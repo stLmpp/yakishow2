@@ -1,0 +1,47 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { AuthStore } from './auth.store';
+import { finalize, tap } from 'rxjs/operators';
+import { User } from '../../model/user';
+import { Observable } from 'rxjs';
+import { AuthQuery } from './auth.query';
+import { Router } from '@angular/router';
+
+@Injectable({ providedIn: 'root' })
+export class AuthService {
+  constructor(
+    private authStore: AuthStore,
+    private http: HttpClient,
+    private authQuery: AuthQuery,
+    private router: Router
+  ) {}
+
+  autoLogin(): Observable<User> {
+    const token = this.authQuery.getTokenSnapshot();
+    const loggedUser = this.authQuery.getUserSnapshot();
+    if (!token || !!loggedUser) return;
+    this.authStore.setLoading(true);
+    return this.http.get<User>('/auth/auto-login').pipe(
+      finalize(() => {
+        this.authStore.setLoading(false);
+      }),
+      tap(user => {
+        this.authStore.update({ user });
+      })
+    );
+  }
+
+  loginApi(username: string, password: string): Observable<User> {
+    this.authStore.setLoading(true);
+    return this.http
+      .post<User>('/auth/login', { username, password })
+      .pipe(
+        finalize(() => {
+          this.authStore.setLoading(false);
+        }),
+        tap(user => {
+          this.authStore.update({ token: user.token, user });
+        })
+      );
+  }
+}

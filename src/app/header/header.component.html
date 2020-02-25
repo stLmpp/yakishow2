@@ -1,0 +1,17 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button (click)="sidenavService.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  Yakishow
+  <span style="flex: 1 1 auto"></span>
+  <button mat-icon-button>
+    <mat-icon>person</mat-icon>
+  </button>
+</mat-toolbar>
+<mat-progress-bar
+  *ngIf="loadingService.isLoading$ | async"
+  mode="indeterminate"
+  color="accent"
+  @inOut
+  style="z-index: -1"
+></mat-progress-bar>

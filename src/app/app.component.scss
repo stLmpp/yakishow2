@@ -1,0 +1,11 @@
+@import '~@angular/material/theming';
+
+.main {
+  padding: 64px + 15px 15px 15px;
+}
+
+@media ($mat-xsmall) {
+  .main {
+    padding-top: 56px + 15px;
+  }
+}

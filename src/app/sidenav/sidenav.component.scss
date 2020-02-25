@@ -1,0 +1,24 @@
+@import '~@angular/material/theming';
+
+.sidenav-origin {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.sidenav {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 300px;
+  background-color: white;
+  padding: 2rem;
+}
+
+@media ($mat-xsmall) {
+  .sidenav {
+    width: auto;
+    right: 0;
+  }
+}

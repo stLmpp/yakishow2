@@ -1,0 +1,26 @@
+<div
+  cdk-overlay-origin
+  class="sidenav-origin"
+  #sidenav="cdkOverlayOrigin"
+></div>
+<ng-template
+  cdk-connected-overlay
+  [cdkConnectedOverlayOrigin]="sidenav"
+  [cdkConnectedOverlayOpen]="sidenavService.isOpen$ | async"
+  [cdkConnectedOverlayHasBackdrop]="true"
+>
+  <div class="sidenav" @slideInOut (swipeleft)="sidenavService.close()">
+    <mat-nav-list>
+      <ng-container *ngFor="let menu of menus">
+        <a
+          mat-list-item
+          *ngIf="(menu.auth | async) || !menu.auth"
+          [routerLink]="menu.routerLink"
+        >
+          <mat-icon matListIcon>{{ menu.icon }}</mat-icon>
+          <h4 matLine>{{ menu.title }}</h4>
+        </a>
+      </ng-container>
+    </mat-nav-list>
+  </div>
+</ng-template>
