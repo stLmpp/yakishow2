@@ -4,9 +4,19 @@
   </button>
   Yakishow
   <span style="flex: 1 1 auto"></span>
-  <button mat-icon-button>
+  <button
+    [matMenuTriggerFor]="userMenu"
+    mat-icon-button
+    *ngIf="authQuery.isLogged$ | async; else login"
+  >
     <mat-icon>person</mat-icon>
   </button>
+  <mat-menu #userMenu="matMenu" xPosition="before">
+    <button mat-menu-item (click)="authService.logout()">Logout</button>
+  </mat-menu>
+  <ng-template #login>
+    <button mat-button (click)="onLogin()">Login</button>
+  </ng-template>
 </mat-toolbar>
 <mat-progress-bar
   *ngIf="loadingService.isLoading$ | async"

@@ -1,0 +1,17 @@
+@import '~@angular/material/theming';
+
+form {
+  .mat-form-field {
+    margin-bottom: 1rem;
+  }
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+@media ($mat-xsmall) {
+  .mat-form-field {
+    font-size: 1.25rem;
+  }
+}

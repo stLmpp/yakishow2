@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { LoadingService } from '../core/loading/loading.service';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { SidenavService } from '../sidenav/sidenav.service';
+import { AuthQuery } from '../auth/state/auth.query';
+import { AuthService } from '../auth/state/auth.service';
+import { MatDialog } from '@angular/material/dialog';
+import { LoginComponent } from '../auth/login/login.component';
 
 @Component({
   selector: 'app-header',
@@ -22,8 +26,15 @@ import { SidenavService } from '../sidenav/sidenav.service';
 export class HeaderComponent implements OnInit {
   constructor(
     public loadingService: LoadingService,
-    public sidenavService: SidenavService
+    public sidenavService: SidenavService,
+    public authQuery: AuthQuery,
+    public authService: AuthService,
+    private matDialog: MatDialog
   ) {}
+
+  onLogin(): void {
+    this.matDialog.open(LoginComponent);
+  }
 
   ngOnInit(): void {}
 }

@@ -1,9 +1,13 @@
 import {
   BrowserModule,
   HAMMER_GESTURE_CONFIG,
-  HammerModule,
 } from '@angular/platform-browser';
-import { NgModule, Provider } from '@angular/core';
+import {
+  DEFAULT_CURRENCY_CODE,
+  LOCALE_ID,
+  NgModule,
+  Provider,
+} from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -18,17 +22,20 @@ import { HammerConfig } from './core/hammer-config.service';
 import { WINDOW_PROVIDERS } from './core/window.service';
 import { LoadingInterceptor } from './core/loading/loading.interceptor';
 import { HeaderComponent } from './header/header.component';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { HomeComponent } from './home/home.component';
 import { SharedModule } from './shared/shared.module';
-import { OverlayModule } from '@angular/cdk/overlay';
-import { DragDropModule } from '@angular/cdk/drag-drop';
-import { MatListModule } from '@angular/material/list';
+import { DateInterceptor } from './core/date.interceptor';
+import { ApiInterceptor } from './core/api.interceptor';
+import { CoreModule } from './core/core.module';
+import { AuthModule } from './auth/auth.module';
+import { registerLocaleData } from '@angular/common';
+import localePtBR from '@angular/common/locales/pt';
+import { NgxCurrencyModule } from 'ngx-currency';
+import { FormatErrorInterceptor } from './core/error/format-error.interceptor';
+
+registerLocaleData(localePtBR, 'pt-BR');
 
 const withInterceptors = (...interceptors: any[]): Provider[] =>
   interceptors.map(useClass => ({
@@ -55,23 +62,42 @@ const withInterceptors = (...interceptors: any[]): Provider[] =>
     }),
     HttpClientModule,
     NgxMaskModule.forRoot(),
-    HammerModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    MatProgressBarModule,
-    MatListModule,
+    NgxCurrencyModule.forRoot({
+      prefix: '',
+      align: 'left',
+      allowNegative: true,
+      decimal: ',',
+      precision: 2,
+      suffix: '',
+      thousands: '.',
+      nullable: false,
+      allowZero: true,
+    }),
     SharedModule,
-    OverlayModule,
-    DragDropModule,
+    CoreModule,
+    AuthModule,
   ],
   providers: [
+    {
+      provide: LOCALE_ID,
+      useValue: 'pt-BR',
+    },
     {
       provide: HAMMER_GESTURE_CONFIG,
       useClass: HammerConfig,
     },
     ...WINDOW_PROVIDERS,
-    ...withInterceptors(AuthInterceptor, LoadingInterceptor),
+    ...withInterceptors(
+      ApiInterceptor,
+      AuthInterceptor,
+      LoadingInterceptor,
+      DateInterceptor,
+      FormatErrorInterceptor
+    ),
+    {
+      provide: DEFAULT_CURRENCY_CODE,
+      useValue: 'BRL',
+    },
   ],
   bootstrap: [AppComponent],
 })

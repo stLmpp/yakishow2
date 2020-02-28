@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthStore } from './auth.store';
-import { finalize, tap } from 'rxjs/operators';
+import { catchError, finalize, tap } from 'rxjs/operators';
 import { User } from '../../model/user';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { AuthQuery } from './auth.query';
 import { Router } from '@angular/router';
 
@@ -41,7 +41,16 @@ export class AuthService {
         }),
         tap(user => {
           this.authStore.update({ token: user.token, user });
+        }),
+        catchError(error => {
+          this.authStore.setError(error.error);
+          return throwError(error);
         })
       );
+  }
+
+  logout(): void {
+    this.authStore.update({ user: null, token: null });
+    this.router.navigateByUrl('/home');
   }
 }

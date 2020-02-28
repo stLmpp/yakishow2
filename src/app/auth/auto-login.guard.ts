@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
   CanActivate,
+  Router,
   RouterStateSnapshot,
   UrlTree,
 } from '@angular/router';
@@ -11,7 +12,7 @@ import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class AutoLoginGuard implements CanActivate {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(
     next: ActivatedRouteSnapshot,
@@ -23,6 +24,13 @@ export class AutoLoginGuard implements CanActivate {
     | UrlTree {
     let autoLogin = this.authService.autoLogin();
     if (!autoLogin) autoLogin = of(null);
-    return autoLogin.pipe(map(() => true));
+    return autoLogin.pipe(
+      map(() => {
+        if (state.url === '/') {
+          return this.router.parseUrl('/home');
+        }
+        return true;
+      })
+    );
   }
 }

@@ -1,0 +1,10 @@
+.mat-button-base {
+  > .mat-button-wrapper {
+    > mat-progress-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+  }
+}

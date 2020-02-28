@@ -1,0 +1,50 @@
+<ng-container *ngLet="authQuery.loading$ | async as authLoading">
+  <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+    <div mat-dialog-content>
+      <mat-form-field>
+        <input
+          autofocus
+          matInput
+          autocomplete="login"
+          placeholder="Usuário / E-mail"
+          formControlName="login"
+        />
+        <mat-error *ngIf="loginForm.get('login').hasError('required')">
+          Login é um campo obrigatório!
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          matInput
+          [type]="hide ? 'password' : 'text'"
+          placeholder="Senha"
+          autocomplete="current-password"
+          formControlName="password"
+        />
+        <button mat-icon-button matSuffix (click)="hide = !hide" type="button">
+          <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        <mat-error *ngIf="loginForm.get('password').hasError('required')">
+          Senha é um campo obrigatório!
+        </mat-error>
+        <mat-error *ngIf="loginError">
+          Login ou senha inválida!
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div mat-dialog-actions>
+      <button
+        [disabled]="
+          this.loginForm.get('login').hasError('required') ||
+          this.loginForm.get('password').hasError('required') ||
+          authLoading
+        "
+        mat-raised-button
+        color="primary"
+        type="submit"
+      >
+        Login
+      </button>
+    </div>
+  </form>
+</ng-container>

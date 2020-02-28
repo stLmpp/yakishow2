@@ -35,6 +35,12 @@ export class SidenavComponent implements OnInit {
       routerLink: '/pessoas',
       auth: this.authQuery.isLogged$,
     },
+    {
+      icon: 'list',
+      title: 'Produtos',
+      routerLink: '/produtos',
+      auth: this.authQuery.isLogged$,
+    },
   ];
 
   ngOnInit(): void {}

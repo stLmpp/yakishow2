@@ -8,6 +8,7 @@
   [cdkConnectedOverlayOrigin]="sidenav"
   [cdkConnectedOverlayOpen]="sidenavService.isOpen$ | async"
   [cdkConnectedOverlayHasBackdrop]="true"
+  (backdropClick)="sidenavService.close()"
 >
   <div class="sidenav" @slideInOut (swipeleft)="sidenavService.close()">
     <mat-nav-list>

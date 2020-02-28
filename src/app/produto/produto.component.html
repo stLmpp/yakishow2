@@ -1,0 +1,36 @@
+<div class="title">
+  <h2>Produtos</h2>
+  <div>
+    <button mat-raised-button color="accent" (click)="openModalProduto()">
+      Novo
+    </button>
+  </div>
+</div>
+
+<mat-form-field>
+  <input
+    type="search"
+    autocomplete="off"
+    [formControl]="searchControl"
+    matInput
+  />
+  <mat-label> <mat-icon>search</mat-icon> Pesquisar </mat-label>
+  <mat-hint>Pesquise pela descrição ou código do produto</mat-hint>
+</mat-form-field>
+<mat-nav-list *ngLet="search$ | async as search">
+  <a
+    [class.inativo]="!produto.ativo"
+    mat-list-item
+    *ngFor="
+      let produto of produtoQuery.all$
+        | async
+        | filter: ['codigo', 'descricao']:search
+        | orderBy: 'descricao'
+    "
+    (click)="openModalProduto(produto)"
+  >
+    <div matLine>{{ produto.descricao }}</div>
+    <div matLine class="mat-line-secondary">{{ produto.codigo }}</div>
+    <div matSuffix>{{ produto.valor | currency }}</div>
+  </a>
+</mat-nav-list>

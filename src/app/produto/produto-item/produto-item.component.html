@@ -1,0 +1,81 @@
+<form
+  [formGroup]="form"
+  (ngSubmit)="onSubmit()"
+  *ngLet="form.get('ativo').value as isAtivo"
+>
+  <h2 mat-dialog-title>
+    {{ edit ? 'Editar Produto' : 'Adicionar Produto' }}
+  </h2>
+  <mat-dialog-content>
+    <mat-form-field *ngLet="form.get('codigo') as codigoControl">
+      <input
+        matInput
+        type="text"
+        formControlName="codigo"
+        placeholder="Código"
+        required
+        maxlength="30"
+        [uniqueCodigo]="produto.id"
+        autocomplete="off"
+        [disabledControl]="!isAtivo || loading"
+        #codigo
+      />
+      <mat-hint align="end">{{ codigo.value?.length || 0 }}/30</mat-hint>
+      <mat-error *ngIf="codigoControl.hasError('required')">
+        Código é obrigatório!
+      </mat-error>
+      <mat-error *ngIf="codigoControl.hasError('uniqueCodigo')">
+        Esse código já existe!
+      </mat-error>
+      <mat-spinner
+        matSuffix
+        diameter="18"
+        *ngIf="codigoControl.pending"
+      ></mat-spinner>
+    </mat-form-field>
+    <mat-form-field>
+      <textarea
+        matInput
+        [matTextareaAutosize]="true"
+        type="text"
+        formControlName="descricao"
+        placeholder="Descrição"
+        maxlength="255"
+        required
+        [disabledControl]="!isAtivo || loading"
+        #descricao
+      ></textarea>
+      <mat-hint align="end">{{ descricao.value?.length || 0 }}/255</mat-hint>
+      <mat-error *ngIf="form.get('descricao').hasError('required')">
+        Descrição é obrigatória!
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        matInput
+        inputmode="decimal"
+        currencyMask
+        [options]="{ allowNegative: false }"
+        formControlName="valor"
+        placeholder="Valor"
+        required
+        [disabledControl]="!isAtivo || loading"
+      />
+      <span matPrefix>R$&nbsp;</span>
+      <mat-error *ngIf="form.get('valor').hasError('required')">
+        Valor é obrigatório!
+      </mat-error>
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <mat-checkbox formControlName="ativo">Ativo</mat-checkbox>
+    <button
+      mat-button
+      color="primary"
+      [disabled]="loading || form.invalid || form.pristine"
+    >
+      <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+      Salvar
+    </button>
+  </mat-dialog-actions>
+</form>
