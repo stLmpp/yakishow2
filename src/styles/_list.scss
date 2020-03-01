@@ -2,6 +2,7 @@
 
 @mixin mat-list-theme($theme) {
   $foreground: map-get($theme, foreground);
+  $accent: map-get($theme, accent);
   .mat-list-base {
     .mat-list-item {
       .mat-line {
@@ -9,6 +10,11 @@
           font-size: 0.8em;
           color: lighten(mat-color($foreground, text), 30%);
         }
+      }
+      &.active {
+        font-weight: bold;
+        color: mat-color($accent, darker);
+        background: rgba(0, 0, 0, 0.04);
       }
     }
   }

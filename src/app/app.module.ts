@@ -34,6 +34,7 @@ import { registerLocaleData } from '@angular/common';
 import localePtBR from '@angular/common/locales/pt';
 import { NgxCurrencyModule } from 'ngx-currency';
 import { FormatErrorInterceptor } from './core/error/format-error.interceptor';
+import { CreateInstanceInterceptor } from './core/create-instance/create-instance.interceptor';
 
 registerLocaleData(localePtBR, 'pt-BR');
 
@@ -92,7 +93,8 @@ const withInterceptors = (...interceptors: any[]): Provider[] =>
       AuthInterceptor,
       LoadingInterceptor,
       DateInterceptor,
-      FormatErrorInterceptor
+      FormatErrorInterceptor,
+      CreateInstanceInterceptor
     ),
     {
       provide: DEFAULT_CURRENCY_CODE,

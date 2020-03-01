@@ -1,5 +1,8 @@
 import { animate, group, query, style, transition } from '@angular/animations';
 
+const ms = '150ms';
+const type = 'ease-out';
+
 export const RTL = (right: string, left: string) => {
   return transition(`${right} => ${left}`, [
     query(
@@ -17,7 +20,7 @@ export const RTL = (right: string, left: string) => {
         ':enter',
         [
           style({ transform: 'translateX(-100%)' }),
-          animate('150ms ease', style({ transform: 'translateX(0%)' })),
+          animate(`${ms} ${type}`, style({ transform: 'translateX(0%)' })),
         ],
         { optional: true }
       ),
@@ -25,7 +28,7 @@ export const RTL = (right: string, left: string) => {
         ':leave',
         [
           style({ transform: 'translateX(0%)' }),
-          animate('150ms ease', style({ transform: 'translateX(100%)' })),
+          animate(`${ms} ${type}`, style({ transform: 'translateX(100%)' })),
         ],
         { optional: true }
       ),
@@ -50,7 +53,7 @@ export const LTR = (left: string, right: string) => {
         ':enter',
         [
           style({ transform: 'translateX(100%)' }),
-          animate('150ms ease', style({ transform: 'translateX(0%)' })),
+          animate(`${ms} ${type}`, style({ transform: 'translateX(0%)' })),
         ],
         { optional: true }
       ),
@@ -58,7 +61,7 @@ export const LTR = (left: string, right: string) => {
         ':leave',
         [
           style({ transform: 'translateX(0%)' }),
-          animate('150ms ease', style({ transform: 'translateX(-100%)' })),
+          animate(`${ms} ${type}`, style({ transform: 'translateX(-100%)' })),
         ],
         { optional: true }
       ),
@@ -83,7 +86,7 @@ export const TTB = (top: string, bottom: string) => {
         ':enter',
         [
           style({ transform: 'translateY(-100%)' }),
-          animate('150ms ease', style({ transform: 'translateY(0%)' })),
+          animate(`${ms} ${type}`, style({ transform: 'translateY(0%)' })),
         ],
         { optional: true }
       ),
@@ -91,7 +94,7 @@ export const TTB = (top: string, bottom: string) => {
         ':leave',
         [
           style({ transform: 'translateY(0%)' }),
-          animate('150ms ease', style({ transform: 'translateY(100%)' })),
+          animate(`${ms} ${type}`, style({ transform: 'translateY(100%)' })),
         ],
         { optional: true }
       ),

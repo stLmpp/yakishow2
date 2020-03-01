@@ -993,6 +993,11 @@
     semver "6.3.0"
     semver-intersect "1.4.0"
 
+"@tweenjs/tween.js@17.4.0":
+  version "17.4.0"
+  resolved "https://registry.yarnpkg.com/@tweenjs/tween.js/-/tween.js-17.4.0.tgz#2e9ab3f2111906b30dfe1ef3259a9781dd211d35"
+  integrity sha512-J3fzl1F6wvh8KXVVcIuHN12xi1ZDcPA/0Vix+ZcJYwZWVHUwfIqfvzYXXEw7ybeev6477KCTt9fKydU+ajUqcg==
+
 "@types/estree@*":
   version "0.0.42"
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-0.0.42.tgz#8d0c1f480339efedb3e46070e22dd63e0430dd11"
@@ -1073,6 +1078,11 @@
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/@types/source-list-map/-/source-list-map-0.1.2.tgz#0078836063ffaf17412349bba364087e0ac02ec9"
   integrity sha512-K5K+yml8LTo9bWJI/rECfIPrGgxdpeNbj+d53lwN4QjW1MCwlkhUms+gtdzigTeUyBr09+u8BwOIY3MXvHdcsA==
+
+"@types/tween.js@17.2.0":
+  version "17.2.0"
+  resolved "https://registry.yarnpkg.com/@types/tween.js/-/tween.js-17.2.0.tgz#25f98311daecb165ab91ee2cd7f17a9b1e6cc30c"
+  integrity sha512-mOsqurEtFEzwgkVc/jDVE2XrjZBYTbrmDUyCr9GXmnfc6q5otokxFtKvSY/B21zgz9LVRIvRTawKczjKi57wrA==
 
 "@types/uuid@^3.4.7":
   version "3.4.7"
@@ -2187,6 +2197,11 @@ circular-dependency-plugin@5.2.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/circular-dependency-plugin/-/circular-dependency-plugin-5.2.0.tgz#e09dbc2dd3e2928442403e2d45b41cea06bc0a93"
   integrity sha512-7p4Kn/gffhQaavNfyDFg7LS5S/UT1JAjyGd4UqR2+jzoYF02eDkj0Ec3+48TsIa4zghjLY87nQHIh/ecK9qLdw==
+
+class-transformer@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/class-transformer/-/class-transformer-0.2.3.tgz#598c92ca71dcca73f91ccb875d74a3847ccfa32d"
+  integrity sha512-qsP+0xoavpOlJHuYsQJsN58HXSl8Jvveo+T37rEvCEeRfMWoytAyR0Ua/YsFgpM6AZYZ/og2PJwArwzJl1aXtQ==
 
 class-utils@^0.3.5:
   version "0.3.6"
@@ -5551,6 +5566,14 @@ ngx-mask@^8.1.7:
   integrity sha512-hCBH416Lf1DNu/lnMrlpaC3an69RPfp8m36O19+Rz3/rdH8ndHkVAbcGvSyOffh74Ri7Zs+qeUzsFpFq2A5CWQ==
   dependencies:
     tslib "^1.9.0"
+
+ngx-virtual-scroller@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/ngx-virtual-scroller/-/ngx-virtual-scroller-4.0.2.tgz#f6d965a641942903845ac8035cc9c8c440669c93"
+  integrity sha512-QCn7J6CxyBqvba85q3+KsfgnzhKWolh1Jk6kloJJeBreeX5sqWqdvKjmTaDeZJ9otx8fDzuV+o8y27l3u6MGMQ==
+  dependencies:
+    "@tweenjs/tween.js" "17.4.0"
+    "@types/tween.js" "17.2.0"
 
 nice-try@^1.0.4:
   version "1.0.5"

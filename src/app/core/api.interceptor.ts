@@ -8,9 +8,7 @@ import {
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ApiInterceptor implements HttpInterceptor {
   intercept(
     _req: HttpRequest<any>,

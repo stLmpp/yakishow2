@@ -62,10 +62,6 @@ export class ProdutoItemComponent implements OnInit {
       .subscribe();
   }
 
-  swipeDown($event): void {
-    console.log($event);
-  }
-
   ngOnInit(): void {
     this.form = new FormGroup({
       codigo: new FormControl(this.produto.codigo),

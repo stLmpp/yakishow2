@@ -1,3 +1,4 @@
 export enum MasksEnum {
-  decimal = '0*.00',
+  celular = '(00) 0 0000-0000',
+  cep = '00000-000',
 }

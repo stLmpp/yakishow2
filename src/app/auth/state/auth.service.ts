@@ -6,6 +6,7 @@ import { User } from '../../model/user';
 import { Observable, throwError } from 'rxjs';
 import { AuthQuery } from './auth.query';
 import { Router } from '@angular/router';
+import { createInstanceHeaders } from '../../core/create-instance/create-instance.interceptor';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -21,20 +22,26 @@ export class AuthService {
     const loggedUser = this.authQuery.getUserSnapshot();
     if (!token || !!loggedUser) return;
     this.authStore.setLoading(true);
-    return this.http.get<User>('/auth/auto-login').pipe(
-      finalize(() => {
-        this.authStore.setLoading(false);
-      }),
-      tap(user => {
-        this.authStore.update({ user });
-      })
-    );
+    return this.http
+      .get<User>('/auth/auto-login', { headers: createInstanceHeaders(User) })
+      .pipe(
+        finalize(() => {
+          this.authStore.setLoading(false);
+        }),
+        tap(user => {
+          this.authStore.update({ user });
+        })
+      );
   }
 
   loginApi(username: string, password: string): Observable<User> {
     this.authStore.setLoading(true);
     return this.http
-      .post<User>('/auth/login', { username, password })
+      .post<User>(
+        '/auth/login',
+        { username, password },
+        { headers: createInstanceHeaders(User) }
+      )
       .pipe(
         finalize(() => {
           this.authStore.setLoading(false);

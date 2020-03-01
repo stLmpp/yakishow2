@@ -7,6 +7,7 @@ import { ProdutoQuery } from './state/produto.query';
 import { MatDialog } from '@angular/material/dialog';
 import { ProdutoItemComponent } from './produto-item/produto-item.component';
 import { Produto } from '../model/produto';
+import { trackByFactory } from '../util/util';
 
 @Component({
   selector: 'app-produto',
@@ -28,6 +29,8 @@ export class ProdutoComponent implements OnInit, OnDestroy {
   search$: Observable<string> = this.searchControl.valueChanges.pipe(
     debounceTime(400)
   );
+
+  trackByProduto = trackByFactory<Produto>('id');
 
   openModalProduto(data?: Produto): void {
     this.matDialog.open(ProdutoItemComponent, { data });

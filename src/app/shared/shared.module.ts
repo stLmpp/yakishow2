@@ -7,10 +7,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatListModule } from '@angular/material/list';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -21,6 +19,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DisabledControlDirective } from './disabled-control/disabled-control.directive';
 import { FilterPipe } from './filter/filter.pipe';
 import { OrderByPipe } from './order-by/order-by.pipe';
+import { ScrollToTopComponent } from './scroll-to-top/scroll-to-top.component';
 
 const DECLARATIONS = [
   environment.production ? [] : HammerjsDirective,
@@ -28,6 +27,7 @@ const DECLARATIONS = [
   DisabledControlDirective,
   FilterPipe,
   OrderByPipe,
+  ScrollToTopComponent,
 ];
 const MODULES = [
   MatToolbarModule,

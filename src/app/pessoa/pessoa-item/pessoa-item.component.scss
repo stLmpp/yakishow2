@@ -1,0 +1,23 @@
+@import '~@angular/material/theming';
+
+form {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 10px;
+  > .actions {
+    grid-column: 1 / 4;
+    justify-content: center;
+  }
+  > .nome {
+    grid-column: 1 / 3;
+  }
+}
+
+@media ($mat-xsmall) {
+  form {
+    display: block;
+    > .actions {
+      justify-content: flex-end;
+    }
+  }
+}

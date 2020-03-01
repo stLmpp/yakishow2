@@ -1,4 +1,4 @@
-<div class="title">
+<div class="page-title">
   <h2>Produtos</h2>
   <div>
     <button mat-raised-button color="accent" (click)="openModalProduto()">
@@ -17,6 +17,7 @@
   <mat-label> <mat-icon>search</mat-icon> Pesquisar </mat-label>
   <mat-hint>Pesquise pela descrição ou código do produto</mat-hint>
 </mat-form-field>
+
 <mat-nav-list *ngLet="search$ | async as search">
   <a
     [class.inativo]="!produto.ativo"
@@ -25,7 +26,8 @@
       let produto of produtoQuery.all$
         | async
         | filter: ['codigo', 'descricao']:search
-        | orderBy: 'descricao'
+        | orderBy: 'descricao';
+      trackBy: trackByProduto
     "
     (click)="openModalProduto(produto)"
   >

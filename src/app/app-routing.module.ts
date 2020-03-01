@@ -27,6 +27,12 @@ const routes: Routes = [
           import('./produto/produto.module').then(m => m.ProdutoModule),
         canActivate: [AuthGuard],
       },
+      {
+        path: 'pessoas',
+        loadChildren: () =>
+          import('./pessoa/pessoa.module').then(m => m.PessoaModule),
+        canActivate: [AuthGuard],
+      },
     ],
   },
   {
@@ -41,6 +47,7 @@ const routes: Routes = [
       preloadingStrategy: PreloadAllModules,
       initialNavigation: 'enabled',
       relativeLinkResolution: 'corrected',
+      paramsInheritanceStrategy: 'always',
     }),
   ],
   exports: [RouterModule],
