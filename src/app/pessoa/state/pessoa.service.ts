@@ -76,4 +76,15 @@ export class PessoaService {
       })
     );
   }
+
+  getByCelular(celular: string): Observable<Pessoa> {
+    const params = new HttpParams({ fromObject: { celular } });
+    return this.http
+      .get<Pessoa>(`${this.target}/celular`, { params })
+      .pipe(
+        tap(pessoa => {
+          this.pessoaStore.upsert(pessoa.id, pessoa);
+        })
+      );
+  }
 }

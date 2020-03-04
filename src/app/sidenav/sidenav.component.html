@@ -17,6 +17,7 @@
           mat-list-item
           *ngIf="(menu.auth | async) || !menu.auth"
           [routerLink]="menu.routerLink"
+          routerLinkActive="active"
           (click)="sidenavService.close()"
         >
           <mat-icon matListIcon>{{ menu.icon }}</mat-icon>

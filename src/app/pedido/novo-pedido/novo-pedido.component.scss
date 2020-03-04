@@ -1,0 +1,27 @@
+@import '~@angular/material/theming';
+@import 'variables';
+
+.header {
+  /*position: sticky;
+  top: 56px;
+  background-color: white;
+  z-index: 1;*/
+  > .pessoa {
+    margin-bottom: 1rem;
+  }
+}
+
+.produtos {
+  margin-bottom: calc(60px + 1rem);
+  > .produto {
+    @include mat-elevation(2);
+    padding: 0.5rem;
+    background-color: $background-list;
+  }
+}
+
+@media (min-width: 600px) {
+  .header {
+    top: 60px;
+  }
+}

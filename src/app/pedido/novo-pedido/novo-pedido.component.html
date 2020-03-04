@@ -1,0 +1,49 @@
+<div class="page-title">
+  <h2>Novo pedido</h2>
+</div>
+<div class="header">
+  <div class="pessoa">
+    <mat-form-field>
+      <input
+        [formControl]="celularControl"
+        matInput
+        placeholder="Celular"
+        inputmode="tel"
+        [mask]="masksEnum.celular"
+        required
+      />
+      <mat-spinner matSuffix *ngIf="loadingPessoa" diameter="18"></mat-spinner>
+      <mat-error *ngIf="personNotFound">
+        Pessoa não encontrada.
+        <a [routerLink]="null" (click)="criarPessoa()">Criar</a>
+      </mat-error>
+    </mat-form-field>
+    <ng-container *ngIf="pessoa">
+      <mat-list>
+        <mat-list-item class="active">
+          <span matLine>{{ pessoa.nome }}</span>
+          <span matLine class="mat-line-secondary">{{ pessoa.endereco }}</span>
+          <span *ngIf="pessoa.complemento" matLine class="mat-line-secondary">{{
+            pessoa.complemento
+          }}</span>
+        </mat-list-item>
+      </mat-list>
+    </ng-container>
+  </div>
+</div>
+<div class="produtos">
+  <ng-container
+    *ngIf="celularControl.valid && !celularControl.pending && !loadingPessoa"
+  >
+    <ng-container *ngFor="let form of formGroupArray; let $last = last">
+      <div class="produto">
+        <app-novo-pedido-form [form]="form"></app-novo-pedido-form>
+      </div>
+      <mat-divider *ngIf="!$last" style="margin-bottom: 1rem"></mat-divider>
+    </ng-container>
+  </ng-container>
+</div>
+
+<button mat-fab class="mat-button-floating bottom center" (click)="addForm()">
+  <mat-icon>add</mat-icon>
+</button>

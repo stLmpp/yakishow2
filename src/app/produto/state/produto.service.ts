@@ -29,6 +29,18 @@ export class ProdutoService {
       );
   }
 
+  getByCodigo(codigo: string): Observable<Produto> {
+    const params = new HttpParams({ fromObject: { codigo } });
+    return this.http.get<Produto>(`${this.target}/codigo`, { params });
+  }
+
+  getBySimilarityCodigo(codigo: string): Observable<Produto[]> {
+    const params = new HttpParams({ fromObject: { codigo } });
+    return this.http.get<Produto[]>(`${this.target}/similarity/codigo`, {
+      params,
+    });
+  }
+
   getAll(): Observable<Produto[]> {
     this.produtoStore.setLoading(true);
     return cacheableCustom(

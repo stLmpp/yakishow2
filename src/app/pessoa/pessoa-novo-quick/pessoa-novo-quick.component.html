@@ -1,0 +1,33 @@
+<h2 mat-dialog-title>{{ celular | mask: masksEnum.celular }}</h2>
+<form [formGroup]="form" (ngSubmit)="save()">
+  <mat-dialog-content>
+    <mat-form-field *ngLet="form.get('nome') as nomeControl" class="nome">
+      <input matInput formControlName="nome" placeholder="Nome" required />
+      <mat-error *ngIf="nomeControl.hasError('required')">
+        Nome é obrigatório
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field *ngLet="form.get('endereco') as enderecoControl">
+      <input
+        matInput
+        formControlName="endereco"
+        placeholder="Endereço"
+        required
+      />
+      <mat-error *ngIf="enderecoControl.hasError('required')">
+        Endereço é obrigatório
+      </mat-error>
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button
+      mat-button
+      type="submit"
+      color="accent"
+      [disabled]="loading || form.invalid || form.pristine"
+    >
+      <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+      Salvar
+    </button>
+  </mat-dialog-actions>
+</form>

@@ -33,6 +33,12 @@ const routes: Routes = [
           import('./pessoa/pessoa.module').then(m => m.PessoaModule),
         canActivate: [AuthGuard],
       },
+      {
+        path: 'pedidos',
+        loadChildren: () =>
+          import('./pedido/pedido.module').then(m => m.PedidoModule),
+        canActivate: [AuthGuard],
+      },
     ],
   },
   {

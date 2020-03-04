@@ -1,0 +1,24 @@
+@import '~@angular/material/theming';
+
+.form {
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: 100px repeat(5, 1fr);
+  @media only screen and (max-width: 599px) {
+    > .descricao {
+      grid-column-end: span 5;
+    }
+    > .observacao {
+      grid-column-end: span 6;
+    }
+    > .valorUnitario {
+      grid-column-end: span 2;
+    }
+    > .quantidade {
+      grid-column-end: span 2;
+    }
+    > .valorTotal {
+      grid-column-end: span 2;
+    }
+  }
+}

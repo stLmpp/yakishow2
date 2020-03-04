@@ -16,6 +16,7 @@
       formControlName="celular"
       placeholder="Celular"
       required
+      inputmode="tel"
       [mask]="masksEnum.celular"
       [uniqueCelular]="idPessoa"
     />
@@ -31,6 +32,7 @@
       matInput
       formControlName="cep"
       placeholder="CEP"
+      inputmode="numeric"
       [mask]="masksEnum.cep"
     />
     <mat-spinner matSuffix diameter="18" *ngIf="loadingCep"></mat-spinner>
@@ -55,6 +57,8 @@
       formControlName="email"
       placeholder="E-mail"
       email
+      type="email"
+      inputmode="email"
       [uniqueEmail]="idPessoa"
     />
     <mat-error *ngIf="emailControl.hasError('email')">

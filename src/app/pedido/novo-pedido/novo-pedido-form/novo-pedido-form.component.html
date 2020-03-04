@@ -1,0 +1,83 @@
+<form [formGroup]="form">
+  <div class="form">
+    <mat-form-field class="codigo">
+      <input
+        matInput
+        formControlName="codigo"
+        placeholder="Código"
+        required
+        [matAutocomplete]="autoCodigo"
+        (blur)="blurCodigo()"
+        #codigoRef
+      />
+      <mat-spinner matSuffix diameter="18" *ngIf="loadingCodigo"></mat-spinner>
+      <mat-autocomplete
+        #autoCodigo="matAutocomplete"
+        [autoActiveFirstOption]="true"
+      >
+        <mat-option
+          *ngFor="let produto of similarCodigos"
+          [value]="produto.codigo"
+          (onSelectionChange)="codigoRef.blur()"
+        >
+          {{ produto.codigo }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field class="descricao">
+      <input matInput formControlName="descricao" placeholder="Descrição" />
+    </mat-form-field>
+
+    <mat-form-field class="observacao">
+      <input matInput formControlName="observacao" placeholder="Observação" />
+    </mat-form-field>
+    <mat-form-field class="valorUnitario">
+      <input
+        matInput
+        formControlName="valorUnitario"
+        placeholder="Valor unitário"
+        currencyMask
+      />
+    </mat-form-field>
+    <mat-form-field
+      class="quantidade"
+      *ngLet="form.get('quantidade') as qtdeControl"
+    >
+      <input
+        matInput
+        formControlName="quantidade"
+        type="number"
+        inputmode="tel"
+        placeholder="Quantidade"
+        min="0"
+      />
+      <button
+        matSuffix
+        mat-icon-button
+        (click)="qtdeControl.setValue(+qtdeControl.value + 1)"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
+      <button
+        matPrefix
+        mat-icon-button
+        (click)="
+          qtdeControl.setValue(
+            +qtdeControl.value === 0 ? 0 : +qtdeControl.value - 1
+          )
+        "
+      >
+        <mat-icon>remove</mat-icon>
+      </button>
+    </mat-form-field>
+    <mat-form-field class="valorTotal">
+      <input
+        matInput
+        formControlName="valorTotal"
+        placeholder="Valor total"
+        currencyMask
+      />
+    </mat-form-field>
+  </div>
+</form>

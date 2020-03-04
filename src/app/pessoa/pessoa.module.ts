@@ -9,6 +9,7 @@ import { NgxMaskModule } from 'ngx-mask';
 import { PessoaItemComponent } from './pessoa-item/pessoa-item.component';
 import { UniqueCelularDirective } from './unique-celular.directive';
 import { UniqueEmailDirective } from './unique-email.directive';
+import { PessoaNovoQuickComponent } from './pessoa-novo-quick/pessoa-novo-quick.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { UniqueEmailDirective } from './unique-email.directive';
     PessoaItemComponent,
     UniqueCelularDirective,
     UniqueEmailDirective,
+    PessoaNovoQuickComponent,
   ],
   imports: [
     CommonModule,

@@ -13,6 +13,7 @@ import { Subject } from 'rxjs';
       TTB('*', 'AuthLogin'),
       RTL('AuthLogin', '*'),
       RTL('*', 'Produtos'),
+      ...SLIDE_X('Pedidos', 'NovoPedido'),
     ]),
   ],
 })
