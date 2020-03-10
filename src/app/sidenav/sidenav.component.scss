@@ -16,6 +16,12 @@
   padding: 2rem;
 }
 
+.dark-theme {
+  .sidenav {
+    background-color: map-get($mat-dark-theme-background, background);
+  }
+}
+
 @media ($mat-xsmall) {
   .sidenav {
     width: auto;

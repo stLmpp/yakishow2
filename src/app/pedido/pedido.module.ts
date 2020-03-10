@@ -9,9 +9,18 @@ import { NgxMaskModule } from 'ngx-mask';
 import { NovoPedidoFormComponent } from './novo-pedido/novo-pedido-form/novo-pedido-form.component';
 import { NgxCurrencyModule } from 'ngx-currency';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatCardModule } from '@angular/material/card';
+import { MatRippleModule } from '@angular/material/core';
+import { PedidosDiaComponent } from './pedidos-dia/pedidos-dia.component';
 
 @NgModule({
-  declarations: [PedidoComponent, NovoPedidoComponent, NovoPedidoFormComponent],
+  declarations: [
+    PedidoComponent,
+    NovoPedidoComponent,
+    NovoPedidoFormComponent,
+    PedidosDiaComponent,
+  ],
   imports: [
     CommonModule,
     PedidoRoutingModule,
@@ -19,6 +28,9 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     NgxMaskModule.forChild(),
     NgxCurrencyModule,
     MatAutocompleteModule,
+    MatExpansionModule,
+    MatCardModule,
+    MatRippleModule,
   ],
 })
 export class PedidoModule {}

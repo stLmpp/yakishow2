@@ -1,8 +1,6 @@
 import { CommonHistory } from './common-history';
 import { PessoaTipo } from './pessoa-tipo';
-import { CreateInstance } from '../core/create-instance/create-instance.interceptor';
 
-@CreateInstance()
 export class Pessoa extends CommonHistory {
   constructor(partial?: Partial<Pessoa>) {
     super();

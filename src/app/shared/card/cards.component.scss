@@ -1,0 +1,7 @@
+app-cards {
+  display: flex;
+  flex-wrap: wrap;
+  app-card > .yk-card {
+    margin: 15px;
+  }
+}

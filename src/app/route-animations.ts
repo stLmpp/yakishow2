@@ -10,6 +10,7 @@ export const RTL = (right: string, left: string) => {
       style({
         position: 'fixed',
         width: '90%',
+        height: '90%',
       }),
       {
         optional: true,
@@ -43,6 +44,7 @@ export const LTR = (left: string, right: string) => {
       style({
         position: 'fixed',
         width: '90%',
+        height: '90%',
       }),
       {
         optional: true,
@@ -76,6 +78,7 @@ export const TTB = (top: string, bottom: string) => {
       style({
         position: 'fixed',
         width: '90%',
+        height: '90%',
       }),
       {
         optional: true,

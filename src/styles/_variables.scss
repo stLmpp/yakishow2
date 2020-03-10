@@ -1,7 +1,19 @@
 @import '~@angular/material/theming';
 
-$primary: mat-palette($mat-indigo);
-$accent: mat-palette($mat-pink, A200, A100, A400);
-$theme: mat-light-theme($primary, $accent);
-$background: map-get($theme, background);
-$background-list: mat-color($background, disabled-list-option);
+$primary-light: mat-palette($mat-red, 900, 100, 700, A700);
+$accent-light: mat-palette($mat-orange, A200, A100, A400);
+
+$primary-dark: mat-palette($mat-red, 900, 100, 700, 100);
+$accent-dark: mat-palette($mat-orange, A200, A100, A400);
+
+$light-theme: mat-light-theme($primary-light, $accent-light);
+$dark-theme: mat-dark-theme($primary-dark, $accent-dark);
+
+$background: map-get($light-theme, background);
+$background-list-disabled: mat-color($background, disabled-list-option);
+$background-list-active: rgba(0, 0, 0, 0.04);
+
+$header-height: 64px;
+$header-z-index: 500;
+
+$main-padding: 15px;

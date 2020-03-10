@@ -1,8 +1,17 @@
-<div class="page-title">
+<!--<div class="page-title">
   <h2>Pedidos</h2>
   <div>
     <button mat-raised-button color="accent" [routerLink]="['./', 'novo']">
       Novo
     </button>
   </div>
-</div>
+</div>-->
+<app-cards>
+  <app-card text="Novo" icon="add" [routerLink]="['./', 'novo']"></app-card>
+  <app-card
+    text="Pedidos do dia"
+    icon="today"
+    [routerLink]="['./', 'dia']"
+  ></app-card>
+  <app-card text="Pesquisar pedidos" icon="search"></app-card>
+</app-cards>

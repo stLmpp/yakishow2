@@ -1,13 +1,13 @@
 <form [formGroup]="form">
   <div class="form">
-    <mat-form-field class="codigo">
+    <mat-form-field class="codigo" *ngLet="form.get('codigo') as codigoControl">
       <input
         matInput
         formControlName="codigo"
         placeholder="Código"
-        required
         [matAutocomplete]="autoCodigo"
         (blur)="blurCodigo()"
+        required
         #codigoRef
       />
       <mat-spinner matSuffix diameter="18" *ngIf="loadingCodigo"></mat-spinner>
@@ -23,6 +23,14 @@
           {{ produto.codigo }}
         </mat-option>
       </mat-autocomplete>
+      <mat-error *ngIf="codigoControl.hasError('required')">
+        Favor informar o código do produto
+      </mat-error>
+      <mat-error
+        *ngIf="codigoControl?.errors?.produtoNotFound as produtoNotFound"
+      >
+        {{ produtoNotFound }}
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field class="descricao">
@@ -50,7 +58,7 @@
         type="number"
         inputmode="tel"
         placeholder="Quantidade"
-        min="0"
+        required
       />
       <button
         matSuffix
@@ -70,6 +78,12 @@
       >
         <mat-icon>remove</mat-icon>
       </button>
+      <mat-error *ngIf="qtdeControl.hasError('required')">
+        Favor informar a quantidade
+      </mat-error>
+      <mat-error *ngIf="qtdeControl.hasError('min')">
+        Quantidade não pode ser negativa
+      </mat-error>
     </mat-form-field>
     <mat-form-field class="valorTotal">
       <input

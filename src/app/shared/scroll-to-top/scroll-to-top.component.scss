@@ -2,9 +2,5 @@ button {
   position: fixed;
   bottom: 15px;
   right: 15px;
-  opacity: 0;
-  transition: opacity 200ms ease-in-out;
-  &.active {
-    opacity: 1;
-  }
+  z-index: 499;
 }

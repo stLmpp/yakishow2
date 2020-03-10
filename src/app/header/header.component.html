@@ -12,7 +12,15 @@
     <mat-icon>person</mat-icon>
   </button>
   <mat-menu #userMenu="matMenu" xPosition="before">
-    <button mat-menu-item (click)="authService.logout()">Logout</button>
+    <button
+      mat-menu-item
+      (click)="changeTheme(theme)"
+      *ngLet="authQuery.theme$ | async as theme"
+    >
+      Tema
+      {{ theme === themesEnum.light ? 'escuro' : 'claro' }}
+    </button>
+    <button mat-menu-item (click)="logout()">Logout</button>
   </mat-menu>
   <ng-template #login>
     <button mat-button (click)="onLogin()">Login</button>
@@ -23,5 +31,4 @@
   mode="indeterminate"
   color="accent"
   @inOut
-  style="z-index: -1"
 ></mat-progress-bar>

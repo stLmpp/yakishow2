@@ -1,1 +1,8 @@
-<p>home works!</p>
+<app-cards>
+  <app-card
+    *ngFor="let menu of sidenavService.menus | filter: 'title':'Início':true"
+    [icon]="menu.icon"
+    [text]="menu.title"
+    [routerLink]="menu.routerLink"
+  ></app-card>
+</app-cards>

@@ -6,7 +6,7 @@
     </button>
   </div>
 </div>
-<mat-form-field>
+<mat-form-field class="search">
   <input
     type="search"
     autocomplete="off"
@@ -49,7 +49,13 @@
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
-        <button mat-menu-item>Fazer pedido</button>
+        <button
+          mat-menu-item
+          [routerLink]="['/', 'pedidos', 'novo']"
+          [queryParams]="{ celular: pessoa.celular }"
+        >
+          Fazer pedido
+        </button>
         <button
           mat-menu-item
           (click)="idPessoaParam = pessoa.id"

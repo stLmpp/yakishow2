@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { AuthStore } from './auth.store';
 import { catchError, finalize, tap } from 'rxjs/operators';
 import { User } from '../../model/user';
 import { Observable, throwError } from 'rxjs';
 import { AuthQuery } from './auth.query';
 import { Router } from '@angular/router';
-import { createInstanceHeaders } from '../../core/create-instance/create-instance.interceptor';
+import { ThemesEnum } from '../../model/themes.enum';
+import { UpdateResult } from '../../model/update-result';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -22,26 +23,20 @@ export class AuthService {
     const loggedUser = this.authQuery.getUserSnapshot();
     if (!token || !!loggedUser) return;
     this.authStore.setLoading(true);
-    return this.http
-      .get<User>('/auth/auto-login', { headers: createInstanceHeaders(User) })
-      .pipe(
-        finalize(() => {
-          this.authStore.setLoading(false);
-        }),
-        tap(user => {
-          this.authStore.update({ user });
-        })
-      );
+    return this.http.get<User>('/auth/auto-login').pipe(
+      finalize(() => {
+        this.authStore.setLoading(false);
+      }),
+      tap(user => {
+        this.authStore.update({ user });
+      })
+    );
   }
 
   loginApi(username: string, password: string): Observable<User> {
     this.authStore.setLoading(true);
     return this.http
-      .post<User>(
-        '/auth/login',
-        { username, password },
-        { headers: createInstanceHeaders(User) }
-      )
+      .post<User>('/auth/login', { username, password })
       .pipe(
         finalize(() => {
           this.authStore.setLoading(false);
@@ -59,5 +54,16 @@ export class AuthService {
   logout(): void {
     this.authStore.update({ user: null, token: null });
     this.router.navigateByUrl('/home');
+  }
+
+  updateTheme(id: number, theme: ThemesEnum): Observable<UpdateResult> {
+    this.authStore.update(state => ({
+      ...state,
+      user: { ...state.user, theme },
+    }));
+    const params = new HttpParams().set('theme', '' + theme);
+    return this.http.patch<UpdateResult>(`user/${id}/theme`, undefined, {
+      params,
+    });
   }
 }

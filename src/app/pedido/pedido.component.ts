@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PedidoQuery } from './state/pedido.query';
 
 @Component({
   selector: 'app-pedido',
@@ -6,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./pedido.component.scss'],
 })
 export class PedidoComponent implements OnInit {
-  constructor() {}
+  constructor(public pedidoQuery: PedidoQuery) {}
 
   ngOnInit(): void {}
 }

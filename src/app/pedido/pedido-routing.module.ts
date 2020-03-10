@@ -1,7 +1,10 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { PedidoComponent } from './pedido.component';
 import { NovoPedidoComponent } from './novo-pedido/novo-pedido.component';
+import { scrollToTopDisabled } from '../shared/scroll-to-top/scroll-to-top.component';
+import { PedidosDiaResolver } from './pedidos-dia.resolver';
+import { PedidosDiaComponent } from './pedidos-dia/pedidos-dia.component';
 
 const routes: Routes = [
   {
@@ -12,7 +15,12 @@ const routes: Routes = [
   {
     path: 'novo',
     component: NovoPedidoComponent,
-    data: { animation: 'NovoPedido' },
+    data: { animation: 'NovoPedido', [scrollToTopDisabled]: true },
+  },
+  {
+    path: 'dia',
+    component: PedidosDiaComponent,
+    resolve: [PedidosDiaResolver],
   },
 ];
 

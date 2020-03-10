@@ -1,4 +1,5 @@
 @import '~@angular/material/theming';
+@import 'variables';
 
 form {
   .mat-form-field {
@@ -8,6 +9,12 @@ form {
 
 .mat-form-field {
   width: 100%;
+  &.search {
+    .mat-form-field-wrapper {
+      margin-left: $main-padding;
+      margin-right: $main-padding;
+    }
+  }
 }
 
 @media ($mat-xsmall) {

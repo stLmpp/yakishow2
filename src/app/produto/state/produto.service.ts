@@ -6,7 +6,6 @@ import { finalize, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { UpdateResult } from '../../model/update-result';
 import { cacheableCustom } from '../../util/akita';
-import { createInstanceHeaders } from '../../core/create-instance/create-instance.interceptor';
 
 @Injectable({ providedIn: 'root' })
 export class ProdutoService {
@@ -45,18 +44,14 @@ export class ProdutoService {
     this.produtoStore.setLoading(true);
     return cacheableCustom(
       this.produtoStore,
-      this.http
-        .get<Produto[]>(`${this.target}/all`, {
-          headers: createInstanceHeaders(Produto),
+      this.http.get<Produto[]>(`${this.target}/all`).pipe(
+        tap(produtos => {
+          this.produtoStore.set(produtos);
+        }),
+        finalize(() => {
+          this.produtoStore.setLoading(false);
         })
-        .pipe(
-          tap(produtos => {
-            this.produtoStore.set(produtos);
-          }),
-          finalize(() => {
-            this.produtoStore.setLoading(false);
-          })
-        )
+      )
     );
   }
 

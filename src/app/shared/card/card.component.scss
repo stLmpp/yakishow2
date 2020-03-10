@@ -1,0 +1,31 @@
+@import '~@angular/material/theming';
+@import 'variables';
+
+$l: mat-color(map-get($light-theme, primary));
+$d: mat-color(map-get($dark-theme, primary));
+
+app-card {
+  > .yk-card {
+    display: grid;
+    width: 7rem;
+    height: 7rem;
+    padding: 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: $l;
+    outline: 0;
+    @include mat-elevation(2);
+    > .text {
+      display: flex;
+      align-items: flex-end;
+    }
+  }
+}
+
+.dark-theme {
+  app-card {
+    > .yk-card {
+      background-color: $d;
+    }
+  }
+}

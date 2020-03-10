@@ -1,14 +1,5 @@
-/* You can add global styles to this file, and also import other style files */
+/*@import '~@angular/material/prebuilt-themes/pink-bluegrey.css';*/
 @import '~@angular/material/theming';
-
-html,
-body {
-  height: 100%;
-}
-body {
-  margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
-}
 
 @include mat-core();
 
@@ -17,5 +8,23 @@ body {
 @import './styles/form';
 @import './styles/list';
 @import './styles/button';
+@import './styles/dialog';
+@import './swipe-actions';
 
-@include mat-list-theme($theme);
+@include angular-material-theme($light-theme);
+@include mat-list-theme-custom($light-theme);
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  &.dark-theme {
+    @include angular-material-theme($dark-theme);
+    @include mat-list-theme-custom($dark-theme);
+    color: white;
+    background-color: map-get($mat-dark-theme-background, background);
+  }
+}

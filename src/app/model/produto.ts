@@ -1,7 +1,5 @@
 import { CommonHistory } from './common-history';
-import { CreateInstance } from '../core/create-instance/create-instance.interceptor';
 
-@CreateInstance()
 export class Produto extends CommonHistory {
   constructor(partial?: Partial<Produto>) {
     super();

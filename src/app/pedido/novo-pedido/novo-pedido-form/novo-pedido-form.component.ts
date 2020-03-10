@@ -1,8 +1,9 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ProdutoService } from '../../../produto/state/produto.service';
-import { combineLatest, Subject } from 'rxjs';
+import { combineLatest, Subject, throwError } from 'rxjs';
 import {
+  catchError,
   debounceTime,
   distinctUntilChanged,
   filter,
@@ -37,6 +38,7 @@ export class NovoPedidoFormComponent implements OnInit, OnDestroy {
       this.form.patchValue({
         descricao: produto.descricao,
         valorUnitario: produto.valor,
+        produtoId: produto.id,
       });
     } else {
       this.loadingCodigo = true;
@@ -45,12 +47,23 @@ export class NovoPedidoFormComponent implements OnInit, OnDestroy {
         .pipe(
           finalize(() => {
             this.loadingCodigo = false;
+          }),
+          catchError(err => {
+            codigoControl.setErrors({ produtoNotFound: err.message });
+            this.form.patchValue({
+              descricao: null,
+              valurUnitario: null,
+              produtoId: null,
+            });
+            return throwError(err);
           })
         )
-        .subscribe(({ descricao, valor }) => {
+        .subscribe(({ descricao, valor, id }) => {
+          codigoControl.setErrors(null);
           this.form.patchValue({
             descricao,
             valorUnitario: valor,
+            produtoId: id,
           });
         });
     }

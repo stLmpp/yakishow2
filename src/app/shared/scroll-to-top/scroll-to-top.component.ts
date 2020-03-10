@@ -11,18 +11,18 @@ import {
 import { WINDOW } from '../../core/window.service';
 import { DOCUMENT } from '@angular/common';
 import { fromEvent, Subject } from 'rxjs';
-import { filter, takeUntil, throttleTime } from 'rxjs/operators';
+import { filter, sampleTime, takeUntil } from 'rxjs/operators';
+import { fadeInOut } from '../animations';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
-enum ScrollDirection {
-  Up,
-  Down,
-}
+export const scrollToTopDisabled = 'scrollToTopDisabled';
 
 @Component({
   selector: 'app-scroll-to-top',
   templateUrl: './scroll-to-top.component.html',
   styleUrls: ['./scroll-to-top.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [fadeInOut],
 })
 export class ScrollToTopComponent implements OnInit, OnDestroy {
   constructor(
@@ -30,10 +30,13 @@ export class ScrollToTopComponent implements OnInit, OnDestroy {
     @Inject(DOCUMENT) private document: Document,
     private ngZone: NgZone,
     private renderer2: Renderer2,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private routerQuery: RouterQuery
   ) {}
 
   private _destroy$ = new Subject();
+
+  disabled$ = this.routerQuery.selectData<boolean>(scrollToTopDisabled);
 
   windowScrolled: boolean;
 
@@ -62,7 +65,7 @@ export class ScrollToTopComponent implements OnInit, OnDestroy {
       fromEvent(this.window, 'scroll', { passive: true })
         .pipe(
           takeUntil(this._destroy$),
-          throttleTime(50),
+          sampleTime(50),
           filter(() => isScrolling() || isOnTop())
         )
         .subscribe(() => {

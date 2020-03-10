@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { RTL, SLIDE_X, TTB } from './route-animations';
+import { LTR, RTL, SLIDE_X, TTB } from './route-animations';
 import { trigger } from '@angular/animations';
 import { Subject } from 'rxjs';
 
@@ -14,6 +14,7 @@ import { Subject } from 'rxjs';
       RTL('AuthLogin', '*'),
       RTL('*', 'Produtos'),
       ...SLIDE_X('Pedidos', 'NovoPedido'),
+      LTR('Home', '*'),
     ]),
   ],
 })

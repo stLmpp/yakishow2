@@ -3,6 +3,7 @@ import { Query } from '@datorama/akita';
 import { AuthStore } from './auth.store';
 import { User } from '../../model/user';
 import { Auth } from './auth.model';
+import { distinctUntilChanged, filter, pluck } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class AuthQuery extends Query<Auth> {
@@ -17,6 +18,9 @@ export class AuthQuery extends Query<Auth> {
   });
 
   user$ = this.select('user');
+  theme$ = this.select('user').pipe(filter(Boolean), pluck('theme'));
+
+  themeChanged$ = this.theme$.pipe(distinctUntilChanged());
 
   getTokenSnapshot(): string {
     return this.getValue().token;

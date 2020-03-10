@@ -1,49 +1,100 @@
 <div class="page-title">
   <h2>Novo pedido</h2>
 </div>
-<div class="header">
-  <div class="pessoa">
-    <mat-form-field>
-      <input
-        [formControl]="celularControl"
-        matInput
-        placeholder="Celular"
-        inputmode="tel"
-        [mask]="masksEnum.celular"
-        required
-      />
-      <mat-spinner matSuffix *ngIf="loadingPessoa" diameter="18"></mat-spinner>
-      <mat-error *ngIf="personNotFound">
-        Pessoa não encontrada.
-        <a [routerLink]="null" (click)="criarPessoa()">Criar</a>
-      </mat-error>
-    </mat-form-field>
-    <ng-container *ngIf="pessoa">
-      <mat-list>
-        <mat-list-item class="active">
-          <span matLine>{{ pessoa.nome }}</span>
-          <span matLine class="mat-line-secondary">{{ pessoa.endereco }}</span>
-          <span *ngIf="pessoa.complemento" matLine class="mat-line-secondary">{{
-            pessoa.complemento
-          }}</span>
-        </mat-list-item>
-      </mat-list>
-    </ng-container>
-  </div>
+<mat-form-field class="search">
+  <input
+    [formControl]="celularControl"
+    matInput
+    placeholder="Celular"
+    inputmode="tel"
+    [mask]="masksEnum.celular"
+    required
+  />
+  <mat-spinner matSuffix *ngIf="loadingPessoa" diameter="18"></mat-spinner>
+  <mat-error *ngIf="personNotFound">
+    Pessoa não encontrada.
+    <a [routerLink]="null" (click)="criarPessoa()">Criar</a>
+  </mat-error>
+</mat-form-field>
+<div class="pessoa-info" *ngIf="pessoa">
+  <mat-list>
+    <mat-list-item class="active">
+      <span matLine>{{ pessoa.nome }}</span>
+      <span matLine class="mat-line-secondary">{{ pessoa.endereco }}</span>
+      <span *ngIf="pessoa.complemento" matLine class="mat-line-secondary">
+        {{ pessoa.complemento }}
+      </span>
+      <button mat-icon-button matSuffix color="warn" (click)="onDeletePessoa()">
+        <mat-icon>clear</mat-icon>
+      </button>
+    </mat-list-item>
+  </mat-list>
 </div>
-<div class="produtos">
-  <ng-container
-    *ngIf="celularControl.valid && !celularControl.pending && !loadingPessoa"
-  >
-    <ng-container *ngFor="let form of formGroupArray; let $last = last">
-      <div class="produto">
-        <app-novo-pedido-form [form]="form"></app-novo-pedido-form>
-      </div>
-      <mat-divider *ngIf="!$last" style="margin-bottom: 1rem"></mat-divider>
-    </ng-container>
+<div
+  class="produtos"
+  *ngIf="
+    !celularControl.invalid &&
+    !celularControl.pending &&
+    !loadingPessoa &&
+    !!pessoa
+  "
+>
+  <ng-container *ngIf="!formGroupArray.length">
+    Favor adicionar um produto
   </ng-container>
+  <mat-accordion>
+    <mat-expansion-panel
+      *ngFor="let form of formGroupArray; let $index = index"
+      (afterExpand)="afterExpand($index, swipe)"
+      (afterCollapse)="afterCollapse(swipe)"
+      [disabled]="pedidoSaving"
+      swipeActions
+      swipeIcon="delete"
+      swipeIconColor="warn"
+      swipeId="novo-pedido-produtos"
+      [swipeDisabled]="pedidoSaving"
+      (swipeAction)="deleteProduto($index)"
+      [class.mat-error]="form.dirty && form.get('codigo').hasError('required')"
+      #swipe="swipeActions"
+      #matExpansionPanel
+      @items
+    >
+      <mat-expansion-panel-header>
+        <ng-container *ngIf="form.get('descricao').value; else noCodigo">
+          {{ form.get('codigo').value }} - {{ form.get('descricao').value }}
+        </ng-container>
+        <ng-template #noCodigo>
+          Produto não selecionado
+        </ng-template>
+      </mat-expansion-panel-header>
+      <ng-template matExpansionPanelContent>
+        <div class="produto">
+          <app-novo-pedido-form [form]="form"></app-novo-pedido-form>
+        </div>
+      </ng-template>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <button mat-fab class="mat-button-floating bottom center" (click)="addForm()">
+    <mat-icon>add</mat-icon>
+  </button>
+  <button
+    mat-fab
+    class="mat-button-floating bottom right"
+    [disabled]="(saveDisabled$ | async) || !formProdutos.length || pedidoSaving"
+    (click)="salvar()"
+  >
+    <mat-icon>
+      save
+    </mat-icon>
+  </button>
 </div>
-
-<button mat-fab class="mat-button-floating bottom center" (click)="addForm()">
-  <mat-icon>add</mat-icon>
+<button
+  mat-fab
+  class="mat-button-floating bottom left"
+  (click)="navigateBack()"
+>
+  <mat-icon>
+    keyboard_arrow_left
+  </mat-icon>
 </button>
+<div style="height: calc(60px + 1rem)"></div>

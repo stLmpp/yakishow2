@@ -43,6 +43,10 @@
         color="primary"
         type="submit"
       >
+        <mat-progress-bar
+          mode="indeterminate"
+          *ngIf="authLoading"
+        ></mat-progress-bar>
         Login
       </button>
     </div>

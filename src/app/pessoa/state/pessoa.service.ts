@@ -5,7 +5,6 @@ import { finalize, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Pessoa } from '../../model/pessoa';
 import { cacheableCustom } from '../../util/akita';
-import { createInstanceHeaders } from '../../core/create-instance/create-instance.interceptor';
 
 @Injectable({ providedIn: 'root' })
 export class PessoaService {
@@ -17,31 +16,23 @@ export class PessoaService {
     this.pessoaStore.setLoading(true);
     return cacheableCustom(
       this.pessoaStore,
-      this.http
-        .get<Pessoa[]>(`${this.target}/all`, {
-          headers: createInstanceHeaders(Pessoa),
+      this.http.get<Pessoa[]>(`${this.target}/all`).pipe(
+        tap(pessoas => {
+          this.pessoaStore.set(pessoas);
+        }),
+        finalize(() => {
+          this.pessoaStore.setLoading(false);
         })
-        .pipe(
-          tap(pessoas => {
-            this.pessoaStore.set(pessoas);
-          }),
-          finalize(() => {
-            this.pessoaStore.setLoading(false);
-          })
-        )
+      )
     );
   }
 
   getById(id: number): Observable<Pessoa> {
-    return this.http
-      .get<Pessoa>(`${this.target}/id/${id}`, {
-        headers: createInstanceHeaders(Pessoa),
+    return this.http.get<Pessoa>(`${this.target}/id/${id}`).pipe(
+      tap(pessoa => {
+        this.pessoaStore.upsert(pessoa.id, pessoa);
       })
-      .pipe(
-        tap(pessoa => {
-          this.pessoaStore.upsert(pessoa.id, pessoa);
-        })
-      );
+    );
   }
 
   existsByCelular(celular: string, id?: number): Observable<boolean> {
@@ -57,15 +48,11 @@ export class PessoaService {
   }
 
   postPessoa(pessoa: Pessoa): Observable<Pessoa> {
-    return this.http
-      .post<Pessoa>(this.target, pessoa, {
-        headers: createInstanceHeaders(Pessoa),
+    return this.http.post<Pessoa>(this.target, pessoa).pipe(
+      tap(createdPessoa => {
+        this.pessoaStore.upsert(createdPessoa.id, createdPessoa);
       })
-      .pipe(
-        tap(createdPessoa => {
-          this.pessoaStore.upsert(createdPessoa.id, createdPessoa);
-        })
-      );
+    );
   }
 
   patchPessoa(id: number, pessoa: Partial<Pessoa>): Observable<Pessoa> {

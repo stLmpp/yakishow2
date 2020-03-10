@@ -34,6 +34,7 @@ export class ProdutoItemComponent implements OnInit {
 
   onSubmit(): void {
     this.loading = true;
+    this.matDialogRef.disableClose = true;
     let http: Observable<Produto | UpdateResult>;
     if (this.edit) {
       http = this.produtoService.updateProduto(
@@ -51,6 +52,7 @@ export class ProdutoItemComponent implements OnInit {
         }),
         finalize(() => {
           this.loading = false;
+          this.matDialogRef.disableClose = false;
         }),
         catchError(err => {
           this.matSnackBar.open(

@@ -3,7 +3,12 @@ import { isArray, toLower } from 'lodash';
 
 @Pipe({ name: 'filter' })
 export class FilterPipe implements PipeTransform {
-  transform<T>(value: T[], keyOrKeys: keyof T | (keyof T)[], term: any): T[] {
+  transform<T>(
+    value: T[],
+    keyOrKeys: keyof T | (keyof T)[],
+    term: any,
+    reverse = false
+  ): T[] {
     if (!value?.length || !keyOrKeys || !term) {
       return value;
     }
@@ -16,7 +21,7 @@ export class FilterPipe implements PipeTransform {
         const valKey = toLower('' + val[key])
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '');
-        return valKey.includes(term);
+        return reverse ? !valKey.includes(term) : valKey.includes(term);
       });
     });
   }

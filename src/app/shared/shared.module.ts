@@ -20,6 +20,12 @@ import { DisabledControlDirective } from './disabled-control/disabled-control.di
 import { FilterPipe } from './filter/filter.pipe';
 import { OrderByPipe } from './order-by/order-by.pipe';
 import { ScrollToTopComponent } from './scroll-to-top/scroll-to-top.component';
+import { DialogComponent } from './dialog/dialog.component';
+import { SwipeActionsDirective } from './swipe-actions/swipe-actions.directive';
+import { SwipeActionComponent } from './swipe-actions/swipe-action.component';
+import { CardComponent } from './card/card.component';
+import { CardsComponent } from './card/cards.component';
+import { MatRippleModule } from '@angular/material/core';
 
 const DECLARATIONS = [
   environment.production ? [] : HammerjsDirective,
@@ -28,6 +34,11 @@ const DECLARATIONS = [
   FilterPipe,
   OrderByPipe,
   ScrollToTopComponent,
+  DialogComponent,
+  SwipeActionsDirective,
+  SwipeActionComponent,
+  CardComponent,
+  CardsComponent,
 ];
 const MODULES = [
   MatToolbarModule,
@@ -49,6 +60,6 @@ const MODULES = [
 @NgModule({
   declarations: [...DECLARATIONS],
   exports: [...DECLARATIONS, ...MODULES],
-  imports: [CommonModule, ...MODULES],
+  imports: [CommonModule, ...MODULES, MatRippleModule],
 })
 export class SharedModule {}

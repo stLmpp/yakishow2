@@ -1,9 +1,7 @@
 import { Pedido } from './pedido';
 import { Produto } from './produto';
 import { CommonHistory } from './common-history';
-import { CreateInstance } from '../core/create-instance/create-instance.interceptor';
 
-@CreateInstance()
 export class PedidoItem extends CommonHistory {
   id: number;
   produtoId: number;
@@ -11,4 +9,6 @@ export class PedidoItem extends CommonHistory {
   pedidoId: number;
   pedido: Pedido;
   quantidade: number;
+  observacao: string;
+  total: number;
 }

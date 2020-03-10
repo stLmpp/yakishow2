@@ -1,27 +1,29 @@
 @import '~@angular/material/theming';
 @import 'variables';
 
-.header {
-  /*position: sticky;
-  top: 56px;
-  background-color: white;
-  z-index: 1;*/
-  > .pessoa {
-    margin-bottom: 1rem;
+app-novo-pedido {
+  .pessoa-info {
+    position: sticky;
+    top: $header-height;
+    padding-top: $main-padding / 4;
+    padding-bottom: 1rem;
+    background-color: map-get($mat-light-theme-background, background);
+    z-index: 2;
+  }
+
+  .produtos {
+    margin-left: 5px;
+    margin-right: 5px;
+    > .produto {
+      padding: 0.5rem;
+    }
   }
 }
 
-.produtos {
-  margin-bottom: calc(60px + 1rem);
-  > .produto {
-    @include mat-elevation(2);
-    padding: 0.5rem;
-    background-color: $background-list;
-  }
-}
-
-@media (min-width: 600px) {
-  .header {
-    top: 60px;
+.dark-theme {
+  app-novo-pedido {
+    .pessoa-info {
+      background-color: map-get($mat-dark-theme-background, background);
+    }
   }
 }

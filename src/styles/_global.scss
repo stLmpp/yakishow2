@@ -1,6 +1,9 @@
+@import 'variables';
+
 .page-title {
   display: flex;
   justify-content: space-between;
+  @extend .main-padding
 }
 
 .d-flex-align-center-justify-end {
@@ -9,9 +12,36 @@
   justify-content: flex-end;
 }
 
+.main-padding {
+  padding: $main-padding;
+}
 
-.link {
-  &:visited {
+.main-padding-t {
+  padding-top: $main-padding;
+}
 
-  }
+.main-padding-b {
+  padding-bottom: $main-padding;
+}
+
+.main-padding-l {
+  padding-left: $main-padding;
+}
+
+.main-padding-r {
+  padding-right: $main-padding;
+}
+
+.main-padding-x {
+  padding-left: $main-padding;
+  padding-right: $main-padding;
+}
+
+.main-padding-y {
+  padding-top: $main-padding;
+  padding-bottom: $main-padding;
+}
+
+.pointer-events-none {
+  pointer-events: none;
 }

@@ -8,6 +8,6 @@ export interface PedidoState extends EntityState<Pedido> {}
 @StoreConfig({ name: 'pedido' })
 export class PedidoStore extends EntityStore<PedidoState> {
   constructor() {
-    super();
+    super({ loading: false });
   }
 }
