@@ -1,4 +1,4 @@
 export class CommonHistory {
   creationDate: Date;
-  lastUpdateDate: Date;
+  lastUpdateDate?: Date;
 }

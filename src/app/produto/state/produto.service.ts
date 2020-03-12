@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ProdutoStore } from './produto.store';
 import { Produto } from '../../model/produto';
-import { finalize, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { UpdateResult } from '../../model/update-result';
 import { cacheableCustom } from '../../util/akita';
+import { setLoading } from '@datorama/akita';
 
 @Injectable({ providedIn: 'root' })
 export class ProdutoService {
@@ -14,16 +15,13 @@ export class ProdutoService {
   private target = 'produto';
 
   getByParams(descricao: string, codigo: string): Observable<Produto[]> {
-    this.produtoStore.setLoading(true);
     const params = new HttpParams({ fromObject: { descricao, codigo } });
     return this.http
       .get<Produto[]>(`${this.target}/params`, { params })
       .pipe(
+        setLoading(this.produtoStore),
         tap(produtos => {
           this.produtoStore.upsertMany(produtos);
-        }),
-        finalize(() => {
-          this.produtoStore.setLoading(false);
         })
       );
   }
@@ -41,15 +39,12 @@ export class ProdutoService {
   }
 
   getAll(): Observable<Produto[]> {
-    this.produtoStore.setLoading(true);
     return cacheableCustom(
       this.produtoStore,
       this.http.get<Produto[]>(`${this.target}/all`).pipe(
+        setLoading(this.produtoStore),
         tap(produtos => {
           this.produtoStore.set(produtos);
-        }),
-        finalize(() => {
-          this.produtoStore.setLoading(false);
         })
       )
     );

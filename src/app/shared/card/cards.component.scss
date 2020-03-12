@@ -1,7 +1,10 @@
 app-cards {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 7rem);
+  grid-auto-rows: 7rem;
+  grid-gap: 1rem;
   app-card > .yk-card {
-    margin: 15px;
+    height: 7rem;
+    box-sizing: border-box;
   }
 }

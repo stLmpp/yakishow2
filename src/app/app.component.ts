@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LTR, RTL, SLIDE_X, TTB } from './route-animations';
 import { trigger } from '@angular/animations';
 import { Subject } from 'rxjs';
+import { AuthQuery } from './auth/state/auth.query';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +20,7 @@ import { Subject } from 'rxjs';
   ],
 })
 export class AppComponent implements OnInit, OnDestroy {
-  constructor() {}
+  constructor(public authQuery: AuthQuery) {}
 
   private _destroy$ = new Subject();
 

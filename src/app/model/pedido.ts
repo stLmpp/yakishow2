@@ -7,8 +7,8 @@ export class Pedido extends CommonHistory {
   id: number;
   status: PedidoStatusEnum;
   clienteId: number;
-  cliente: Pessoa;
+  cliente?: Pessoa;
   entregadorId: number;
-  entregador: Pessoa;
+  entregador?: Pessoa;
   pedidoItems: PedidoItem[];
 }

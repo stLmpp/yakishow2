@@ -7,8 +7,6 @@ $d: mat-color(map-get($dark-theme, primary));
 app-card {
   > .yk-card {
     display: grid;
-    width: 7rem;
-    height: 7rem;
     padding: 0.5rem;
     border-radius: 4px;
     cursor: pointer;

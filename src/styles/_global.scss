@@ -12,6 +12,10 @@
   justify-content: flex-end;
 }
 
+.main-margin-cards {
+  margin: $main-padding $main-padding 0;
+}
+
 .main-padding {
   padding: $main-padding;
 }

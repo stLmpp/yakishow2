@@ -1,4 +1,7 @@
-<app-cards>
+<app-cards
+  *ngIf="authQuery.isLogged$ | async; else login"
+  class="main-margin-cards"
+>
   <app-card
     *ngFor="let menu of sidenavService.menus | filter: 'title':'Início':true"
     [icon]="menu.icon"
@@ -6,3 +9,6 @@
     [routerLink]="menu.routerLink"
   ></app-card>
 </app-cards>
+<ng-template #login>
+  Bem-vindo ao Yakishow! Faça login para continuar.
+</ng-template>

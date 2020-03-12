@@ -1,4 +1,4 @@
-import { cacheable, Store } from '@datorama/akita';
+import { cacheable, setLoading, Store } from '@datorama/akita';
 import { Observable } from 'rxjs';
 
 export function cacheableCustom<T>(
@@ -6,6 +6,5 @@ export function cacheableCustom<T>(
   $request: Observable<T>,
   options: { emitNext: boolean } = { emitNext: true }
 ): Observable<T> {
-  store.setLoading(false);
-  return cacheable(store, $request, options);
+  return cacheable(store, $request, options).pipe(setLoading(store));
 }

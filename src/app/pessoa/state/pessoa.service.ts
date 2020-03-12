@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { PessoaStore } from './pessoa.store';
-import { finalize, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Pessoa } from '../../model/pessoa';
 import { cacheableCustom } from '../../util/akita';
+import { setLoading } from '@datorama/akita';
 
 @Injectable({ providedIn: 'root' })
 export class PessoaService {
@@ -13,15 +14,12 @@ export class PessoaService {
   private target = 'pessoa';
 
   getAll(): Observable<Pessoa[]> {
-    this.pessoaStore.setLoading(true);
     return cacheableCustom(
       this.pessoaStore,
       this.http.get<Pessoa[]>(`${this.target}/all`).pipe(
+        setLoading(this.pessoaStore),
         tap(pessoas => {
           this.pessoaStore.set(pessoas);
-        }),
-        finalize(() => {
-          this.pessoaStore.setLoading(false);
         })
       )
     );

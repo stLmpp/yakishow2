@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { PedidoQuery } from '../state/pedido.query';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { Observable } from 'rxjs';
+import { Pedido } from '../../model/pedido';
+import { parse } from 'date-fns';
+import { PedidoStore } from '../state/pedido.store';
 
 @Component({
   selector: 'app-pedidos-dia',
@@ -7,7 +12,18 @@ import { PedidoQuery } from '../state/pedido.query';
   styleUrls: ['./pedidos-dia.component.scss'],
 })
 export class PedidosDiaComponent implements OnInit {
-  constructor(public pedidoQuery: PedidoQuery) {}
+  constructor(
+    public pedidoQuery: PedidoQuery,
+    private routerQuery: RouterQuery,
+    private pedidoStore: PedidoStore
+  ) {}
 
-  ngOnInit(): void {}
+  list$: Observable<Pedido[]>;
+
+  ngOnInit(): void {
+    const dia = this.routerQuery.getQueryParams<string>('dia');
+    this.list$ = this.pedidoQuery.selectDayList(
+      dia ? parse(dia, 'dd-MM-yyyy', new Date()) : new Date()
+    );
+  }
 }

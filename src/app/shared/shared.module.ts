@@ -26,6 +26,7 @@ import { SwipeActionComponent } from './swipe-actions/swipe-action.component';
 import { CardComponent } from './card/card.component';
 import { CardsComponent } from './card/cards.component';
 import { MatRippleModule } from '@angular/material/core';
+import { NavigateBackComponent } from './navigate-back/navigate-back.component';
 
 const DECLARATIONS = [
   environment.production ? [] : HammerjsDirective,
@@ -58,7 +59,7 @@ const MODULES = [
 ];
 
 @NgModule({
-  declarations: [...DECLARATIONS],
+  declarations: [...DECLARATIONS, NavigateBackComponent],
   exports: [...DECLARATIONS, ...MODULES],
   imports: [CommonModule, ...MODULES, MatRippleModule],
 })
