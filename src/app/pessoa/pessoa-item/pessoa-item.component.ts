@@ -20,7 +20,7 @@ import {
 import { ViaCepService } from '../../shared/via-cep/via-cep.service';
 import { PessoaService } from '../state/pessoa.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { isArray } from 'lodash';
+import { isArray } from 'is-what';
 
 @Component({
   selector: 'app-pessoa-item',

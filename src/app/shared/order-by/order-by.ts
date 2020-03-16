@@ -1,4 +1,5 @@
-import { isFunction, isNil, isNumber } from 'lodash';
+import { isFunction, isNumber } from 'is-what';
+import { isNil } from '../../util/util';
 
 export type Order = 'asc' | 'desc';
 export type OrderByType<T> = keyof T | ((valueA: T, valueB: T) => number);

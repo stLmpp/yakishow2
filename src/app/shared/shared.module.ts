@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HammerjsDirective } from './hammerjs/hammerjs.directive';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -40,6 +40,7 @@ const DECLARATIONS = [
   SwipeActionComponent,
   CardComponent,
   CardsComponent,
+  NavigateBackComponent,
 ];
 const MODULES = [
   MatToolbarModule,
@@ -56,11 +57,18 @@ const MODULES = [
   MatProgressSpinnerModule,
   MatSnackBarModule,
   OverlayModule,
+  MatRippleModule,
 ];
 
 @NgModule({
-  declarations: [...DECLARATIONS, NavigateBackComponent],
+  declarations: [...DECLARATIONS],
   exports: [...DECLARATIONS, ...MODULES],
-  imports: [CommonModule, ...MODULES, MatRippleModule],
+  imports: [CommonModule, ...MODULES],
 })
-export class SharedModule {}
+export class SharedModule {
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: SharedModule,
+    };
+  }
+}

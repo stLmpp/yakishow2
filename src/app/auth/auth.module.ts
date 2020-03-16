@@ -14,13 +14,5 @@ const DECLARATIONS = [LoginComponent];
   declarations: [...DECLARATIONS],
   exports: [...DECLARATIONS],
   imports: [CommonModule, AuthRoutingModule, SharedModule],
-  providers: [
-    {
-      provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
-      useValue: {
-        duration: 5000,
-      } as MatSnackBarConfig,
-    },
-  ],
 })
 export class AuthModule {}

@@ -29,7 +29,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { PessoaNovoQuickComponent } from '../../pessoa/pessoa-novo-quick/pessoa-novo-quick.component';
 import { DOCUMENT, ViewportScroller } from '@angular/common';
 import { DialogService } from '../../shared/dialog/dialog.service';
-import { isUndefined } from 'lodash';
+import { isUndefined } from 'is-what';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { SwipeActionsDirective } from '../../shared/swipe-actions/swipe-actions.directive';
 import { animate, style, transition, trigger } from '@angular/animations';

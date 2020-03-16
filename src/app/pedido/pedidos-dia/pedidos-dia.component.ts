@@ -4,7 +4,6 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable } from 'rxjs';
 import { Pedido } from '../../model/pedido';
 import { parse } from 'date-fns';
-import { PedidoStore } from '../state/pedido.store';
 
 @Component({
   selector: 'app-pedidos-dia',
@@ -14,8 +13,7 @@ import { PedidoStore } from '../state/pedido.store';
 export class PedidosDiaComponent implements OnInit {
   constructor(
     public pedidoQuery: PedidoQuery,
-    private routerQuery: RouterQuery,
-    private pedidoStore: PedidoStore
+    private routerQuery: RouterQuery
   ) {}
 
   list$: Observable<Pedido[]>;

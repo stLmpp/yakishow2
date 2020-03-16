@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { isArray, toLower } from 'lodash';
+import { isArray } from 'is-what';
 
 @Pipe({ name: 'filter' })
 export class FilterPipe implements PipeTransform {
@@ -12,13 +12,15 @@ export class FilterPipe implements PipeTransform {
     if (!value?.length || !keyOrKeys || !term) {
       return value;
     }
-    term = toLower(term)
+    term = ('' + term)
+      .toLowerCase()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '');
     const keys = isArray(keyOrKeys) ? keyOrKeys : [keyOrKeys];
     return value.filter(val => {
       return keys.some(key => {
-        const valKey = toLower('' + val[key])
+        const valKey = ('' + val[key])
+          .toLowerCase()
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '');
         return reverse ? !valKey.includes(term) : valKey.includes(term);
