@@ -25,7 +25,7 @@
       pessoaQuery.all$
         | async
         | filter: ['nome', 'celular']:search
-        | orderBy: 'nome'
+        | orderBy: ['nome', 'celular']
     "
     [parentScroll]="window"
     (vsUpdate)="viewPortItems = $event"
