@@ -22,6 +22,12 @@ export class RouteHistoryService {
     this.router.navigateByUrl(route.url);
   }
 
+  updateComponentInstance(instance: any): void {
+    this.routeHistoryStore.update(this.routeHistoryQuery.getLastId(), {
+      instance,
+    });
+  }
+
   init(): void {
     this.router.events.pipe(takeUntil(this._destroy$)).subscribe(event => {
       if (event instanceof NavigationEnd) {

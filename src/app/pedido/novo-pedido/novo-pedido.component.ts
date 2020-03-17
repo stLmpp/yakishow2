@@ -11,7 +11,13 @@ import { MasksEnum } from '../../model/masks.enum';
 import { Pessoa } from '../../model/pessoa';
 import { PessoaQuery } from '../../pessoa/state/pessoa.query';
 import { PessoaService } from '../../pessoa/state/pessoa.service';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  Form,
+  FormArray,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import {
   catchError,
   debounceTime,
@@ -40,6 +46,7 @@ import { PedidoStatusEnum } from '../../model/pedido-status.enum';
 import { PedidoItem } from '../../model/pedido-item';
 import { PedidoService } from '../state/pedido.service';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { trackByFactory } from '../../util/util';
 
 const formGroupModel = () =>
   new FormGroup({
@@ -95,6 +102,8 @@ export class NovoPedidoComponent implements OnInit, OnDestroy {
   expanded = 0;
 
   pedidoSaving = false;
+
+  trackByFormArray = trackByFactory<FormGroup>();
 
   navigateBack(): void {
     this.router.navigate(['../'], { relativeTo: this.activatedRoute });

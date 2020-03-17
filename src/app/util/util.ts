@@ -6,10 +6,10 @@ export const compareByFactory = <T = any>(key: keyof T): CompareFn<T> => (
   valueB
 ) => valueA?.[key] === valueB?.[key];
 
-export const trackByFactory = <T = any>(key: keyof T): TrackByFunction<T> => (
-  _,
+export const trackByFactory = <T = any>(key?: keyof T): TrackByFunction<T> => (
+  index,
   element
-) => element[key];
+) => (key ? element[key] : index);
 
 export function isNil(value: any): value is null | undefined {
   return value == null;

@@ -16,7 +16,7 @@
         [autoActiveFirstOption]="true"
       >
         <mat-option
-          *ngFor="let produto of similarCodigos"
+          *ngFor="let produto of similarCodigos; trackBy: trackByProduto"
           [value]="produto.codigo"
           (onSelectionChange)="codigoRef.blur()"
         >

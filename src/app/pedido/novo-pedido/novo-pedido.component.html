@@ -44,7 +44,11 @@
   </ng-container>
   <mat-accordion>
     <mat-expansion-panel
-      *ngFor="let form of formGroupArray; let $index = index"
+      *ngFor="
+        let form of formGroupArray;
+        let $index = index;
+        trackBy: trackByFormArray
+      "
       (afterExpand)="afterExpand($index, swipe)"
       (afterCollapse)="afterCollapse(swipe)"
       [disabled]="pedidoSaving"

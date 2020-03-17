@@ -3,6 +3,7 @@ import { LTR, RTL, SLIDE_X, TTB } from './route-animations';
 import { trigger } from '@angular/animations';
 import { Subject } from 'rxjs';
 import { AuthQuery } from './auth/state/auth.query';
+import { RouteHistoryService } from './shared/history/route-history.service';
 
 @Component({
   selector: 'app-root',
@@ -20,9 +21,16 @@ import { AuthQuery } from './auth/state/auth.query';
   ],
 })
 export class AppComponent implements OnInit, OnDestroy {
-  constructor(public authQuery: AuthQuery) {}
+  constructor(
+    public authQuery: AuthQuery,
+    private routeHistoryService: RouteHistoryService
+  ) {}
 
   private _destroy$ = new Subject();
+
+  onRouteActivate($event: any): void {
+    this.routeHistoryService.updateComponentInstance($event);
+  }
 
   ngOnInit(): void {}
 

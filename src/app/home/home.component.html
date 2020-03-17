@@ -3,7 +3,10 @@
   class="main-margin-cards"
 >
   <app-card
-    *ngFor="let menu of sidenavService.menus | filter: 'title':'Início':true"
+    *ngFor="
+      let menu of sidenavService.menus | filter: 'title':'Início':true;
+      trackBy: trackByMenu
+    "
     [icon]="menu.icon"
     [text]="menu.title"
     [routerLink]="menu.routerLink"

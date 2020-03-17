@@ -6,7 +6,10 @@
     outlet?.isActivated ? outlet?.activatedRouteData?.animation : ''
   "
 >
-  <router-outlet #outlet="outlet"></router-outlet>
+  <router-outlet
+    (activate)="onRouteActivate($event)"
+    #outlet="outlet"
+  ></router-outlet>
 </div>
 <app-scroll-to-top></app-scroll-to-top>
 <app-navigate-back

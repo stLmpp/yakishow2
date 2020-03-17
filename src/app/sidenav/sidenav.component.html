@@ -12,7 +12,9 @@
 >
   <div class="sidenav" @slideInOut (swipeleft)="sidenavService.close()">
     <mat-nav-list>
-      <ng-container *ngFor="let menu of sidenavService.menus">
+      <ng-container
+        *ngFor="let menu of sidenavService.menus; trackBy: trackByMenu"
+      >
         <a
           mat-list-item
           *ngIf="(menu.auth | async) || !menu.auth"

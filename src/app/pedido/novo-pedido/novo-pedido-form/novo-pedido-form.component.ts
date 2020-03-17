@@ -12,6 +12,7 @@ import {
   takeUntil,
 } from 'rxjs/operators';
 import { Produto } from '../../../model/produto';
+import { trackByFactory } from '../../../util/util';
 
 @Component({
   selector: 'app-novo-pedido-form',
@@ -26,6 +27,7 @@ export class NovoPedidoFormComponent implements OnInit, OnDestroy {
   @Input() form: FormGroup;
 
   similarCodigos: Produto[] = [];
+  trackByProduto = trackByFactory<Produto>('id');
 
   loadingCodigo = false;
 

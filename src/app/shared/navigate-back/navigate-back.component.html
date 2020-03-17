@@ -1,35 +1,47 @@
-<ng-container *ngIf="hasHistory$ | async">
-  <button
-    *ngIf="miniFab; else fab"
-    mat-mini-fab
-    [ngClass]="{
-      top: top,
-      right: right,
-      bottom: bottom,
-      left: left,
-      'mat-button-floating': floating
-    }"
-    (click)="navigateBack()"
-  >
-    <mat-icon>
-      keyboard_arrow_left
-    </mat-icon>
-  </button>
-  <ng-template #fab>
-    <button
-      mat-fab
-      [ngClass]="{
-        top: top,
-        right: right,
-        bottom: bottom,
-        left: left,
-        'mat-button-floating': floating
-      }"
-      (click)="navigateBack()"
-    >
-      <mat-icon>
-        keyboard_arrow_left
-      </mat-icon>
-    </button>
-  </ng-template>
+<ng-container
+  *ngIf="{
+    back: back$ | async,
+    disabled: disabled$ | async,
+    hasHistory: hasHistory$ | async
+  } as options"
+>
+  <ng-container *ngIf="!options?.disabled">
+    <ng-container *ngIf="options?.back || options?.hasHistory">
+      <button
+        *ngIf="miniFab; else fab"
+        mat-mini-fab
+        [ngClass]="{
+          top: top,
+          right: right,
+          bottom: bottom,
+          left: left,
+          'mat-button-floating': floating
+        }"
+        (click)="navigateBack(options?.back)"
+        @fadeInOut
+      >
+        <mat-icon>
+          keyboard_arrow_left
+        </mat-icon>
+      </button>
+      <ng-template #fab>
+        <button
+          mat-fab
+          [ngClass]="{
+            top: top,
+            right: right,
+            bottom: bottom,
+            left: left,
+            'mat-button-floating': floating
+          }"
+          (click)="navigateBack(options?.back)"
+          @fadeInOut
+        >
+          <mat-icon>
+            keyboard_arrow_left
+          </mat-icon>
+        </button>
+      </ng-template>
+    </ng-container>
+  </ng-container>
 </ng-container>
