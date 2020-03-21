@@ -1,7 +1,8 @@
 <button
   *ngIf="windowScrolled && !(disabled$ | async)"
   mat-mini-fab
-  color="primary"
+  floating
+  right
   (click)="scrollToTop()"
   @fadeInOut
 >

@@ -47,11 +47,6 @@ export class PessoaItemComponent implements OnInit, OnDestroy {
 
   loadingPessoa = false;
 
-  @HostListener('swiperight')
-  onSwipeLeft(): void {
-    this.navigateBack();
-  }
-
   save(): void {
     if (this.form.invalid) return;
     this.loadingPessoa = true;

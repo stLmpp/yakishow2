@@ -68,23 +68,23 @@
       E-mail já cadastrado
     </mat-error>
   </mat-form-field>
-  <div class="d-flex-align-center-justify-end actions">
-    <button mat-button color="primary" type="button" (click)="navigateBack()">
-      Voltar
-    </button>
-    <button
-      mat-raised-button
-      type="submit"
-      color="primary"
-      [disabled]="
-        loadingPessoa || form.invalid || form.pristine || form.pending
-      "
-    >
-      <mat-progress-bar
-        *ngIf="loadingPessoa"
-        mode="indeterminate"
-      ></mat-progress-bar>
-      Salvar
-    </button>
-  </div>
+  <button
+    mat-mini-fab
+    floating
+    left
+    type="button"
+    (click)="navigateBack()"
+    [disabled]="loadingPessoa"
+  >
+    <mat-icon>keyboard_arrow_left</mat-icon>
+  </button>
+  <button
+    mat-mini-fab
+    floating
+    right
+    type="submit"
+    [disabled]="loadingPessoa || form.invalid || form.pristine || form.pending"
+  >
+    <mat-icon>save</mat-icon>
+  </button>
 </form>
