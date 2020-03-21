@@ -14,3 +14,13 @@ export const trackByFactory = <T = any>(key?: keyof T): TrackByFunction<T> => (
 export function isNil(value: any): value is null | undefined {
   return value == null;
 }
+
+export function convertToBoolProperty(val: any): boolean {
+  if (typeof val === 'string') {
+    val = val.toLowerCase().trim();
+
+    return val === 'true' || val === '';
+  }
+
+  return !!val;
+}

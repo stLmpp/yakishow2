@@ -5,16 +5,16 @@ import { NovoPedidoComponent } from './novo-pedido/novo-pedido.component';
 import { scrollToTopDisabled } from '../shared/scroll-to-top/scroll-to-top.component';
 import { PedidosDiaResolver } from './pedidos-dia.resolver';
 import { PedidosDiaComponent } from './pedidos-dia/pedidos-dia.component';
-import {
-  navigateBackDisabled,
-  navigateBackUrl,
-} from '../shared/navigate-back/navigate-back.component';
+import { RouterParamsEnum } from '../model/router-params.enum';
+import { PedidoItem } from '../model/pedido-item';
+import { PedidoItemComponent } from './pedido-item/pedido-item.component';
+import { PedidoItemResolver } from './pedido-item/pedido-item.resolver';
 
 const routes: Routes = [
   {
     path: '',
     component: PedidoComponent,
-    data: { animation: 'Pedidos', [navigateBackDisabled]: true },
+    data: { animation: 'Pedidos' },
   },
   {
     path: 'novo',
@@ -22,14 +22,19 @@ const routes: Routes = [
     data: {
       animation: 'NovoPedido',
       [scrollToTopDisabled]: true,
-      [navigateBackUrl]: '/pedidos',
     },
   },
   {
     path: 'dia',
     component: PedidosDiaComponent,
     resolve: [PedidosDiaResolver],
-    data: { animation: 'NovoPedido', [navigateBackUrl]: '/pedidos' },
+    data: { animation: 'PedidosDia' },
+  },
+  {
+    path: `:${RouterParamsEnum.idPedido}`,
+    component: PedidoItemComponent,
+    resolve: [PedidoItemResolver],
+    data: { animation: 'PedidoItem' },
   },
 ];
 

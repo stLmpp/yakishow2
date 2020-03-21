@@ -26,7 +26,7 @@ import { SwipeActionComponent } from './swipe-actions/swipe-action.component';
 import { CardComponent } from './card/card.component';
 import { CardsComponent } from './card/cards.component';
 import { MatRippleModule } from '@angular/material/core';
-import { NavigateBackComponent } from './navigate-back/navigate-back.component';
+import { FabFloatingDirective } from './floating/fab-floating.directive';
 
 const DECLARATIONS = [
   environment.production ? [] : HammerjsDirective,
@@ -40,7 +40,7 @@ const DECLARATIONS = [
   SwipeActionComponent,
   CardComponent,
   CardsComponent,
-  NavigateBackComponent,
+  FabFloatingDirective,
 ];
 const MODULES = [
   MatToolbarModule,

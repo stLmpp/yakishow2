@@ -4,7 +4,6 @@ import { HomeComponent } from './home/home.component';
 import { AutoLoginGuard } from './auth/auto-login.guard';
 import { NotLoggedGuard } from './auth/not-logged.guard';
 import { AuthGuard } from './auth/auth.guard';
-import { navigateBackDisabled } from './shared/navigate-back/navigate-back.component';
 
 const routes: Routes = [
   {
@@ -14,7 +13,7 @@ const routes: Routes = [
       {
         path: 'home',
         component: HomeComponent,
-        data: { animation: 'Home', [navigateBackDisabled]: true },
+        data: { animation: 'Home' },
       },
       {
         path: 'auth',
@@ -55,6 +54,7 @@ const routes: Routes = [
       initialNavigation: 'enabled',
       relativeLinkResolution: 'corrected',
       paramsInheritanceStrategy: 'always',
+      scrollPositionRestoration: 'enabled',
     }),
   ],
   exports: [RouterModule],

@@ -1,15 +1,22 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ProdutoService } from '../../../produto/state/produto.service';
-import { combineLatest, Subject, throwError } from 'rxjs';
+import { combineLatest, Subject } from 'rxjs';
 import {
-  catchError,
   debounceTime,
   distinctUntilChanged,
   filter,
   finalize,
   switchMap,
   takeUntil,
+  tap,
 } from 'rxjs/operators';
 import { Produto } from '../../../model/produto';
 import { trackByFactory } from '../../../util/util';
@@ -26,59 +33,41 @@ export class NovoPedidoFormComponent implements OnInit, OnDestroy {
 
   @Input() form: FormGroup;
 
+  @ViewChild('codigoRef')
+  codigoRef: ElementRef<HTMLInputElement>;
+
   similarCodigos: Produto[] = [];
   trackByProduto = trackByFactory<Produto>('id');
 
   loadingCodigo = false;
 
-  blurCodigo(): void {
-    const codigoControl = this.form.get('codigo');
-    if (codigoControl.invalid) return;
-    const codigo = codigoControl.value;
-    const produto = this.similarCodigos.find(o => o.codigo === codigo);
-    if (produto) {
-      this.form.patchValue({
-        descricao: produto.descricao,
-        valorUnitario: produto.valor,
-        produtoId: produto.id,
-      });
-    } else {
-      this.loadingCodigo = true;
-      this.produtoService
-        .getByCodigo(codigo)
-        .pipe(
-          finalize(() => {
-            this.loadingCodigo = false;
-          }),
-          catchError(err => {
-            codigoControl.setErrors({ produtoNotFound: err.message });
-            this.form.patchValue({
-              descricao: null,
-              valurUnitario: null,
-              produtoId: null,
-            });
-            return throwError(err);
-          })
-        )
-        .subscribe(({ descricao, valor, id }) => {
-          codigoControl.setErrors(null);
-          this.form.patchValue({
-            descricao,
-            valorUnitario: valor,
-            produtoId: id,
-          });
-        });
-    }
+  codigoFocused = false;
+
+  selectCodigo(produto: Produto): void {
+    this.codigoRef.nativeElement.blur();
+    this.form.patchValue({
+      descricao: produto.descricao,
+      valorUnitario: produto.valor,
+      produtoId: produto.id,
+    });
   }
 
-  ngOnInit(): void {
+  startSub(): void {
     this.form
       .get('codigo')
       .valueChanges.pipe(
         takeUntil(this._destroy$),
+        filter(() => this.codigoFocused),
         distinctUntilChanged(),
         filter(value => !!value),
-        debounceTime(200),
+        debounceTime(300),
+        tap(() => {
+          this.form.patchValue({
+            descricao: null,
+            valorUnitario: null,
+            produtoId: null,
+          });
+        }),
         switchMap(value => {
           this.loadingCodigo = true;
           return this.produtoService.getBySimilarityCodigo(value).pipe(
@@ -91,6 +80,10 @@ export class NovoPedidoFormComponent implements OnInit, OnDestroy {
       .subscribe(produtos => {
         this.similarCodigos = produtos;
       });
+  }
+
+  ngOnInit(): void {
+    this.startSub();
     const withDistinct = (name: string) =>
       this.form
         .get(name)
@@ -100,7 +93,7 @@ export class NovoPedidoFormComponent implements OnInit, OnDestroy {
       .subscribe(([quantidade, valor]) => {
         this.form
           .get('valorTotal')
-          .setValue(+(quantidade ?? 0) * +(valor ?? 0));
+          .setValue(+(quantidade ?? 0) * +(valor ?? 0), { emitEvent: false });
       });
   }
 

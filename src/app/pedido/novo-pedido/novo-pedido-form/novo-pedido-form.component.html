@@ -6,8 +6,8 @@
         formControlName="codigo"
         placeholder="Código"
         [matAutocomplete]="autoCodigo"
-        (blur)="blurCodigo()"
-        required
+        (focus)="codigoFocused = true"
+        (blur)="codigoFocused = false"
         #codigoRef
       />
       <mat-spinner matSuffix diameter="18" *ngIf="loadingCodigo"></mat-spinner>
@@ -18,7 +18,7 @@
         <mat-option
           *ngFor="let produto of similarCodigos; trackBy: trackByProduto"
           [value]="produto.codigo"
-          (onSelectionChange)="codigoRef.blur()"
+          (onSelectionChange)="selectCodigo(produto)"
         >
           {{ produto.codigo }}
         </mat-option>

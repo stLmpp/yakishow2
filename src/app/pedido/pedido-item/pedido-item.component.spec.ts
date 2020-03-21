@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NavigateBackComponent } from './navigate-back.component';
+import { PedidoItemComponent } from './pedido-item.component';
 
-describe('NavigateBackComponent', () => {
-  let component: NavigateBackComponent;
-  let fixture: ComponentFixture<NavigateBackComponent>;
+describe('PedidoItemComponent', () => {
+  let component: PedidoItemComponent;
+  let fixture: ComponentFixture<PedidoItemComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [NavigateBackComponent],
+      declarations: [PedidoItemComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NavigateBackComponent);
+    fixture = TestBed.createComponent(PedidoItemComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

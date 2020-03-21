@@ -12,10 +12,10 @@ import { Pessoa } from '../../model/pessoa';
 import { PessoaQuery } from '../../pessoa/state/pessoa.query';
 import { PessoaService } from '../../pessoa/state/pessoa.service';
 import {
-  Form,
   FormArray,
   FormControl,
   FormGroup,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import {
@@ -48,9 +48,17 @@ import { PedidoService } from '../state/pedido.service';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { trackByFactory } from '../../util/util';
 
+const produtoIdExists: ValidatorFn = control => {
+  const produtoIdControl = control?.parent?.get?.('produtoId');
+  if (produtoIdControl) {
+    return produtoIdControl.value ? null : { produtoIdNotExists: true };
+  }
+  return null;
+};
+
 const formGroupModel = () =>
   new FormGroup({
-    codigo: new FormControl(null, [Validators.required]),
+    codigo: new FormControl(null, [Validators.required, produtoIdExists]),
     descricao: new FormControl({ value: null, disabled: true }),
     observacao: new FormControl(),
     valorUnitario: new FormControl({ value: null, disabled: true }),
@@ -104,10 +112,6 @@ export class NovoPedidoComponent implements OnInit, OnDestroy {
   pedidoSaving = false;
 
   trackByFormArray = trackByFactory<FormGroup>();
-
-  navigateBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.activatedRoute });
-  }
 
   afterExpand($index: number, swipe: SwipeActionsDirective): void {
     this.expanded = $index;
@@ -225,8 +229,24 @@ export class NovoPedidoComponent implements OnInit, OnDestroy {
           this.pedidoSaving = false;
         })
       )
-      .subscribe(() => {
-        this.matSnackBar.open('Pedido salvo com sucesso!', 'Fechar');
+      .subscribe(pedido => {
+        this.formProdutos = new FormArray([]);
+        setTimeout(() => {
+          this.addForm();
+        });
+        const snackBar = this.matSnackBar.open(
+          'Pedido salvo com sucesso!',
+          'Visualizar'
+        );
+        // TODO visualizar pedido
+        snackBar
+          .afterDismissed()
+          .pipe(take(1))
+          .subscribe(() => {
+            this.router.navigate(['../', pedido.id], {
+              relativeTo: this.activatedRoute,
+            });
+          });
       });
   }
 

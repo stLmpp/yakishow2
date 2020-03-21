@@ -1,7 +1,7 @@
 <div class="page-title">
   <h2>Novo pedido</h2>
 </div>
-<mat-form-field class="search">
+<mat-form-field class="search" [hideRequiredMarker]="true">
   <input
     [formControl]="celularControl"
     matInput
@@ -78,12 +78,19 @@
       </ng-template>
     </mat-expansion-panel>
   </mat-accordion>
-  <button mat-fab class="mat-button-floating bottom center" (click)="addForm()">
+  <button
+    mat-mini-fab
+    floating
+    center
+    (click)="addForm()"
+    [disabled]="pedidoSaving"
+  >
     <mat-icon>add</mat-icon>
   </button>
   <button
-    mat-fab
-    class="mat-button-floating bottom right"
+    mat-mini-fab
+    floating
+    right
     [disabled]="(saveDisabled$ | async) || !formProdutos.length || pedidoSaving"
     (click)="salvar()"
   >
@@ -93,12 +100,11 @@
   </button>
 </div>
 <button
-  mat-fab
-  class="mat-button-floating bottom left"
-  (click)="navigateBack()"
+  mat-mini-fab
+  floating
+  left
+  [routerLink]="['../']"
+  [disabled]="pedidoSaving"
 >
-  <mat-icon>
-    keyboard_arrow_left
-  </mat-icon>
+  <mat-icon>keyboard_arrow_left</mat-icon>
 </button>
-<div style="height: calc(60px + 1rem)"></div>

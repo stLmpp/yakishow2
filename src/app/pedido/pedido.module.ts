@@ -13,6 +13,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCardModule } from '@angular/material/card';
 import { MatRippleModule } from '@angular/material/core';
 import { PedidosDiaComponent } from './pedidos-dia/pedidos-dia.component';
+import { PedidoItemComponent } from './pedido-item/pedido-item.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { PedidosDiaComponent } from './pedidos-dia/pedidos-dia.component';
     NovoPedidoComponent,
     NovoPedidoFormComponent,
     PedidosDiaComponent,
+    PedidoItemComponent,
   ],
   imports: [
     CommonModule,

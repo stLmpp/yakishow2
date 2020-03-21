@@ -29,4 +29,12 @@ export class PedidoService {
       })
     );
   }
+
+  getById(idPedido: number): Observable<Pedido> {
+    return this.http.get<Pedido>(`${this.target}/id/${idPedido}`).pipe(
+      tap(pedido => {
+        this.pedidoStore.upsert(idPedido, pedido);
+      })
+    );
+  }
 }
