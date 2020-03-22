@@ -20,7 +20,7 @@
     *ngFor="
       let produto of produtoQuery.all$
         | async
-        | filter: ['codigo', 'descricao']:search
+        | search: ['codigo', 'descricao']:search
         | orderBy: 'descricao';
       trackBy: trackByProduto
     "

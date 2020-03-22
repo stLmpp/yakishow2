@@ -19,7 +19,7 @@
     [items]="
       pessoaQuery.all$
         | async
-        | filter: ['nome', 'celular']:search
+        | search: ['nome', 'celular']:search
         | orderBy: ['nome', 'celular']
     "
     [parentScroll]="window"

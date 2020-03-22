@@ -11,6 +11,7 @@
     &.mat-button-floating {
       position: fixed;
       z-index: 500;
+      transition: margin-bottom 200ms ease, margin-top 200ms ease;
       &.top {
         top: 1rem;
       }

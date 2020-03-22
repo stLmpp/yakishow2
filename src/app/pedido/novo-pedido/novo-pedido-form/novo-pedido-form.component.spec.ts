@@ -8,9 +8,8 @@ describe('NovoPedidoFormComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NovoPedidoFormComponent ]
-    })
-    .compileComponents();
+      declarations: [NovoPedidoFormComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

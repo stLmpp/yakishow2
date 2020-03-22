@@ -5,8 +5,8 @@ import { ProdutoService } from '../state/produto.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Observable, throwError } from 'rxjs';
 import { catchError, finalize, tap } from 'rxjs/operators';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { UpdateResult } from '../../model/update-result';
+import { SnackBarService } from '../../shared/snack-bar/snack-bar.service';
 
 @Component({
   selector: 'app-produto-item',
@@ -18,7 +18,7 @@ export class ProdutoItemComponent implements OnInit {
     private matDialogRef: MatDialogRef<ProdutoItemComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public produto: Produto,
     private produtoService: ProdutoService,
-    private matSnackBar: MatSnackBar
+    private snackBarService: SnackBarService
   ) {
     this.edit = !!produto;
     this.produto = new Produto(this.produto);
@@ -48,14 +48,14 @@ export class ProdutoItemComponent implements OnInit {
       .pipe(
         tap(() => {
           this.matDialogRef.close();
-          this.matSnackBar.open('Produto salvo com sucesso!', 'Fechar');
+          this.snackBarService.open('Produto salvo com sucesso!', 'Fechar');
         }),
         finalize(() => {
           this.loading = false;
           this.matDialogRef.disableClose = false;
         }),
         catchError(err => {
-          this.matSnackBar.open(
+          this.snackBarService.open(
             err?.message ?? 'Erro ao tentar salvar o produto!'
           );
           return throwError(err);

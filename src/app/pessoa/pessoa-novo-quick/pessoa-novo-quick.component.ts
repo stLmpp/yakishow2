@@ -5,8 +5,8 @@ import { MasksEnum } from '../../model/masks.enum';
 import { PessoaService } from '../state/pessoa.service';
 import { Pessoa } from '../../model/pessoa';
 import { catchError, finalize, tap } from 'rxjs/operators';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { throwError } from 'rxjs';
+import { SnackBarService } from '../../shared/snack-bar/snack-bar.service';
 
 @Component({
   selector: 'app-pessoa-novo-quick',
@@ -18,7 +18,7 @@ export class PessoaNovoQuickComponent implements OnInit {
     @Optional() @Inject(MAT_DIALOG_DATA) public celular: string,
     private pessoaService: PessoaService,
     private matDialogRef: MatDialogRef<PessoaNovoQuickComponent>,
-    private matSnackBar: MatSnackBar
+    private snackBarService: SnackBarService
   ) {}
 
   form: FormGroup;
@@ -38,10 +38,10 @@ export class PessoaNovoQuickComponent implements OnInit {
         }),
         tap(pessoa => {
           this.matDialogRef.close(pessoa);
-          this.matSnackBar.open('Pessoa criada com sucesso!', 'Fechar');
+          this.snackBarService.open('Pessoa criada com sucesso!', 'Fechar');
         }),
         catchError(error => {
-          this.matSnackBar.open(error.message);
+          this.snackBarService.open(error.message);
           return throwError(error);
         })
       )

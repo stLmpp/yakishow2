@@ -17,7 +17,7 @@ import { NgLetDirective } from './ng-let/ng-let.directive';
 import { environment } from '../../environments/environment';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DisabledControlDirective } from './disabled-control/disabled-control.directive';
-import { FilterPipe } from './filter/filter.pipe';
+import { SearchPipe } from './filter/search.pipe';
 import { OrderByPipe } from './order-by/order-by.pipe';
 import { ScrollToTopComponent } from './scroll-to-top/scroll-to-top.component';
 import { DialogComponent } from './dialog/dialog.component';
@@ -32,7 +32,7 @@ const DECLARATIONS = [
   environment.production ? [] : HammerjsDirective,
   NgLetDirective,
   DisabledControlDirective,
-  FilterPipe,
+  SearchPipe,
   OrderByPipe,
   ScrollToTopComponent,
   DialogComponent,

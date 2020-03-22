@@ -1,8 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { isArray } from 'is-what';
 
-@Pipe({ name: 'filter' })
-export class FilterPipe implements PipeTransform {
+@Pipe({ name: 'search' })
+export class SearchPipe implements PipeTransform {
   transform<T>(
     value: T[],
     keyOrKeys: keyof T | (keyof T)[],

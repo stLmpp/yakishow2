@@ -1,11 +1,28 @@
-import { Directive, HostBinding, Input } from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  HostBinding,
+  Input,
+  OnDestroy,
+  OnInit,
+  Renderer2,
+} from '@angular/core';
 import { convertToBoolProperty } from '../../util/util';
+import { SnackBarService } from '../snack-bar/snack-bar.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Directive({
   selector: '[mat-fab][floating],[mat-mini-fab][floating]',
 })
-export class FabFloatingDirective {
-  constructor() {}
+export class FabFloatingDirective implements OnInit, OnDestroy {
+  constructor(
+    private snackBarService: SnackBarService,
+    private renderer2: Renderer2,
+    private elementRef: ElementRef
+  ) {}
+
+  private _destroy$ = new Subject();
 
   @HostBinding('class.mat-button-floating') floating = true;
 
@@ -57,5 +74,23 @@ export class FabFloatingDirective {
   @HostBinding('class.center')
   get centerClass(): boolean {
     return this._center;
+  }
+
+  ngOnInit(): void {
+    this.snackBarService.snackbarHeight$
+      .pipe(takeUntil(this._destroy$))
+      .subscribe(h => {
+        const marginProperty = this._bottom ? 'bottom' : 'top';
+        this.renderer2.setStyle(
+          this.elementRef.nativeElement,
+          `margin-${marginProperty}`,
+          h
+        );
+      });
+  }
+
+  ngOnDestroy(): void {
+    this._destroy$.next();
+    this._destroy$.complete();
   }
 }

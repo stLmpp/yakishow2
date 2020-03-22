@@ -10,7 +10,7 @@ import { AuthQuery } from '../state/auth.query';
 import { Subject, throwError } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 import { MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackBarService } from '../../shared/snack-bar/snack-bar.service';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     public authQuery: AuthQuery,
     private matDialogRef: MatDialogRef<LoginComponent>,
-    private matSnackBar: MatSnackBar
+    private snackBarService: SnackBarService
   ) {}
 
   private _destroy$ = new Subject();
@@ -60,7 +60,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.loginError = null;
         this.matDialogRef.close();
-        this.matSnackBar.open('Logado com sucesso!', 'Fechar');
+        this.snackBarService.open('Logado com sucesso!', 'Fechar');
       });
   }
 

@@ -4,7 +4,7 @@
 >
   <app-card
     *ngFor="
-      let menu of sidenavService.menus | filter: 'title':'Início':true;
+      let menu of sidenavService.menus | search: 'title':'Início':true;
       trackBy: trackByMenu
     "
     [icon]="menu.icon"

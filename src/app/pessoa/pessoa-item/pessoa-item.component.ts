@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { PessoaQuery } from '../state/pessoa.query';
 import { Observable, Subject, throwError } from 'rxjs';
@@ -19,8 +19,8 @@ import {
 } from 'rxjs/operators';
 import { ViaCepService } from '../../shared/via-cep/via-cep.service';
 import { PessoaService } from '../state/pessoa.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { isArray } from 'is-what';
+import { SnackBarService } from '../../shared/snack-bar/snack-bar.service';
 
 @Component({
   selector: 'app-pessoa-item',
@@ -35,7 +35,7 @@ export class PessoaItemComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private viaCepService: ViaCepService,
     private pessoaService: PessoaService,
-    private matSnackBar: MatSnackBar
+    private snackBarService: SnackBarService
   ) {}
 
   private _destroy$ = new Subject();
@@ -60,7 +60,7 @@ export class PessoaItemComponent implements OnInit, OnDestroy {
       .pipe(
         tap(() => {
           this.navigateBack();
-          this.matSnackBar.open('Pessoa salva com sucesso!', 'Fechar');
+          this.snackBarService.open('Pessoa salva com sucesso!', 'Fechar');
         }),
         finalize(() => {
           this.loadingPessoa = false;
@@ -70,9 +70,9 @@ export class PessoaItemComponent implements OnInit, OnDestroy {
             isArray(err.message) &&
             err.message.some(o => o.property === 'email')
           ) {
-            this.matSnackBar.open('E-mail inválido!');
+            this.snackBarService.open('E-mail inválido!');
           } else {
-            this.matSnackBar.open(err.message);
+            this.snackBarService.open(err.message);
           }
 
           return throwError(err);

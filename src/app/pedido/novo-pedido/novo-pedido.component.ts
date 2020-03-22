@@ -40,13 +40,13 @@ import { MatExpansionPanel } from '@angular/material/expansion';
 import { SwipeActionsDirective } from '../../shared/swipe-actions/swipe-actions.directive';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Pedido } from '../../model/pedido';
 import { PedidoStatusEnum } from '../../model/pedido-status.enum';
 import { PedidoItem } from '../../model/pedido-item';
 import { PedidoService } from '../state/pedido.service';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { trackByFactory } from '../../util/util';
+import { SnackBarService } from '../../shared/snack-bar/snack-bar.service';
 
 const produtoIdExists: ValidatorFn = control => {
   const produtoIdControl = control?.parent?.get?.('produtoId');
@@ -88,7 +88,7 @@ export class NovoPedidoComponent implements OnInit, OnDestroy {
     private dialogService: DialogService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private matSnackBar: MatSnackBar,
+    private snackBarService: SnackBarService,
     private pedidoService: PedidoService,
     private routerQuery: RouterQuery
   ) {}
@@ -234,13 +234,13 @@ export class NovoPedidoComponent implements OnInit, OnDestroy {
         setTimeout(() => {
           this.addForm();
         });
-        const snackBar = this.matSnackBar.open(
+        const snackBar = this.snackBarService.open(
           'Pedido salvo com sucesso!',
           'Visualizar'
         );
         // TODO visualizar pedido
         snackBar
-          .afterDismissed()
+          .onAction()
           .pipe(take(1))
           .subscribe(() => {
             this.router.navigate(['../', pedido.id], {
