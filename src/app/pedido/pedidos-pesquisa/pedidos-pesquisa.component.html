@@ -1,0 +1,76 @@
+<div class="page-title">
+  <h2>Pesquisar Pedidos</h2>
+</div>
+<mat-expansion-panel class="pesquisa" [expanded]="true">
+  <mat-expansion-panel-header>
+    Parâmetros de pesquisa
+  </mat-expansion-panel-header>
+  <div [formGroup]="form" class="form">
+    <mat-form-field>
+      <input
+        matInput
+        [matDatepicker]="dataCriacao"
+        placeholder="Criação"
+        formControlName="dataCriacao"
+        [matDatepickerFilter]="filterBefore"
+      />
+      <mat-datepicker-toggle
+        [for]="dataCriacao"
+        matSuffix
+      ></mat-datepicker-toggle>
+      <mat-datepicker
+        [touchUi]="touchUi$ | async"
+        #dataCriacao
+        disabled="false"
+      ></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        matInput
+        [matDatepicker]="dataFinalizado"
+        placeholder="Finalização"
+        formControlName="dataFinalizado"
+        [matDatepickerFilter]="filterAfter"
+      />
+      <mat-datepicker-toggle
+        [for]="dataFinalizado"
+        matSuffix
+      ></mat-datepicker-toggle>
+      <mat-datepicker
+        [touchUi]="touchUi$ | async"
+        #dataFinalizado
+        disabled="false"
+      ></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field class="full-row">
+      <input
+        matInput
+        formControlName="cliente"
+        placeholder="Cliente"
+        [matAutocomplete]="clienteAutocomplete"
+      />
+      <mat-spinner
+        diameter="18"
+        matSuffix
+        *ngIf="clientesLoading"
+      ></mat-spinner>
+      <mat-autocomplete #clienteAutocomplete [autoActiveFirstOption]="true">
+        <mat-option
+          *ngFor="let cliente of clientes$ | async; trackBy: trackByCliente"
+          [value]="cliente.nome"
+          (onSelectionChange)="selectCliente(cliente)"
+        >
+          {{ cliente.celular | mask: maskEnum.celular }} - {{ cliente.nome }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+</mat-expansion-panel>
+<button mat-mini-fab floating left routerLink="../">
+  <mat-icon>keyboard_arrow_left</mat-icon>
+</button>
+<button mat-mini-fab floating right>
+  <mat-icon>search</mat-icon>
+</button>
+<hr />
+{{ form.valueChanges | async | json }}

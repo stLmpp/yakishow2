@@ -11,9 +11,12 @@ import { NgxCurrencyModule } from 'ngx-currency';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCardModule } from '@angular/material/card';
-import { MatRippleModule } from '@angular/material/core';
+import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
 import { PedidosDiaComponent } from './pedidos-dia/pedidos-dia.component';
 import { PedidoItemComponent } from './pedido-item/pedido-item.component';
+import { PedidosPesquisaComponent } from './pedidos-pesquisa/pedidos-pesquisa.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { LayoutModule } from '@angular/cdk/layout';
 
 @NgModule({
   declarations: [
@@ -22,6 +25,7 @@ import { PedidoItemComponent } from './pedido-item/pedido-item.component';
     NovoPedidoFormComponent,
     PedidosDiaComponent,
     PedidoItemComponent,
+    PedidosPesquisaComponent,
   ],
   imports: [
     CommonModule,
@@ -33,6 +37,9 @@ import { PedidoItemComponent } from './pedido-item/pedido-item.component';
     MatExpansionModule,
     MatCardModule,
     MatRippleModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
+    LayoutModule,
   ],
 })
 export class PedidoModule {}

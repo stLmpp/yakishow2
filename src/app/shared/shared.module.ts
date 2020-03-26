@@ -17,7 +17,7 @@ import { NgLetDirective } from './ng-let/ng-let.directive';
 import { environment } from '../../environments/environment';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DisabledControlDirective } from './disabled-control/disabled-control.directive';
-import { SearchPipe } from './filter/search.pipe';
+import { SearchPipe } from './search/search.pipe';
 import { OrderByPipe } from './order-by/order-by.pipe';
 import { ScrollToTopComponent } from './scroll-to-top/scroll-to-top.component';
 import { DialogComponent } from './dialog/dialog.component';
@@ -27,6 +27,7 @@ import { CardComponent } from './card/card.component';
 import { CardsComponent } from './card/cards.component';
 import { MatRippleModule } from '@angular/material/core';
 import { FabFloatingDirective } from './floating/fab-floating.directive';
+import { FilterPipe } from './filter/filter.pipe';
 
 const DECLARATIONS = [
   environment.production ? [] : HammerjsDirective,
@@ -61,7 +62,7 @@ const MODULES = [
 ];
 
 @NgModule({
-  declarations: [...DECLARATIONS],
+  declarations: [...DECLARATIONS, FilterPipe],
   exports: [...DECLARATIONS, ...MODULES],
   imports: [CommonModule, ...MODULES],
 })

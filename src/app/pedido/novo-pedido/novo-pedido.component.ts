@@ -7,7 +7,7 @@ import {
   ViewChildren,
   ViewEncapsulation,
 } from '@angular/core';
-import { MasksEnum } from '../../model/masks.enum';
+import { MaskEnum } from '../../model/mask.enum';
 import { Pessoa } from '../../model/pessoa';
 import { PessoaQuery } from '../../pessoa/state/pessoa.query';
 import { PessoaService } from '../../pessoa/state/pessoa.service';
@@ -98,7 +98,7 @@ export class NovoPedidoComponent implements OnInit, OnDestroy {
   @ViewChildren('matExpansionPanel')
   matExpansionPanels: QueryList<MatExpansionPanel>;
 
-  masksEnum = MasksEnum;
+  masksEnum = MaskEnum;
 
   pessoa: Pessoa;
 

@@ -11,7 +11,7 @@ import { Pessoa } from '../model/pessoa';
 import { compareByFactory, trackByFactory } from '../util/util';
 import { FormControl } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
-import { MasksEnum } from '../model/masks.enum';
+import { MaskEnum } from '../model/mask.enum';
 import { VirtualScrollerComponent } from 'ngx-virtual-scroller';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { RouterParamsEnum } from '../model/router-params.enum';
@@ -39,7 +39,7 @@ export class PessoaComponent implements OnInit, AfterViewInit {
   searchControl = new FormControl();
   search$ = this.searchControl.valueChanges.pipe(debounceTime(400));
 
-  masksEnum = MasksEnum;
+  masksEnum = MaskEnum;
 
   idPessoaParam: number;
 

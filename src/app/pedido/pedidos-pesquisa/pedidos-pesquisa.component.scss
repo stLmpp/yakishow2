@@ -1,0 +1,14 @@
+@import 'variables';
+
+.pesquisa {
+  margin-left: $main-padding;
+  margin-right: $main-padding;
+  .form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-gap: 1rem;
+    > .full-row {
+      grid-column: span 2;
+    }
+  }
+}

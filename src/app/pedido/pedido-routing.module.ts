@@ -9,6 +9,7 @@ import { RouterParamsEnum } from '../model/router-params.enum';
 import { PedidoItem } from '../model/pedido-item';
 import { PedidoItemComponent } from './pedido-item/pedido-item.component';
 import { PedidoItemResolver } from './pedido-item/pedido-item.resolver';
+import { PedidosPesquisaComponent } from './pedidos-pesquisa/pedidos-pesquisa.component';
 
 const routes: Routes = [
   {
@@ -29,6 +30,11 @@ const routes: Routes = [
     component: PedidosDiaComponent,
     resolve: [PedidosDiaResolver],
     data: { animation: 'PedidosDia' },
+  },
+  {
+    path: 'pesquisa',
+    component: PedidosPesquisaComponent,
+    data: { animation: 'PedidosPesquisa' },
   },
   {
     path: `:${RouterParamsEnum.idPedido}`,

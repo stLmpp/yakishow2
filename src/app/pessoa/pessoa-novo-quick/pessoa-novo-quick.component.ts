@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MasksEnum } from '../../model/masks.enum';
+import { MaskEnum } from '../../model/mask.enum';
 import { PessoaService } from '../state/pessoa.service';
 import { Pessoa } from '../../model/pessoa';
 import { catchError, finalize, tap } from 'rxjs/operators';
@@ -23,7 +23,7 @@ export class PessoaNovoQuickComponent implements OnInit {
 
   form: FormGroup;
 
-  masksEnum = MasksEnum;
+  masksEnum = MaskEnum;
 
   loading = false;
 

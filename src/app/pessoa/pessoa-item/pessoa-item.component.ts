@@ -6,7 +6,7 @@ import { Pessoa } from '../../model/pessoa';
 import { RouterParamsEnum } from '../../model/router-params.enum';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MasksEnum } from '../../model/masks.enum';
+import { MaskEnum } from '../../model/mask.enum';
 import {
   catchError,
   debounceTime,
@@ -42,7 +42,7 @@ export class PessoaItemComponent implements OnInit, OnDestroy {
 
   form: FormGroup;
   idPessoa: number;
-  masksEnum = MasksEnum;
+  masksEnum = MaskEnum;
   loadingCep = false;
 
   loadingPessoa = false;
