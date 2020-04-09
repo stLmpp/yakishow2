@@ -21,11 +21,20 @@ export function isKeyof<T = any>(value: any): value is keyof T {
 }
 
 export function convertToBoolProperty(val: any): boolean {
-  if (typeof val === 'string') {
+  if (isString(val)) {
     val = val.toLowerCase().trim();
 
     return val === 'true' || val === '';
   }
 
   return !!val;
+}
+
+export function removeNilObject<T>(object: T): T {
+  return Object.entries(object).reduce((obj, [key, value]) => {
+    if (!isNil(value)) {
+      obj[key] = value;
+    }
+    return obj;
+  }, {}) as T;
 }

@@ -73,8 +73,13 @@ export class PessoaService {
       );
   }
 
-  getByTermAutocomplete(term: string): Observable<Pessoa[]> {
-    const params = new HttpParams({ fromObject: { term } });
+  getByTermAutocomplete(
+    term: string,
+    withPedido?: boolean
+  ): Observable<Pessoa[]> {
+    const params = new HttpParams({
+      fromObject: { term, withPedido: '' + withPedido },
+    });
     return this.http.get<Pessoa[]>(`${this.target}/search/autocomplete`, {
       params,
     });

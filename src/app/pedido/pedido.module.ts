@@ -17,6 +17,8 @@ import { PedidoItemComponent } from './pedido-item/pedido-item.component';
 import { PedidosPesquisaComponent } from './pedidos-pesquisa/pedidos-pesquisa.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { LayoutModule } from '@angular/cdk/layout';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRadioModule } from '@angular/material/radio';
 
 @NgModule({
   declarations: [
@@ -40,6 +42,8 @@ import { LayoutModule } from '@angular/cdk/layout';
     MatNativeDateModule,
     MatDatepickerModule,
     LayoutModule,
+    MatCheckboxModule,
+    MatRadioModule,
   ],
 })
 export class PedidoModule {}

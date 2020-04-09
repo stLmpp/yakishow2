@@ -14,23 +14,6 @@ export class ProdutoService {
 
   private target = 'produto';
 
-  getByParams(descricao: string, codigo: string): Observable<Produto[]> {
-    const params = new HttpParams({ fromObject: { descricao, codigo } });
-    return this.http
-      .get<Produto[]>(`${this.target}/params`, { params })
-      .pipe(
-        setLoading(this.produtoStore),
-        tap(produtos => {
-          this.produtoStore.upsertMany(produtos);
-        })
-      );
-  }
-
-  getByCodigo(codigo: string): Observable<Produto> {
-    const params = new HttpParams({ fromObject: { codigo } });
-    return this.http.get<Produto>(`${this.target}/codigo`, { params });
-  }
-
   getBySimilarityCodigo(codigo: string): Observable<Produto[]> {
     const params = new HttpParams({ fromObject: { codigo } });
     return this.http.get<Produto[]>(`${this.target}/similarity/codigo`, {
@@ -73,5 +56,15 @@ export class ProdutoService {
         this.produtoStore.update(id, partial);
       })
     );
+  }
+
+  getBySearchAutocomplete(
+    term: string,
+    withPedido: boolean
+  ): Observable<Produto[]> {
+    const params = new HttpParams({
+      fromObject: { term, withPedido: '' + withPedido, limit: '8' },
+    });
+    return this.http.get<Produto[]>(`${this.target}/search`, { params });
   }
 }

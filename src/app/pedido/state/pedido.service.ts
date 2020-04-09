@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { PedidoStore } from './pedido.store';
 import { Observable } from 'rxjs';
-import { Pedido } from '../../model/pedido';
+import { Pedido, PedidoGetByParamsPayload } from '../../model/pedido';
 import { tap } from 'rxjs/operators';
+import { HttpParams } from '../../util/http-params';
 
 @Injectable({ providedIn: 'root' })
 export class PedidoService {
@@ -12,7 +13,7 @@ export class PedidoService {
   private target = 'pedido';
 
   getByDay(day: Date): Observable<Pedido[]> {
-    const params = new HttpParams({ fromObject: { day: day.toISOString() } });
+    const params = new HttpParams({ day });
     return this.http
       .get<Pedido[]>(`${this.target}/day`, { params })
       .pipe(
@@ -36,5 +37,10 @@ export class PedidoService {
         this.pedidoStore.upsert(idPedido, pedido);
       })
     );
+  }
+
+  getByParams(paramsPayload: PedidoGetByParamsPayload): Observable<Pedido[]> {
+    const params = new HttpParams(paramsPayload);
+    return this.http.get<Pedido[]>(`${this.target}/params`, { params });
   }
 }

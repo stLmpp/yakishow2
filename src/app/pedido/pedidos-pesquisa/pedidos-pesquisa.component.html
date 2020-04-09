@@ -1,7 +1,7 @@
 <div class="page-title">
-  <h2>Pesquisar Pedidos</h2>
+  <h2>Pesquisar pedidos</h2>
 </div>
-<mat-expansion-panel class="pesquisa" [expanded]="true">
+<mat-expansion-panel class="pesquisa" [expanded]="true" #searchPanel>
   <mat-expansion-panel-header>
     Parâmetros de pesquisa
   </mat-expansion-panel-header>
@@ -12,7 +12,6 @@
         [matDatepicker]="dataCriacao"
         placeholder="Criação"
         formControlName="dataCriacao"
-        [matDatepickerFilter]="filterBefore"
       />
       <mat-datepicker-toggle
         [for]="dataCriacao"
@@ -27,22 +26,17 @@
     <mat-form-field>
       <input
         matInput
-        [matDatepicker]="dataFinalizado"
-        placeholder="Finalização"
+        placeholder="Hora finalizado"
         formControlName="dataFinalizado"
-        [matDatepickerFilter]="filterAfter"
+        inputmode="numeric"
+        [mask]="maskEnum.horaMinuto"
+        [dropSpecialCharacters]="false"
       />
-      <mat-datepicker-toggle
-        [for]="dataFinalizado"
-        matSuffix
-      ></mat-datepicker-toggle>
-      <mat-datepicker
-        [touchUi]="touchUi$ | async"
-        #dataFinalizado
-        disabled="false"
-      ></mat-datepicker>
     </mat-form-field>
-    <mat-form-field class="full-row">
+    <mat-form-field
+      class="full-row"
+      *ngLet="form.get('cliente') as clienteControl"
+    >
       <input
         matInput
         formControlName="cliente"
@@ -54,6 +48,13 @@
         matSuffix
         *ngIf="clientesLoading"
       ></mat-spinner>
+      <mat-icon
+        matSuffix
+        (click)="selectCliente(null)"
+        *ngIf="clienteControl.disabled"
+      >
+        clear
+      </mat-icon>
       <mat-autocomplete #clienteAutocomplete [autoActiveFirstOption]="true">
         <mat-option
           *ngFor="let cliente of clientes$ | async; trackBy: trackByCliente"
@@ -64,13 +65,44 @@
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
+    <mat-form-field
+      class="full-row"
+      *ngLet="form.get('produto') as produtoControl"
+    >
+      <input
+        matInput
+        placeholder="Produto"
+        formControlName="produto"
+        [matAutocomplete]="produtoAutocomplete"
+      />
+      <mat-spinner
+        diameter="18"
+        matSuffix
+        *ngIf="produtosLoading"
+      ></mat-spinner>
+      <mat-autocomplete #produtoAutocomplete [autoActiveFirstOption]="true">
+        <mat-option
+          *ngFor="let produto of produtos$ | async; trackBy: trackByProduto"
+          [value]="produto.descricao"
+          (onSelectionChange)="selectProduto(produto)"
+        >
+          {{ produto.codigo }} - {{ produto.descricao }}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-icon
+        matSuffix
+        (click)="selectProduto(null)"
+        *ngIf="produtoControl.disabled"
+      >
+        clear
+      </mat-icon>
+    </mat-form-field>
   </div>
 </mat-expansion-panel>
 <button mat-mini-fab floating left routerLink="../">
   <mat-icon>keyboard_arrow_left</mat-icon>
 </button>
-<button mat-mini-fab floating right>
+<button mat-mini-fab floating right (click)="pesquisar()">
   <mat-icon>search</mat-icon>
 </button>
-<hr />
-{{ form.valueChanges | async | json }}
+{{ pedidos$ | async }}
