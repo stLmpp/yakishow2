@@ -11,30 +11,29 @@ import { PessoaService } from './state/pessoa.service';
 
 @Directive({
   selector:
-    '[uniqueEmail][formControl], [uniqueEmail][formControlName], [uniqueEmail][ngModel]',
+    '[ykUniqueEmail][formControl], [ykUniqueEmail][formControlName], [ykUniqueEmail][ngModel]',
   providers: [
     {
       provide: NG_ASYNC_VALIDATORS,
-      useExisting: forwardRef(() => UniqueEmailDirective),
+      useExisting: forwardRef(() => YkUniqueEmailDirective),
       multi: true,
     },
   ],
 })
-export class UniqueEmailDirective implements AsyncValidator {
+export class YkUniqueEmailDirective implements AsyncValidator {
   constructor(private pessoaService: PessoaService) {}
 
-  @Input() uniqueEmail: number;
+  @Input() ykUniqueEmail: number;
 
   validate({
     value,
-    valueChanges,
     pristine,
   }: AbstractControl): Observable<ValidationErrors | null> {
     if (!value || pristine) return of(null);
     return timer(400).pipe(
       distinctUntilChanged(),
       switchMap(() => {
-        return this.pessoaService.existsByEmail(value, this.uniqueEmail).pipe(
+        return this.pessoaService.existsByEmail(value, this.ykUniqueEmail).pipe(
           map(exists => {
             return exists ? { uniqueEmail: true } : null;
           })

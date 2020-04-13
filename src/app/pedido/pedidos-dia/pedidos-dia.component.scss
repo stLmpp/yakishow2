@@ -1,0 +1,24 @@
+@import 'variables';
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media ($mat-xs) {
+  .list {
+    grid-template-columns: none;
+  }
+}
+
+@media ($mat-sm) {
+  .list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media ($mat-xl) {
+  .list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

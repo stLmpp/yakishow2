@@ -1,0 +1,26 @@
+.mat-table {
+  > .mat-header-row > .mat-header-cell,
+  > .mat-row > .mat-cell,
+  > .mat-footer-row > .mat-footer-cell {
+    justify-content: center;
+  }
+}
+
+.pedido-info {
+  > .mat-card-content {
+    position: relative;
+    > .overlay {
+      position: absolute;
+      right: 0;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 1;
+    }
+    > .status-radio-group {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 1rem;
+    }
+  }
+}

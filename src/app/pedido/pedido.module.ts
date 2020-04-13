@@ -19,6 +19,10 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { PedidoStatusPipe } from './pedido-status.pipe';
 
 @NgModule({
   declarations: [
@@ -28,6 +32,7 @@ import { MatRadioModule } from '@angular/material/radio';
     PedidosDiaComponent,
     PedidoItemComponent,
     PedidosPesquisaComponent,
+    PedidoStatusPipe,
   ],
   imports: [
     CommonModule,
@@ -44,6 +49,9 @@ import { MatRadioModule } from '@angular/material/radio';
     LayoutModule,
     MatCheckboxModule,
     MatRadioModule,
+    MatTableModule,
+    MatSortModule,
+    MatTooltipModule,
   ],
 })
 export class PedidoModule {}

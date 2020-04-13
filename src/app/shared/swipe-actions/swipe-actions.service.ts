@@ -8,6 +8,8 @@ export class SwipeActionsService {
   private _swipeUpdate = new Subject<string>();
   public swipeUpdate = this._swipeUpdate.asObservable();
 
+  doCheckDisabled = false;
+
   updateSwipe(id: string): void {
     this._swipeUpdate.next(id);
   }

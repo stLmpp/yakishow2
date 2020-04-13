@@ -1,21 +1,23 @@
 import { animate, group, query, style, transition } from '@angular/animations';
 
-const ms = '150ms';
+const ms = '100ms';
 const type = 'ease-out';
+
+export const routeInitialStyle = query(
+  ':enter, :leave',
+  style({
+    position: 'fixed',
+    width: '100%',
+    height: '100%',
+  }),
+  {
+    optional: true,
+  }
+);
 
 export const RTL = (right: string, left: string) => {
   return transition(`${right} => ${left}`, [
-    query(
-      ':enter, :leave',
-      style({
-        position: 'fixed',
-        width: '90%',
-        height: '90%',
-      }),
-      {
-        optional: true,
-      }
-    ),
+    routeInitialStyle,
     group([
       query(
         ':enter',
@@ -39,17 +41,7 @@ export const RTL = (right: string, left: string) => {
 
 export const LTR = (left: string, right: string) => {
   return transition(`${left} => ${right}`, [
-    query(
-      ':enter, :leave',
-      style({
-        position: 'fixed',
-        width: '90%',
-        height: '90%',
-      }),
-      {
-        optional: true,
-      }
-    ),
+    routeInitialStyle,
     group([
       query(
         ':enter',
@@ -73,17 +65,7 @@ export const LTR = (left: string, right: string) => {
 
 export const TTB = (top: string, bottom: string) => {
   return transition(`${top} => ${bottom}`, [
-    query(
-      ':enter, :leave',
-      style({
-        position: 'fixed',
-        width: '90%',
-        height: '90%',
-      }),
-      {
-        optional: true,
-      }
-    ),
+    routeInitialStyle,
     group([
       query(
         ':enter',
@@ -105,6 +87,34 @@ export const TTB = (top: string, bottom: string) => {
   ]);
 };
 
+export const BTT = (bottom: string, top: string) => {
+  return transition(`${bottom} => ${top}`, [
+    routeInitialStyle,
+    group([
+      query(
+        ':enter',
+        [
+          style({ transform: 'translateY(100%)' }),
+          animate(`${ms} ${type}`, style({ transform: 'translateY(0%)' })),
+        ],
+        { optional: true }
+      ),
+      query(
+        ':leave',
+        [
+          style({ transform: 'translateY(0%)' }),
+          animate(`${ms} ${type}`, style({ transform: 'translateY(-100%)' })),
+        ],
+        { optional: true }
+      ),
+    ]),
+  ]);
+};
+
 export const SLIDE_X = (left: string, right: string) => {
   return [LTR(left, right), RTL(right, left)];
+};
+
+export const SLIDE_Y = (top: string, bottom: string) => {
+  return [TTB(top, bottom), BTT(bottom, top)];
 };

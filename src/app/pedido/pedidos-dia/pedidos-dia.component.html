@@ -1,3 +1,60 @@
-<button mat-mini-fab floating left routerLink="../">
-  <mat-icon>keyboard_arrow_left</mat-icon>
-</button>
+<ng-container *ykLet="list$ | async | filter: 'status':filterStatus as pedidos">
+  <div class="list">
+    <div
+      *ngFor="
+        let pedido of pedidos | orderBy: 'creationDate':'desc';
+        trackBy: trackByPedido
+      "
+    >
+      <app-pedido-item
+        [editPedido]="true"
+        [pedido]="pedido"
+        backUrl="/pedidos/dia"
+      ></app-pedido-item>
+    </div>
+    <div class="main-margin" *ngIf="!pedidos?.length">
+      Nenhum pedido encontrado.
+    </div>
+  </div>
+  <ng-template #filterStatusSettingsRef>
+    <h2 mat-dialog-title>Status</h2>
+    <mat-dialog-content [formGroup]="formSettings">
+      <mat-selection-list formControlName="status">
+        <mat-list-option
+          *ngFor="let status of pedidoStatusList; trackBy: trackByPedidoStatus"
+          [value]="status.value"
+        >
+          {{ status.label }}
+        </mat-list-option>
+      </mat-selection-list>
+    </mat-dialog-content>
+    <mat-dialog-actions class="align-end">
+      <button mat-button color="primary" mat-dialog-close>Cancelar</button>
+      <button mat-button color="primary" (click)="applyFiltersAndOrder()">
+        Aplicar
+      </button>
+    </mat-dialog-actions>
+  </ng-template>
+
+  <button mat-mini-fab ykFabFloating left routerLink="../">
+    <mat-icon>keyboard_arrow_left</mat-icon>
+  </button>
+  <button
+    mat-mini-fab
+    ykFabFloating
+    center
+    [routerLink]="['../', 'novo']"
+    [queryParams]="{ backUrl: '/pedidos/dia' }"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+  <button
+    mat-mini-fab
+    ykFabFloating
+    right
+    (click)="openFilterModal()"
+    [disabled]="!pedidos?.length"
+  >
+    <mat-icon>filter_list</mat-icon>
+  </button>
+</ng-container>

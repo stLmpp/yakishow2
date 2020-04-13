@@ -3,7 +3,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { PessoaQuery } from '../state/pessoa.query';
 import { Observable, Subject, throwError } from 'rxjs';
 import { Pessoa } from '../../model/pessoa';
-import { RouterParamsEnum } from '../../model/router-params.enum';
+import { RouteParamsEnum } from '../../model/route-params.enum';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MaskEnum } from '../../model/mask.enum';
@@ -86,7 +86,14 @@ export class PessoaItemComponent implements OnInit, OnDestroy {
     const queryParams: Params = {};
     if (this.idPessoa) {
       commands = '/pessoas';
-      queryParams[RouterParamsEnum.idPessoa] = this.idPessoa;
+      queryParams[RouteParamsEnum.idPessoa] = this.idPessoa;
+    }
+    const backUrl = this.routerQuery.getQueryParams<string>(
+      RouteParamsEnum.backUrl
+    );
+    if (backUrl) {
+      this.router.navigateByUrl(backUrl);
+      return;
     }
     this.router.navigate([commands], {
       relativeTo: this.activatedRoute,
@@ -125,7 +132,7 @@ export class PessoaItemComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.idPessoa = this.routerQuery.getParams(RouterParamsEnum.idPessoa);
+    this.idPessoa = this.routerQuery.getParams(RouteParamsEnum.idPessoa);
     const pessoa = this.pessoaQuery.getEntity(this.idPessoa) ?? new Pessoa();
     const { celular, tipos, complemento, cep, nome, email, endereco } = pessoa;
     this.form = new FormGroup({

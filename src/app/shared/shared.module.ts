@@ -11,37 +11,40 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { NgLetDirective } from './ng-let/ng-let.directive';
+import { YkLetDirective } from './let/yk-let.directive';
 import { environment } from '../../environments/environment';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { DisabledControlDirective } from './disabled-control/disabled-control.directive';
+import { YkDisabledControlDirective } from './disabled-control/yk-disabled-control.directive';
 import { SearchPipe } from './search/search.pipe';
 import { OrderByPipe } from './order-by/order-by.pipe';
 import { ScrollToTopComponent } from './scroll-to-top/scroll-to-top.component';
 import { DialogComponent } from './dialog/dialog.component';
-import { SwipeActionsDirective } from './swipe-actions/swipe-actions.directive';
+import { YkSwipeActionsDirective } from './swipe-actions/yk-swipe-actions.directive';
 import { SwipeActionComponent } from './swipe-actions/swipe-action.component';
 import { CardComponent } from './card/card.component';
 import { CardsComponent } from './card/cards.component';
 import { MatRippleModule } from '@angular/material/core';
-import { FabFloatingDirective } from './floating/fab-floating.directive';
+import { YkFabFloatingDirective } from './fab-floating/yk-fab-floating.directive';
 import { FilterPipe } from './filter/filter.pipe';
+import { GetDeepPipe } from './get-deep/get-deep.pipe';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { SumByPipe } from './sum-by/sum-by.pipe';
 
 const DECLARATIONS = [
   environment.production ? [] : HammerjsDirective,
-  NgLetDirective,
-  DisabledControlDirective,
+  YkLetDirective,
+  YkDisabledControlDirective,
   SearchPipe,
   OrderByPipe,
   ScrollToTopComponent,
   DialogComponent,
-  SwipeActionsDirective,
+  YkSwipeActionsDirective,
   SwipeActionComponent,
   CardComponent,
   CardsComponent,
-  FabFloatingDirective,
+  YkFabFloatingDirective,
 ];
 const MODULES = [
   MatToolbarModule,
@@ -55,6 +58,7 @@ const MODULES = [
   MatInputModule,
   MatDialogModule,
   ReactiveFormsModule,
+  FormsModule,
   MatProgressSpinnerModule,
   MatSnackBarModule,
   OverlayModule,
@@ -62,8 +66,14 @@ const MODULES = [
 ];
 
 @NgModule({
-  declarations: [...DECLARATIONS, FilterPipe],
-  exports: [...DECLARATIONS, ...MODULES],
+  declarations: [
+    ...DECLARATIONS,
+    FilterPipe,
+    GetDeepPipe,
+    ConfirmDialogComponent,
+    SumByPipe,
+  ],
+  exports: [...DECLARATIONS, ...MODULES, GetDeepPipe, SumByPipe, FilterPipe],
   imports: [CommonModule, ...MODULES],
 })
 export class SharedModule {

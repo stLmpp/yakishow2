@@ -11,6 +11,7 @@ import { ProdutoService } from '../../../produto/state/produto.service';
 import { combineLatest, Subject } from 'rxjs';
 import {
   debounceTime,
+  delay,
   distinctUntilChanged,
   filter,
   finalize,
@@ -20,6 +21,7 @@ import {
 } from 'rxjs/operators';
 import { Produto } from '../../../model/produto';
 import { trackByFactory } from '../../../util/util';
+import { MatExpansionPanel } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-novo-pedido-form',
@@ -27,7 +29,10 @@ import { trackByFactory } from '../../../util/util';
   styleUrls: ['./novo-pedido-form.component.scss'],
 })
 export class NovoPedidoFormComponent implements OnInit, OnDestroy {
-  constructor(private produtoService: ProdutoService) {}
+  constructor(
+    private produtoService: ProdutoService,
+    private matExpansionPanel: MatExpansionPanel
+  ) {}
 
   private _destroy$ = new Subject();
 
@@ -79,6 +84,15 @@ export class NovoPedidoFormComponent implements OnInit, OnDestroy {
       )
       .subscribe(produtos => {
         this.similarCodigos = produtos;
+      });
+    this.matExpansionPanel.afterExpand
+      .pipe(
+        takeUntil(this._destroy$),
+        filter(() => !this.form.get('codigo').value),
+        delay(0)
+      )
+      .subscribe(() => {
+        this.codigoRef.nativeElement.focus();
       });
   }
 

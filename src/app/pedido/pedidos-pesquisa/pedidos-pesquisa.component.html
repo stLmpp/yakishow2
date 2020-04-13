@@ -35,7 +35,7 @@
     </mat-form-field>
     <mat-form-field
       class="full-row"
-      *ngLet="form.get('cliente') as clienteControl"
+      *ykLet="form.get('cliente') as clienteControl"
     >
       <input
         matInput
@@ -59,7 +59,7 @@
         <mat-option
           *ngFor="let cliente of clientes$ | async; trackBy: trackByCliente"
           [value]="cliente.nome"
-          (onSelectionChange)="selectCliente(cliente)"
+          (click)="selectCliente(cliente.id)"
         >
           {{ cliente.celular | mask: maskEnum.celular }} - {{ cliente.nome }}
         </mat-option>
@@ -67,7 +67,7 @@
     </mat-form-field>
     <mat-form-field
       class="full-row"
-      *ngLet="form.get('produto') as produtoControl"
+      *ykLet="form.get('produto') as produtoControl"
     >
       <input
         matInput
@@ -84,7 +84,8 @@
         <mat-option
           *ngFor="let produto of produtos$ | async; trackBy: trackByProduto"
           [value]="produto.descricao"
-          (onSelectionChange)="selectProduto(produto)"
+          (click)="selectProduto(produto.id)"
+          [title]="produto.descricao"
         >
           {{ produto.codigo }} - {{ produto.descricao }}
         </mat-option>
@@ -99,10 +100,43 @@
     </mat-form-field>
   </div>
 </mat-expansion-panel>
-<button mat-mini-fab floating left routerLink="../">
+<ng-container *ykLet="pedidos$ | async as pedidos">
+  <mat-nav-list *ngIf="pedidos?.length">
+    <mat-list-item
+      *ngFor="let pedido of pedidos"
+      [routerLink]="['..', pedido.id]"
+      [queryParams]="{ backUrl: '/pedidos/pesquisa?idPedido=' + pedido.id }"
+      [ngClass]="pedido.status | pedidoStatus | lowercase"
+      [id]="pedido.id"
+      [class.active]="pedido.id === activeId"
+      #pedidos
+    >
+      <mat-icon mat-list-icon>menu_book</mat-icon>
+      <span matLine>{{ pedido.cliente.nome }}</span>
+      <span matLine>
+        Criado: {{ pedido.creationDate | date: 'dd/MM/yyyy HH:mm' }}
+      </span>
+      <span matLine>
+        {{ pedido.status | pedidoStatus
+        }}<ng-container *ngIf="pedido.dataFinalizado"
+          >:
+          {{ pedido.dataFinalizado | date: 'dd/MM/yyyy HH:mm' }}</ng-container
+        >
+      </span>
+      <span matSuffix>{{ pedido.id }}</span>
+    </mat-list-item>
+  </mat-nav-list>
+  <div *ngIf="!pedidos?.length && !pedidosLoading" class="main-padding">
+    Nenhum pedido encontrado
+  </div>
+  <div *ngIf="pedidosLoading" class="main-padding">
+    Pesquisando...
+  </div>
+</ng-container>
+
+<button mat-mini-fab ykFabFloating left (click)="navigateBack()">
   <mat-icon>keyboard_arrow_left</mat-icon>
 </button>
-<button mat-mini-fab floating right (click)="pesquisar()">
+<button mat-mini-fab ykFabFloating right (click)="pesquisar()">
   <mat-icon>search</mat-icon>
 </button>
-{{ pedidos$ | async }}

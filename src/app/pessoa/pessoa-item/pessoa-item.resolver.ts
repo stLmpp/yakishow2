@@ -8,7 +8,7 @@ import { Pessoa } from '../../model/pessoa';
 import { Observable } from 'rxjs';
 import { PessoaQuery } from '../state/pessoa.query';
 import { PessoaService } from '../state/pessoa.service';
-import { RouterParamsEnum } from '../../model/router-params.enum';
+import { RouteParamsEnum } from '../../model/route-params.enum';
 
 @Injectable({ providedIn: 'root' })
 export class PessoaItemResolver implements Resolve<Pessoa> {
@@ -21,7 +21,7 @@ export class PessoaItemResolver implements Resolve<Pessoa> {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<Pessoa> | Promise<Pessoa> | Pessoa {
-    const idPessoa = route.params[RouterParamsEnum.idPessoa];
+    const idPessoa = route.params[RouteParamsEnum.idPessoa];
     const pessoa = this.pessoaQuery.getEntity(idPessoa);
     return pessoa ? pessoa : this.pessoaService.getById(idPessoa);
   }

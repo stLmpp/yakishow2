@@ -20,6 +20,10 @@ import { AuthQuery } from './auth/state/auth.query';
       ...SLIDE_X('PedidosPesquisa', 'PedidoItem'),
       ...SLIDE_X('Pedidos', 'PedidosPesquisa'),
       LTR('Home', '*'),
+      ...SLIDE_X('PedidoItem', 'PessoaItem'),
+      ...SLIDE_X('PedidosDia', 'PessoaItem'),
+      ...SLIDE_X('PedidosDia', 'NovoPedido'),
+      ...SLIDE_X('PedidosPesquisa', 'Pessoas'),
     ]),
   ],
 })

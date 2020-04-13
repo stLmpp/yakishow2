@@ -1,0 +1,10 @@
+@import 'variables';
+
+@mixin mat-snack-bar-custom($theme) {
+  $is-dark-theme: map-get($theme, is-dark);
+  .mat-snack-bar-container {
+    &.error {
+      color: mat-color(mat-palette($mat-red, if($is-dark-theme, 500, 100)));
+    }
+  }
+}

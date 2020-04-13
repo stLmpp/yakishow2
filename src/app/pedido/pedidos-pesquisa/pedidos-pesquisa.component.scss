@@ -12,3 +12,20 @@
     }
   }
 }
+
+.mat-list-base {
+  .mat-list-item {
+    &.cancelado {
+      color: $cancelado;
+    }
+    &.finalizado {
+      color: $finalizado;
+    }
+    &.despachado {
+      color: $despachado;
+    }
+    &.preparando {
+      color: $preparando;
+    }
+  }
+}

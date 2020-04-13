@@ -15,7 +15,7 @@ import { SnackBarService } from '../../shared/snack-bar/snack-bar.service';
 })
 export class PessoaNovoQuickComponent implements OnInit {
   constructor(
-    @Optional() @Inject(MAT_DIALOG_DATA) public celular: string,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: string,
     private pessoaService: PessoaService,
     private matDialogRef: MatDialogRef<PessoaNovoQuickComponent>,
     private snackBarService: SnackBarService
@@ -49,9 +49,10 @@ export class PessoaNovoQuickComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const isNumber = /^\d+$/.test(this.data);
     this.form = new FormGroup({
-      nome: new FormControl(),
-      celular: new FormControl(this.celular),
+      nome: new FormControl(isNumber ? null : this.data),
+      celular: new FormControl(isNumber ? this.data : null),
       endereco: new FormControl(),
       // TODO add tipos
       tipos: new FormControl([{ tipoPessoaId: 1 }]),

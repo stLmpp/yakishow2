@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   Component,
   Inject,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -10,26 +11,28 @@ import { WINDOW } from '../core/window.service';
 import { Pessoa } from '../model/pessoa';
 import { compareByFactory, trackByFactory } from '../util/util';
 import { FormControl } from '@angular/forms';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, takeUntil } from 'rxjs/operators';
 import { MaskEnum } from '../model/mask.enum';
 import { VirtualScrollerComponent } from 'ngx-virtual-scroller';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { RouterParamsEnum } from '../model/router-params.enum';
-import { AkitaNgFormsManager } from '@datorama/akita-ng-forms-manager';
-import { FormsState } from '../model/forms-state';
+import { RouteParamsEnum } from '../model/route-params.enum';
+import { Subject } from 'rxjs';
+import { PessoaService } from './state/pessoa.service';
 
 @Component({
   selector: 'app-pessoa',
   templateUrl: './pessoa.component.html',
   styleUrls: ['./pessoa.component.scss'],
 })
-export class PessoaComponent implements OnInit, AfterViewInit {
+export class PessoaComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     public pessoaQuery: PessoaQuery,
     @Inject(WINDOW) public window: Window,
     private routerQuery: RouterQuery,
-    private akitaNgFormsManager: AkitaNgFormsManager<FormsState>
+    private pessoaService: PessoaService
   ) {}
+
+  private _destroy$ = new Subject();
 
   @ViewChild('virtualScroller')
   virtualScroller: VirtualScrollerComponent;
@@ -48,16 +51,17 @@ export class PessoaComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.idPessoaParam = +this.routerQuery.getQueryParams(
-      RouterParamsEnum.idPessoa
+      RouteParamsEnum.idPessoa
     );
-    if (this.idPessoaParam) {
-      this.akitaNgFormsManager.upsert('searchPessoa', this.searchControl);
-    }
+    this.searchControl.setValue(this.pessoaQuery.getSearchTerm());
+    this.search$
+      .pipe(takeUntil(this._destroy$))
+      .subscribe(term => this.pessoaService.updateSearch(term));
   }
 
   ngAfterViewInit(): void {
     this.idPessoaParam = +this.routerQuery.getQueryParams(
-      RouterParamsEnum.idPessoa
+      RouteParamsEnum.idPessoa
     );
     if (this.idPessoaParam) {
       // Set timeout para que a lista seja carregada antes de fazer o scroll
@@ -68,5 +72,13 @@ export class PessoaComponent implements OnInit, AfterViewInit {
         this.virtualScroller.scrollInto(item, true, -100);
       });
     }
+    setTimeout(() => {
+      this.searchControl.enable();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this._destroy$.next();
+    this._destroy$.complete();
   }
 }

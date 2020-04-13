@@ -5,40 +5,39 @@ import {
   NG_ASYNC_VALIDATORS,
   ValidationErrors,
 } from '@angular/forms';
-import { ProdutoService } from '../state/produto.service';
 import { Observable, of, timer } from 'rxjs';
+import { PessoaService } from './state/pessoa.service';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 
 @Directive({
   selector:
-    '[uniqueCodigo][formControl], [uniqueCodigo][formControlName], [uniqueCodigo][ngModel]',
+    '[ykUniqueCelular][formControl],[ykUniqueCelular][formControlName],[ykUniqueCelular][ngModel]',
   providers: [
     {
       provide: NG_ASYNC_VALIDATORS,
-      useExisting: forwardRef(() => UniqueCodigoDirective),
+      useExisting: forwardRef(() => YkUniqueCelularDirective),
       multi: true,
     },
   ],
 })
-export class UniqueCodigoDirective implements AsyncValidator {
-  constructor(private produtoService: ProdutoService) {}
+export class YkUniqueCelularDirective implements AsyncValidator {
+  constructor(private pessoaService: PessoaService) {}
 
-  @Input() uniqueCodigo: number;
+  @Input() ykUniqueCelular: number;
 
   validate({
     value,
-    valueChanges,
     pristine,
   }: AbstractControl): Observable<ValidationErrors | null> {
     if (!value || pristine) return of(null);
     return timer(400).pipe(
       distinctUntilChanged(),
       switchMap(() => {
-        return this.produtoService
-          .existsByCodigo(value, this.uniqueCodigo)
+        return this.pessoaService
+          .existsByCelular(value, this.ykUniqueCelular)
           .pipe(
             map(exists => {
-              return exists ? { uniqueCodigo: true } : null;
+              return exists ? { uniqueCelular: true } : null;
             })
           );
       })

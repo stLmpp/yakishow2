@@ -11,6 +11,7 @@ export class Pedido extends CommonHistory {
   entregadorId: number;
   entregador?: Pessoa;
   pedidoItems: PedidoItem[];
+  dataFinalizado?: Date;
 }
 
 export interface PedidoGetByParamsPayload {
@@ -21,3 +22,7 @@ export interface PedidoGetByParamsPayload {
   produto?: string;
   produtoId?: number;
 }
+
+export type UpdatePedidoDto = Partial<
+  Pick<Pedido, 'status' | 'entregadorId' | 'clienteId'>
+>;

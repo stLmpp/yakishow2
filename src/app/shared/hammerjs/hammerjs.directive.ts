@@ -1,6 +1,8 @@
 import { Directive, EventEmitter, Output } from '@angular/core';
+import { TouchInput } from 'hammerjs';
 
 @Directive({
+  // tslint:disable-next-line:directive-selector
   selector: `
   button,
   div,

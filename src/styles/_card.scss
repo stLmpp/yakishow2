@@ -1,0 +1,7 @@
+.mat-card {
+  &.mat-ripple {
+    > .last-child {
+      margin-bottom: 0;
+    }
+  }
+}

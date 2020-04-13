@@ -2,9 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PedidoStore } from './pedido.store';
 import { Observable } from 'rxjs';
-import { Pedido, PedidoGetByParamsPayload } from '../../model/pedido';
+import {
+  Pedido,
+  PedidoGetByParamsPayload,
+  UpdatePedidoDto,
+} from '../../model/pedido';
 import { tap } from 'rxjs/operators';
 import { HttpParams } from '../../util/http-params';
+import { PedidoStatusEnum } from '../../model/pedido-status.enum';
 
 @Injectable({ providedIn: 'root' })
 export class PedidoService {
@@ -31,6 +36,26 @@ export class PedidoService {
     );
   }
 
+  patchPedido(idPedido: number, partial: UpdatePedidoDto): Observable<Pedido> {
+    this.pedidoStore.update(idPedido, partial);
+    return this.http.patch<Pedido>(`${this.target}/${idPedido}`, partial).pipe(
+      tap(pedido => {
+        this.pedidoStore.update(idPedido, pedido);
+      })
+    );
+  }
+
+  updateStatus(idPedido: number, status: PedidoStatusEnum): Observable<Pedido> {
+    this.pedidoStore.update(idPedido, { status });
+    return this.http
+      .put<Pedido>(`${this.target}/${idPedido}/status/${status}`, undefined)
+      .pipe(
+        tap(pedido => {
+          this.pedidoStore.update(idPedido, pedido);
+        })
+      );
+  }
+
   getById(idPedido: number): Observable<Pedido> {
     return this.http.get<Pedido>(`${this.target}/id/${idPedido}`).pipe(
       tap(pedido => {
@@ -41,6 +66,12 @@ export class PedidoService {
 
   getByParams(paramsPayload: PedidoGetByParamsPayload): Observable<Pedido[]> {
     const params = new HttpParams(paramsPayload);
-    return this.http.get<Pedido[]>(`${this.target}/params`, { params });
+    return this.http
+      .get<Pedido[]>(`${this.target}/params`, { params })
+      .pipe(
+        tap(pedidos => {
+          this.pedidoStore.upsertMany(pedidos);
+        })
+      );
   }
 }

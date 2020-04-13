@@ -1,34 +1,29 @@
 import { Pipe, PipeTransform } from '@angular/core';
-
-@Pipe({ name: 'orderBy' })
-export class OrderByPipe implements PipeTransform {
-  transform<T, K extends keyof T = keyof T>(
-    array: T[],
-    keyOrCommand?: K[] | K | ((valueA: T, valueB: T) => number),
-    order: Order = 'asc'
-  ): T[] {
-    return orderBy(array, keyOrCommand, order);
-  }
-}
-
 import { isArray, isFunction, isNumber } from 'is-what';
-import { isNil } from '../../util/util';
-
-export type Order = 'asc' | 'desc';
+import { getDeep, isNil } from '../../util/util';
+import { SortDirection } from '@angular/material/sort';
 
 export type OrderByType<T, K extends keyof T = keyof T> =
   | K[]
   | K
+  | string
+  | string[]
   | ((valueA: T, valueB: T) => number);
+
+export interface OrderByOptions {
+  cancelOrderByOnOrderNull?: boolean;
+}
 
 export function orderBy<T, K = keyof T>(
   values: T[],
   keyOrCommand?: OrderByType<T>,
-  order: Order = 'asc'
+  order: SortDirection = 'asc'
 ): T[] {
   if (!values?.length) return values;
-  if (!keyOrCommand) return values;
-  if (isFunction(keyOrCommand)) {
+  if (!order) return values;
+  if (!keyOrCommand) {
+    return values.sort((valueA, valueB) => compareValues(valueA, valueB));
+  } else if (isFunction(keyOrCommand)) {
     return [...values].sort(keyOrCommand);
   } else {
     return [...values].sort((valueA, valueB) => {
@@ -58,23 +53,37 @@ export function compareValues<T>(valueA: T, valueB: T): number {
 export function compareValuesKey<T>(
   valueA: T,
   valueB: T,
-  key: keyof T
+  key: keyof T | string
 ): number {
-  return compareValues(valueA?.[key], valueB?.[key]);
+  return compareValues(
+    getDeep(valueA, key as string),
+    getDeep(valueB, key as string)
+  );
 }
 
 export function compareValuesMultipleKeys<T, K extends keyof T = keyof T>(
   valueA: T,
   valueB: T,
-  keys: K[]
+  keys: K[] | string[]
 ): number {
   let result: number;
   for (let i = 0, len = keys.length; i < len; i++) {
     const key = keys[i];
-    if (valueA?.[key] !== valueB?.[key]) {
+    if (getDeep(valueA, key as string) !== getDeep(valueB, key as string)) {
       result = compareValuesKey<T>(valueA, valueB, key);
       break;
     }
   }
   return result;
+}
+
+@Pipe({ name: 'orderBy' })
+export class OrderByPipe implements PipeTransform {
+  transform<T, K extends keyof T = keyof T>(
+    array: T[],
+    keyOrCommand?: OrderByType<T>,
+    order: SortDirection = 'asc'
+  ): T[] {
+    return orderBy(array, keyOrCommand, order);
+  }
 }

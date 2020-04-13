@@ -14,4 +14,8 @@ export class PessoaQuery extends QueryEntity<PessoaState> {
   getByCelular(celular: string): Pessoa {
     return this.getAll().find(o => o.celular === celular);
   }
+
+  getSearchTerm(): string {
+    return this.getValue()?.search;
+  }
 }

@@ -4,13 +4,13 @@
   </h2>
 </div>
 <form [formGroup]="form" (ngSubmit)="save()">
-  <mat-form-field *ngLet="form.get('nome') as nomeControl" class="nome">
+  <mat-form-field *ykLet="form.get('nome') as nomeControl" class="nome">
     <input matInput formControlName="nome" placeholder="Nome" required />
     <mat-error *ngIf="nomeControl.hasError('required')">
       Nome é obrigatório
     </mat-error>
   </mat-form-field>
-  <mat-form-field *ngLet="form.get('celular') as celularControl">
+  <mat-form-field *ykLet="form.get('celular') as celularControl">
     <input
       matInput
       formControlName="celular"
@@ -18,7 +18,7 @@
       required
       inputmode="tel"
       [mask]="masksEnum.celular"
-      [uniqueCelular]="idPessoa"
+      [ykUniqueCelular]="idPessoa"
     />
     <mat-error *ngIf="celularControl.hasError('uniqueCelular')">
       Celular já cadastrado
@@ -37,7 +37,7 @@
     />
     <mat-spinner matSuffix diameter="18" *ngIf="loadingCep"></mat-spinner>
   </mat-form-field>
-  <mat-form-field *ngLet="form.get('endereco') as enderecoControl">
+  <mat-form-field *ykLet="form.get('endereco') as enderecoControl">
     <input
       matInput
       formControlName="endereco"
@@ -51,7 +51,7 @@
   <mat-form-field>
     <input matInput formControlName="complemento" placeholder="Complemento" />
   </mat-form-field>
-  <mat-form-field *ngLet="form.get('email') as emailControl">
+  <mat-form-field *ykLet="form.get('email') as emailControl">
     <input
       matInput
       formControlName="email"
@@ -59,7 +59,7 @@
       email
       type="email"
       inputmode="email"
-      [uniqueEmail]="idPessoa"
+      [ykUniqueEmail]="idPessoa"
     />
     <mat-error *ngIf="emailControl.hasError('email')">
       E-mail inválido
@@ -70,7 +70,7 @@
   </mat-form-field>
   <button
     mat-mini-fab
-    floating
+    ykFabFloating
     left
     type="button"
     (click)="navigateBack()"
@@ -80,7 +80,7 @@
   </button>
   <button
     mat-mini-fab
-    floating
+    ykFabFloating
     right
     type="submit"
     [disabled]="loadingPessoa || form.invalid || form.pristine || form.pending"

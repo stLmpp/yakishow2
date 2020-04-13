@@ -1,6 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NovoPedidoComponent } from './novo-pedido.component';
+import { HttpClientModule } from '@angular/common/http';
+import { MatDialogModule } from '@angular/material/dialog';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 
 describe('NovoPedidoComponent', () => {
   let component: NovoPedidoComponent;
@@ -9,6 +14,13 @@ describe('NovoPedidoComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [NovoPedidoComponent],
+      imports: [
+        HttpClientModule,
+        MatDialogModule,
+        RouterTestingModule,
+        MatSnackBarModule,
+        AkitaNgRouterStoreModule.forRoot(),
+      ],
     }).compileComponents();
   }));
 

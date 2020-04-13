@@ -13,7 +13,7 @@
 </mat-form-field>
 <mat-nav-list>
   <virtual-scroller
-    *ngLet="
+    *ykLet="
       searchControl.pristine ? searchControl.value : (search$ | async) as search
     "
     [items]="
@@ -58,15 +58,24 @@
         >
           Editar
         </button>
-        <button mat-menu-item>Ver últimos pedidos</button>
+        <button
+          mat-menu-item
+          [routerLink]="['/', 'pedidos', 'pesquisa']"
+          [queryParams]="{
+            idPessoa: pessoa.id,
+            backUrl: 'pessoas?idPessoa=' + pessoa.id
+          }"
+        >
+          Ver últimos pedidos
+        </button>
       </mat-menu>
       <span matLine>{{ pessoa.nome }}</span>
-      <span matLine class="mat-line-secondary">{{
-        pessoa.celular | mask: masksEnum.celular
-      }}</span>
+      <span matLine class="mat-line-secondary">
+        {{ pessoa.celular | mask: masksEnum.celular }}
+      </span>
     </mat-list-item>
   </virtual-scroller>
 </mat-nav-list>
-<button mat-mini-fab floating center [routerLink]="['./', 'novo']">
+<button mat-mini-fab ykFabFloating center [routerLink]="['./', 'novo']">
   <mat-icon>add</mat-icon>
 </button>

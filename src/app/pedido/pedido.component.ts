@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { PedidoQuery } from './state/pedido.query';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-pedido',
   templateUrl: './pedido.component.html',
   styleUrls: ['./pedido.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class PedidoComponent implements OnInit {
-  constructor(public pedidoQuery: PedidoQuery) {}
+  constructor() {}
 
   ngOnInit(): void {}
 }

@@ -6,55 +6,41 @@ import {
   SimpleSnackBar,
 } from '@angular/material/snack-bar';
 import { ComponentType } from '@angular/cdk/overlay';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map, pluck, take } from 'rxjs/operators';
-
-export interface SnackBarEntity {
-  [id: number]: MatSnackBarRef<any>;
-}
-
-let ID = 0;
+import { BehaviorSubject } from 'rxjs';
+import { map, take } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class SnackBarService {
   constructor(private matSnackBar: MatSnackBar) {}
 
-  private _snackbar$ = new BehaviorSubject<SnackBarEntity>({});
+  private _snackbar$ = new BehaviorSubject<number>(0);
   snackbar$ = this._snackbar$.asObservable();
-  snackbarList$: Observable<MatSnackBar[]> = this.snackbar$.pipe(
-    map(Object.values)
-  );
-  snackbarHeight$ = this.snackbarList$.pipe(
-    pluck('length'),
-    map(l => l * 64),
-    map(l => (l ? l + 'px' : 0))
-  );
+  snackbarHeight$ = this.snackbar$.pipe(map(l => (l ? l + 'px' : 0)));
 
-  private addSnackbar(snackBar: MatSnackBarRef<any>): number {
-    const id = ID++;
-    this._snackbar$.next({ ...this._snackbar$.value, [id]: snackBar });
-    return id;
+  addSnackbar(snackBar: MatSnackBarRef<any>): void {
+    setTimeout(
+      () => {
+        this._snackbar$.next(
+          (snackBar as any)?._overlayRef?._pane?.getBoundingClientRect?.()
+            ?.height ?? 0
+        );
+      },
+      this._snackbar$.value > 0 ? 100 : 0
+    );
   }
 
-  private removeSnackbar(id: number): void {
-    const newState = Object.entries({ ...this._snackbar$.value }).reduce(
-      (acc: SnackBarEntity, [idSnack, snackbar]) => {
-        if (+idSnack !== id) {
-          acc = { ...acc, [idSnack]: snackbar };
-        }
-        return acc;
-      },
-      {}
-    );
-    this._snackbar$.next(newState);
+  private removeSnackbar(): void {
+    this._snackbar$.next(0);
   }
 
   private processSnackbar(snackBar: MatSnackBarRef<any>): void {
-    const id = this.addSnackbar(snackBar);
+    this.addSnackbar(snackBar);
     snackBar
       .afterDismissed()
       .pipe(take(1))
-      .subscribe(() => this.removeSnackbar(id));
+      .subscribe(() => {
+        this.removeSnackbar();
+      });
   }
 
   open(

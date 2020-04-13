@@ -1,20 +1,43 @@
 <div class="page-title">
   <h2>Novo pedido</h2>
 </div>
-<mat-form-field class="search" [hideRequiredMarker]="true">
+<mat-form-field
+  class="search"
+  [hideRequiredMarker]="true"
+  *ykLet="clientes$ | async as clientes"
+>
   <input
-    [formControl]="celularControl"
+    [formControl]="clienteControl"
     matInput
-    placeholder="Celular"
-    inputmode="tel"
-    [mask]="masksEnum.celular"
-    required
+    placeholder="Celular ou nome"
+    [matAutocomplete]="clienteAutocomplete"
+    [matAutocompleteDisabled]="!!pessoa?.id"
+    #celularRef
   />
+  <mat-autocomplete #clienteAutocomplete [autoActiveFirstOption]="true">
+    <mat-option
+      *ngFor="let cliente of clientes; trackBy: trackByCliente"
+      value="{{ cliente.celular | mask: maskEnum.celular }} - {{
+        cliente.nome
+      }}"
+      (click)="selectCliente(cliente)"
+    >
+      {{ cliente.celular | mask: maskEnum.celular }} - {{ cliente.nome }}
+    </mat-option>
+    <mat-option
+      *ngIf="
+        !pessoa?.id &&
+        !loadingPessoa &&
+        clienteControl.value &&
+        !clientes?.length
+      "
+      [value]="celularRef.value"
+      (click)="criarPessoa(celularRef.value)"
+    >
+      Nenhum cliente encontrado, criar?
+    </mat-option>
+  </mat-autocomplete>
   <mat-spinner matSuffix *ngIf="loadingPessoa" diameter="18"></mat-spinner>
-  <mat-error *ngIf="personNotFound">
-    Pessoa não encontrada.
-    <a [routerLink]="null" (click)="criarPessoa()">Criar</a>
-  </mat-error>
 </mat-form-field>
 <div class="pessoa-info" *ngIf="pessoa">
   <mat-list>
@@ -33,14 +56,14 @@
 <div
   class="produtos"
   *ngIf="
-    !celularControl.invalid &&
-    !celularControl.pending &&
+    !clienteControl.invalid &&
+    !clienteControl.pending &&
     !loadingPessoa &&
     !!pessoa
   "
 >
   <ng-container *ngIf="!formGroupArray.length">
-    Favor adicionar um produto
+    <div class="main-margin-x">Nenhum produto adicionado nesse pedido</div>
   </ng-container>
   <mat-accordion>
     <mat-expansion-panel
@@ -49,17 +72,14 @@
         let $index = index;
         trackBy: trackByFormArray
       "
-      (afterExpand)="afterExpand($index, swipe)"
-      (afterCollapse)="afterCollapse(swipe)"
+      (afterExpand)="expanded = $index"
       [disabled]="pedidoSaving"
-      swipeActions
+      ykSwipeActions
       swipeIcon="delete"
       swipeIconColor="warn"
-      swipeId="novo-pedido-produtos"
       [swipeDisabled]="pedidoSaving"
       (swipeAction)="deleteProduto($index)"
       [class.mat-error]="form.dirty && form.get('codigo').hasError('required')"
-      #swipe="swipeActions"
       #matExpansionPanel
       @items
     >
@@ -80,7 +100,7 @@
   </mat-accordion>
   <button
     mat-mini-fab
-    floating
+    ykFabFloating
     center
     (click)="addForm()"
     [disabled]="pedidoSaving"
@@ -89,7 +109,7 @@
   </button>
   <button
     mat-mini-fab
-    floating
+    ykFabFloating
     right
     [disabled]="(saveDisabled$ | async) || !formProdutos.length || pedidoSaving"
     (click)="salvar()"
@@ -101,9 +121,9 @@
 </div>
 <button
   mat-mini-fab
-  floating
+  ykFabFloating
   left
-  [routerLink]="['../']"
+  (click)="navigateBack()"
   [disabled]="pedidoSaving"
 >
   <mat-icon>keyboard_arrow_left</mat-icon>

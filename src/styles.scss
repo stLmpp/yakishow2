@@ -9,10 +9,13 @@
 @import './styles/list';
 @import './styles/button';
 @import './styles/dialog';
-@import './swipe-actions';
+@import './styles/snackbar';
+@import './styles/swipe-actions';
+@import './styles/card';
 
 @include angular-material-theme($light-theme);
 @include mat-list-theme-custom($light-theme);
+@include mat-snack-bar-custom($light-theme);
 
 html,
 body {
@@ -24,6 +27,7 @@ body {
   &.dark-theme {
     @include angular-material-theme($dark-theme);
     @include mat-list-theme-custom($dark-theme);
+    @include mat-snack-bar-custom($dark-theme);
     color: white;
     background-color: map-get($mat-dark-theme-background, background);
   }

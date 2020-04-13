@@ -5,7 +5,7 @@ import { NovoPedidoComponent } from './novo-pedido/novo-pedido.component';
 import { scrollToTopDisabled } from '../shared/scroll-to-top/scroll-to-top.component';
 import { PedidosDiaResolver } from './pedidos-dia.resolver';
 import { PedidosDiaComponent } from './pedidos-dia/pedidos-dia.component';
-import { RouterParamsEnum } from '../model/router-params.enum';
+import { RouteParamsEnum } from '../model/route-params.enum';
 import { PedidoItem } from '../model/pedido-item';
 import { PedidoItemComponent } from './pedido-item/pedido-item.component';
 import { PedidoItemResolver } from './pedido-item/pedido-item.resolver';
@@ -29,7 +29,7 @@ const routes: Routes = [
     path: 'dia',
     component: PedidosDiaComponent,
     resolve: [PedidosDiaResolver],
-    data: { animation: 'PedidosDia' },
+    data: { animation: 'PedidosDia', [scrollToTopDisabled]: true },
   },
   {
     path: 'pesquisa',
@@ -37,7 +37,7 @@ const routes: Routes = [
     data: { animation: 'PedidosPesquisa' },
   },
   {
-    path: `:${RouterParamsEnum.idPedido}`,
+    path: `:${RouteParamsEnum.idPedido}`,
     component: PedidoItemComponent,
     resolve: [PedidoItemResolver],
     data: { animation: 'PedidoItem' },

@@ -13,7 +13,7 @@ export abstract class WindowRef {
     throw new Error('Not implemented.');
   }
 }
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class BrowserWindowRef extends WindowRef {
   constructor() {
     super();

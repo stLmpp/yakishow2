@@ -1,9 +1,11 @@
 import {
   Component,
+  ElementRef,
   Inject,
   OnDestroy,
   OnInit,
   QueryList,
+  ViewChild,
   ViewChildren,
   ViewEncapsulation,
 } from '@angular/core';
@@ -19,25 +21,25 @@ import {
   Validators,
 } from '@angular/forms';
 import {
-  catchError,
   debounceTime,
   delay,
+  distinctUntilChanged,
   filter,
   finalize,
   map,
   startWith,
+  switchMap,
   take,
   takeUntil,
   tap,
 } from 'rxjs/operators';
-import { Observable, Subject, throwError } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { PessoaNovoQuickComponent } from '../../pessoa/pessoa-novo-quick/pessoa-novo-quick.component';
 import { DOCUMENT, ViewportScroller } from '@angular/common';
 import { DialogService } from '../../shared/dialog/dialog.service';
 import { isUndefined } from 'is-what';
 import { MatExpansionPanel } from '@angular/material/expansion';
-import { SwipeActionsDirective } from '../../shared/swipe-actions/swipe-actions.directive';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Pedido } from '../../model/pedido';
@@ -47,6 +49,7 @@ import { PedidoService } from '../state/pedido.service';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { trackByFactory } from '../../util/util';
 import { SnackBarService } from '../../shared/snack-bar/snack-bar.service';
+import { RouteParamsEnum } from '../../model/route-params.enum';
 
 const produtoIdExists: ValidatorFn = control => {
   const produtoIdControl = control?.parent?.get?.('produtoId');
@@ -98,13 +101,16 @@ export class NovoPedidoComponent implements OnInit, OnDestroy {
   @ViewChildren('matExpansionPanel')
   matExpansionPanels: QueryList<MatExpansionPanel>;
 
-  masksEnum = MaskEnum;
+  @ViewChild('celularRef') celularRef: ElementRef<HTMLInputElement>;
 
   pessoa: Pessoa;
 
-  celularControl = new FormControl();
+  clientes$: Observable<Pessoa[]>;
+
+  maskEnum = MaskEnum;
+
+  clienteControl = new FormControl(null, [Validators.required]);
   loadingPessoa = false;
-  personNotFound = false;
   formProdutos: FormArray;
   saveDisabled$: Observable<boolean>;
   expanded = 0;
@@ -112,14 +118,11 @@ export class NovoPedidoComponent implements OnInit, OnDestroy {
   pedidoSaving = false;
 
   trackByFormArray = trackByFactory<FormGroup>();
+  trackByCliente = trackByFactory<Pessoa>('id');
 
-  afterExpand($index: number, swipe: SwipeActionsDirective): void {
-    this.expanded = $index;
-    swipe.updatePosition();
-  }
-
-  afterCollapse(swipe: SwipeActionsDirective): void {
-    swipe.updatePosition();
+  selectCliente(cliente: Pessoa): void {
+    this.pessoa = cliente;
+    this.clienteControl.disable({ emitEvent: false });
   }
 
   onDeletePessoa(): void {
@@ -139,62 +142,39 @@ export class NovoPedidoComponent implements OnInit, OnDestroy {
           this.formProdutos.reset();
         }
         this.pessoa = null;
-        this.celularControl.setValue(null);
-        this.celularControl.enable();
-        this.celularControl.markAsUntouched();
-        this.celularControl.markAsPristine();
+        this.clienteControl.setValue(null);
+        this.clienteControl.enable();
+        this.clienteControl.markAsUntouched();
+        this.clienteControl.markAsPristine();
       });
   }
 
   addForm(): void {
     this.formProdutos.push(formGroupModel());
     this.matExpansionPanels.toArray()[this.expanded]?.close();
+    setTimeout(() => {
+      this.matExpansionPanels.last?.open();
+    });
   }
 
   get formGroupArray(): FormGroup[] {
     return this.formProdutos.controls as FormGroup[];
   }
 
-  criarPessoa(): void {
+  criarPessoa(data: string): void {
     this.matDialog
-      .open(PessoaNovoQuickComponent, {
-        data: this.celularControl.value,
-      })
+      .open(PessoaNovoQuickComponent, { data })
       .afterClosed()
       .pipe<Pessoa>(take(1))
       .subscribe(pessoa => {
-        this.pessoa = pessoa;
-        this.celularControl.setErrors(null);
-        this.celularControl.disable({ emitEvent: false });
+        if (pessoa) {
+          this.pessoa = pessoa;
+          this.clienteControl.setValue(
+            this.pessoa.celular + ' - ' + this.pessoa.nome
+          );
+          this.clienteControl.disable({ emitEvent: false });
+        }
       });
-  }
-
-  findPessoaByCelular(celular: string): void {
-    this.pessoa = this.pessoaQuery.getByCelular(celular);
-    if (!this.pessoa) {
-      this.loadingPessoa = true;
-      this.pessoaService
-        .getByCelular(celular)
-        .pipe(
-          tap(pessoa => {
-            this.pessoa = pessoa;
-            this.celularControl.setErrors(null);
-            this.personNotFound = false;
-            this.celularControl.disable({ emitEvent: false });
-          }),
-          finalize(() => {
-            this.loadingPessoa = false;
-          }),
-          catchError(error => {
-            this.personNotFound = true;
-            this.celularControl.setErrors({ personNotFund: true });
-            return throwError(error);
-          })
-        )
-        .subscribe();
-    } else {
-      this.celularControl.disable({ emitEvent: false });
-    }
   }
 
   deleteProduto(index: number): void {
@@ -234,41 +214,62 @@ export class NovoPedidoComponent implements OnInit, OnDestroy {
         setTimeout(() => {
           this.addForm();
         });
-        const snackBar = this.snackBarService.open(
-          'Pedido salvo com sucesso!',
-          'Visualizar'
+
+        const backUrl = this.routerQuery.getQueryParams<string>(
+          RouteParamsEnum.backUrl
         );
-        // TODO visualizar pedido
-        snackBar
-          .onAction()
-          .pipe(take(1))
-          .subscribe(() => {
-            this.router.navigate(['../', pedido.id], {
-              relativeTo: this.activatedRoute,
+        if (backUrl && backUrl === '/pedidos/dia') {
+          this.navigateBack();
+        } else {
+          this.snackBarService
+            .open('Pedido salvo com sucesso!', 'Visualizar')
+            .onAction()
+            .pipe(take(1))
+            .subscribe(() => {
+              this.router.navigate(['../', pedido.id], {
+                relativeTo: this.activatedRoute,
+              });
             });
-          });
+        }
       });
   }
 
+  navigateBack(): void {
+    const backUrl = this.routerQuery.getQueryParams<string>(
+      RouteParamsEnum.backUrl
+    );
+    if (backUrl) {
+      this.router.navigateByUrl(backUrl);
+    } else {
+      this.router.navigate(['../'], { relativeTo: this.activatedRoute });
+    }
+  }
+
   initSub(): void {
-    this.celularControl.valueChanges
-      .pipe(
-        takeUntil(this._destroy$),
-        debounceTime(400),
-        filter(() => this.celularControl.valid)
-      )
-      .subscribe(celular => {
-        this.findPessoaByCelular(celular);
-      });
+    this.clientes$ = this.clienteControl.valueChanges.pipe(
+      takeUntil(this._destroy$),
+      distinctUntilChanged(),
+      tap(() => (this.loadingPessoa = true)),
+      debounceTime(200),
+      switchMap(cliente => {
+        if (!cliente) {
+          this.loadingPessoa = false;
+          return of([]);
+        } else {
+          return this.pessoaService
+            .getByTermAutocomplete(cliente)
+            .pipe(finalize(() => (this.loadingPessoa = false)));
+        }
+      })
+    );
   }
 
   ngOnInit(): void {
     this.initSub();
     this.formProdutos = new FormArray([formGroupModel()]);
     const celular = this.routerQuery.getQueryParams<string>('celular');
-
     if (celular) {
-      this.celularControl.setValue(celular);
+      this.clienteControl.setValue(celular);
     }
     this.saveDisabled$ = this.formProdutos.statusChanges.pipe(
       delay(0),

@@ -9,7 +9,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HttpError, HttpErrorResponse } from '../../model/http-error';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class FormatErrorInterceptor implements HttpInterceptor {
   constructor() {}
 

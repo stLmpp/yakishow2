@@ -13,7 +13,7 @@
   <mat-hint>Pesquise pela descrição ou código do produto</mat-hint>
 </mat-form-field>
 
-<mat-nav-list *ngLet="search$ | async as search">
+<mat-nav-list *ykLet="search$ | async as search">
   <a
     [class.inativo]="!produto.ativo"
     mat-list-item
@@ -32,7 +32,7 @@
   </a>
 </mat-nav-list>
 <div>
-  <button mat-mini-fab floating center (click)="openModalProduto()">
+  <button mat-mini-fab ykFabFloating center (click)="openModalProduto()">
     <mat-icon>add</mat-icon>
   </button>
 </div>

@@ -1,1 +1,138 @@
-{{ pedido$ | async | json }}
+<ng-container *ngIf="!inputPedido ? (pedido$ | async) : pedido as pedido">
+  <mat-card class="main-margin pedido-info">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>menu_book</mat-icon>
+      <mat-card-title>Pedido {{ pedido.id }}</mat-card-title>
+      <mat-card-subtitle>
+        {{ pedido.creationDate | date: 'dd/MM/yyyy HH:mm' }}
+        <ng-container *ngIf="pedido.dataFinalizado">
+          - {{ pedido.dataFinalizado | date: 'dd/MM/yyyy HH:mm' }}
+        </ng-container>
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content
+      *ykLet="
+        pedido.dataFinalizado && pedido.dataFinalizado < nowDate as isBlocked
+      "
+    >
+      <div
+        class="overlay"
+        *ngIf="pedido.dataFinalizado && (!confirmEditStatus || isBlocked)"
+        (click)="clickOverlayChangeStatus(pedido.status, isBlocked)"
+      ></div>
+      <mat-radio-group
+        class="status-radio-group"
+        [ngModel]="pedido.status"
+        (ngModelChange)="changeStatusPedido($event)"
+        [disabled]="(changingStatus$ | async) || isBlocked"
+      >
+        <mat-radio-button
+          *ngFor="let status of pedidoStatusList"
+          [value]="status.value"
+        >
+          {{ status.label }}
+        </mat-radio-button>
+      </mat-radio-group>
+    </mat-card-content>
+  </mat-card>
+  <mat-card
+    mat-ripple
+    class="main-margin-x"
+    *ykLet="pedido.cliente as cliente"
+    [routerLink]="['/', 'pessoas', 'edit', cliente.id]"
+    [queryParams]="{ backUrl: backUrl }"
+  >
+    <mat-card-header>
+      <mat-icon mat-card-avatar>person</mat-icon>
+      <mat-card-title>
+        {{ cliente.nome }}
+      </mat-card-title>
+      <mat-card-subtitle>
+        {{ cliente.celular | mask: maskEnum.celular }}
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content class="last-child">
+      <div>{{ cliente.endereco }}</div>
+      <div>{{ cliente.complemento }}</div>
+      <div>{{ cliente.cep | mask: maskEnum.cep }}</div>
+      <div>{{ cliente.email }}</div>
+    </mat-card-content>
+  </mat-card>
+  <mat-table
+    [dataSource]="pedido.pedidoItems | orderBy: sort?.active:sort?.direction"
+    matSort
+    (matSortChange)="sort = $event"
+    [trackBy]="trackByPedidoItem"
+    class="main-margin mat-elevation-z8"
+  >
+    <ng-container matColumnDef="produto.codigo">
+      <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
+        Cod.
+      </mat-header-cell>
+      <mat-cell
+        *matCellDef="let element"
+        [matTooltip]="element.produto.descricao"
+        matTooltipPosition="above"
+        matTooltipTouchGestures="off"
+        (click)="
+          $event.stopPropagation();
+          toolTip._isTooltipVisible() ? toolTip.hide() : toolTip.show()
+        "
+        #toolTip="matTooltip"
+      >
+        {{ element.produto.codigo }}
+      </mat-cell>
+      <mat-footer-cell *matFooterCellDef>Total</mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="quantidade">
+      <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
+        Qtde
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{ element.quantidade | number: '1.0-2' }}
+      </mat-cell>
+      <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="produto.valor">
+      <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
+        Valor unit.
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{ element.produto.valor | currency }}
+      </mat-cell>
+      <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="total">
+      <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
+        Total
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{ element.total | currency }}
+      </mat-cell>
+      <mat-footer-cell *matFooterCellDef>
+        {{ pedido.pedidoItems | sumBy: 'total' | currency }}
+      </mat-footer-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+    <mat-row
+      *matRowDef="let row; columns: columns"
+      [matTooltip]="row.observacao"
+      matTooltipPosition="above"
+      matTooltipTouchGestures="off"
+      (click)="toolTip._isTooltipVisible() ? toolTip.hide() : toolTip.show()"
+      #toolTip="matTooltip"
+    ></mat-row>
+    <mat-footer-row *matFooterRowDef="columns"></mat-footer-row>
+  </mat-table>
+</ng-container>
+<button
+  *ngIf="!inputPedido"
+  mat-mini-fab
+  ykFabFloating
+  bottom
+  left
+  (click)="navigateBack()"
+>
+  <mat-icon>keyboard_arrow_left</mat-icon>
+</button>

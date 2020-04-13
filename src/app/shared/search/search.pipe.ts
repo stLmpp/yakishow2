@@ -3,7 +3,7 @@ import { isArray } from 'is-what';
 
 @Pipe({ name: 'search' })
 export class SearchPipe implements PipeTransform {
-  transform<T>(
+  transform<T = any>(
     value: T[],
     keyOrKeys: keyof T | (keyof T)[],
     term: any,
@@ -13,7 +13,7 @@ export class SearchPipe implements PipeTransform {
   }
 }
 
-export function search<T>(
+export function search<T = any>(
   array: T[],
   keyOrKeys: keyof T | (keyof T)[],
   term: any,
