@@ -77,6 +77,7 @@
       ykSwipeActions
       swipeIcon="delete"
       swipeIconColor="warn"
+      [updatePositionOnAnyChange]="true"
       [swipeDisabled]="pedidoSaving"
       (swipeAction)="deleteProduto($index)"
       [class.mat-error]="form.dirty && form.get('codigo').hasError('required')"

@@ -267,9 +267,23 @@ export class NovoPedidoComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initSub();
     this.formProdutos = new FormArray([formGroupModel()]);
-    const celular = this.routerQuery.getQueryParams<string>('celular');
-    if (celular) {
-      this.clienteControl.setValue(celular);
+    const idPessoa = +this.routerQuery.getQueryParams<string>(
+      RouteParamsEnum.idPessoa
+    );
+    if (idPessoa) {
+      this.loadingPessoa = true;
+      this.clienteControl.disable();
+      this.pessoaService
+        .getById(idPessoa)
+        .pipe(
+          finalize(() => {
+            this.loadingPessoa = false;
+          })
+        )
+        .subscribe(pessoa => {
+          this.pessoa = pessoa;
+          this.clienteControl.setValue(pessoa.celular + ' - ' + pessoa.nome);
+        });
     }
     this.saveDisabled$ = this.formProdutos.statusChanges.pipe(
       delay(0),

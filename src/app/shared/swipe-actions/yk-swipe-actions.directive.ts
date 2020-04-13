@@ -58,11 +58,17 @@ export class YkSwipeActionsDirective
   @Input() swipeIcon: string;
   @Input() swipeIconColor: ThemePalette;
   @Input() swipeIconRipple: boolean;
+  @Input() updatePositionOnAnyChange: boolean;
 
   @HostBinding('style.z-index') @Input() zIndex = 1;
   @Output() swiped = new EventEmitter<TouchInput>();
   @Output() swipeClick = new EventEmitter<MouseEvent>();
   @Output() swipeAction = new EventEmitter();
+
+  @HostListener('panstart')
+  panStart(): void {
+    this.updatePosition();
+  }
 
   @HostListener('panmove', ['$event'])
   pan($event: TouchInput): void {
@@ -175,7 +181,10 @@ export class YkSwipeActionsDirective
   }
 
   ngDoCheck(): void {
-    if (!this.swipeActionsService.doCheckDisabled) {
+    if (
+      this.updatePositionOnAnyChange &&
+      !this.swipeActionsService.doCheckDisabled
+    ) {
       this.updatePosition();
     }
   }
