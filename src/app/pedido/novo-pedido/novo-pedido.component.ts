@@ -50,6 +50,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { trackByFactory } from '../../util/util';
 import { SnackBarService } from '../../shared/snack-bar/snack-bar.service';
 import { RouteParamsEnum } from '../../model/route-params.enum';
+import { MaskApplierService } from 'ngx-mask';
 
 const produtoIdExists: ValidatorFn = control => {
   const produtoIdControl = control?.parent?.get?.('produtoId');
@@ -93,7 +94,8 @@ export class NovoPedidoComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private snackBarService: SnackBarService,
     private pedidoService: PedidoService,
-    private routerQuery: RouterQuery
+    private routerQuery: RouterQuery,
+    private maskApplierService: MaskApplierService
   ) {}
 
   private _destroy$ = new Subject();
@@ -169,9 +171,7 @@ export class NovoPedidoComponent implements OnInit, OnDestroy {
       .subscribe(pessoa => {
         if (pessoa) {
           this.pessoa = pessoa;
-          this.clienteControl.setValue(
-            this.pessoa.celular + ' - ' + this.pessoa.nome
-          );
+          this.clienteControl.setValue(this.getPessoaInfo(this.pessoa));
           this.clienteControl.disable({ emitEvent: false });
         }
       });
@@ -234,6 +234,14 @@ export class NovoPedidoComponent implements OnInit, OnDestroy {
       });
   }
 
+  private getPessoaInfo({ celular, nome }: Pessoa): string {
+    return (
+      this.maskApplierService.applyMask(celular, MaskEnum.celular) +
+      ' - ' +
+      nome
+    );
+  }
+
   navigateBack(): void {
     const backUrl = this.routerQuery.getQueryParams<string>(
       RouteParamsEnum.backUrl
@@ -282,7 +290,7 @@ export class NovoPedidoComponent implements OnInit, OnDestroy {
         )
         .subscribe(pessoa => {
           this.pessoa = pessoa;
-          this.clienteControl.setValue(pessoa.celular + ' - ' + pessoa.nome);
+          this.clienteControl.setValue(this.getPessoaInfo(pessoa));
         });
     }
     this.saveDisabled$ = this.formProdutos.statusChanges.pipe(
