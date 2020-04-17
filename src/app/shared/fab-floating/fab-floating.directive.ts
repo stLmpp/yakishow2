@@ -15,7 +15,7 @@ import { takeUntil } from 'rxjs/operators';
 @Directive({
   selector: '[mat-fab][ykFabFloating],[mat-mini-fab][ykFabFloating]',
 })
-export class YkFabFloatingDirective implements OnInit, OnDestroy {
+export class FabFloatingDirective implements OnInit, OnDestroy {
   constructor(
     private snackBarService: SnackBarService,
     private renderer2: Renderer2,

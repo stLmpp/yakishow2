@@ -1098,6 +1098,10 @@
     merge-source-map "^1.1.0"
     schema-utils "^2.6.4"
 
+"@ngrx/component@github:ngrx/component-builds":
+  version "9.1.0"
+  resolved "https://codeload.github.com/ngrx/component-builds/tar.gz/e7493040d9f6fe13d9fb9ea1ef413d5375401dbc"
+
 "@ngtools/webpack@9.1.1":
   version "9.1.1"
   resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-9.1.1.tgz#d67c23a62cd6d5ff0ca8f46062d9dc4aa7eebff4"

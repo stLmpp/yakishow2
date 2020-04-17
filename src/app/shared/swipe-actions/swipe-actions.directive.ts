@@ -26,7 +26,7 @@ import { NAVIGATOR } from '../../core/navigator.token';
 import { TouchInput } from 'hammerjs';
 
 @Directive({ selector: '[ykSwipeActions]', exportAs: 'ykSwipeActions' })
-export class YkSwipeActionsDirective
+export class SwipeActionsDirective
   implements OnInit, AfterViewInit, OnDestroy, DoCheck {
   constructor(
     private elementRef: ElementRef,

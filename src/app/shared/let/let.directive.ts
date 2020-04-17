@@ -18,7 +18,7 @@ class YkLetContext<T> {
 }
 
 @Directive({ selector: '[ykLet]' })
-export class YkLetDirective<T> implements OnDestroy, OnInit {
+export class LetDirective<T> implements OnDestroy, OnInit {
   private _context = new YkLetContext<T>();
 
   constructor(
@@ -27,7 +27,7 @@ export class YkLetDirective<T> implements OnDestroy, OnInit {
   ) {}
 
   static ngTemplateContextGuard<T>(
-    dir: YkLetDirective<T>,
+    dir: LetDirective<T>,
     ctx: any
   ): ctx is YkLetContext<NonNullable<T>> {
     return true;

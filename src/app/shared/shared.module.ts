@@ -13,39 +13,42 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { YkLetDirective } from './let/yk-let.directive';
+import { LetDirective } from './let/let.directive';
 import { environment } from '../../environments/environment';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { YkDisabledControlDirective } from './disabled-control/yk-disabled-control.directive';
+import { DisabledControlDirective } from './disabled-control/disabled-control.directive';
 import { SearchPipe } from './search/search.pipe';
 import { OrderByPipe } from './order-by/order-by.pipe';
 import { ScrollToTopComponent } from './scroll-to-top/scroll-to-top.component';
 import { DialogComponent } from './dialog/dialog.component';
-import { YkSwipeActionsDirective } from './swipe-actions/yk-swipe-actions.directive';
+import { SwipeActionsDirective } from './swipe-actions/swipe-actions.directive';
 import { SwipeActionComponent } from './swipe-actions/swipe-action.component';
 import { CardComponent } from './card/card.component';
 import { CardsComponent } from './card/cards.component';
 import { MatRippleModule } from '@angular/material/core';
-import { YkFabFloatingDirective } from './fab-floating/yk-fab-floating.directive';
+import { FabFloatingDirective } from './fab-floating/fab-floating.directive';
 import { FilterPipe } from './filter/filter.pipe';
 import { GetDeepPipe } from './get-deep/get-deep.pipe';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { SumByPipe } from './sum-by/sum-by.pipe';
+import { ReactiveComponentModule } from '@ngrx/component';
 
 const DECLARATIONS = [
   environment.production ? [] : HammerjsDirective,
-  YkLetDirective,
-  YkDisabledControlDirective,
-  SearchPipe,
-  OrderByPipe,
+  LetDirective,
+  DisabledControlDirective,
   ScrollToTopComponent,
   DialogComponent,
-  YkSwipeActionsDirective,
+  SwipeActionsDirective,
   SwipeActionComponent,
   CardComponent,
   CardsComponent,
-  YkFabFloatingDirective,
+  FabFloatingDirective,
+  ConfirmDialogComponent,
 ];
+
+const PIPES = [SearchPipe, OrderByPipe, GetDeepPipe, SumByPipe, FilterPipe];
+
 const MODULES = [
   MatToolbarModule,
   MatIconModule,
@@ -63,17 +66,12 @@ const MODULES = [
   MatSnackBarModule,
   OverlayModule,
   MatRippleModule,
+  ReactiveComponentModule,
 ];
 
 @NgModule({
-  declarations: [
-    ...DECLARATIONS,
-    FilterPipe,
-    GetDeepPipe,
-    ConfirmDialogComponent,
-    SumByPipe,
-  ],
-  exports: [...DECLARATIONS, ...MODULES, GetDeepPipe, SumByPipe, FilterPipe],
+  declarations: [...DECLARATIONS, ...PIPES],
+  exports: [...DECLARATIONS, ...PIPES, ...MODULES],
   imports: [CommonModule, ...MODULES],
 })
 export class SharedModule {

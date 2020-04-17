@@ -6,7 +6,7 @@ import { isUndefined } from 'is-what';
   selector:
     '[formControl][ykDisabledControl],[formControlName][ykDisabledControl],[formGroup][ykDisabledControl],[formGroupName][ykDisabledControl],[formArray][ykDisabledControl],[formArrayName][ykDisabledControl]',
 })
-export class YkDisabledControlDirective implements AfterViewInit {
+export class DisabledControlDirective implements AfterViewInit {
   constructor(
     @Optional() @Host() ngControl: NgControl,
     @Optional() @Host() controlContainer: ControlContainer
