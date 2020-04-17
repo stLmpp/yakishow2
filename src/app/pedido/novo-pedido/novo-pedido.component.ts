@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   Component,
   ElementRef,
   Inject,
@@ -82,7 +83,7 @@ const formGroupModel = () =>
     ]),
   ],
 })
-export class NovoPedidoComponent implements OnInit, OnDestroy {
+export class NovoPedidoComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private pessoaQuery: PessoaQuery,
     private pessoaService: PessoaService,
@@ -103,7 +104,7 @@ export class NovoPedidoComponent implements OnInit, OnDestroy {
   @ViewChildren('matExpansionPanel')
   matExpansionPanels: QueryList<MatExpansionPanel>;
 
-  @ViewChild('celularRef') celularRef: ElementRef<HTMLInputElement>;
+  @ViewChild('clienteRef') clienteRef: ElementRef<HTMLInputElement>;
 
   pessoa: Pessoa;
 
@@ -153,7 +154,6 @@ export class NovoPedidoComponent implements OnInit, OnDestroy {
 
   addForm(): void {
     this.formProdutos.push(formGroupModel());
-    this.matExpansionPanels.toArray()[this.expanded]?.close();
     setTimeout(() => {
       this.matExpansionPanels.last?.open();
     });
@@ -273,8 +273,8 @@ export class NovoPedidoComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.initSub();
     this.formProdutos = new FormArray([formGroupModel()]);
+    this.initSub();
     const idPessoa = +this.routerQuery.getQueryParams<string>(
       RouteParamsEnum.idPessoa
     );
@@ -298,6 +298,16 @@ export class NovoPedidoComponent implements OnInit, OnDestroy {
       startWith('INVALID'),
       map(status => ['INVALID', 'PENDING'].includes(status))
     );
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      const term = this.routerQuery.getQueryParams<string>('term');
+      if (term) {
+        this.clienteControl.setValue(term);
+        this.clienteRef.nativeElement.focus();
+      }
+    });
   }
 
   ngOnDestroy(): void {

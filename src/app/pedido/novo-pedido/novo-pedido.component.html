@@ -12,7 +12,7 @@
     placeholder="Celular ou nome"
     [matAutocomplete]="clienteAutocomplete"
     [matAutocompleteDisabled]="!!pessoa?.id"
-    #celularRef
+    #clienteRef
   />
   <mat-autocomplete #clienteAutocomplete [autoActiveFirstOption]="true">
     <mat-option
@@ -31,8 +31,8 @@
         clienteControl.value &&
         !clientes?.length
       "
-      [value]="celularRef.value"
-      (click)="criarPessoa(celularRef.value)"
+      [value]="clienteRef.value"
+      (click)="criarPessoa(clienteRef.value)"
     >
       Nenhum cliente encontrado, criar?
     </mat-option>

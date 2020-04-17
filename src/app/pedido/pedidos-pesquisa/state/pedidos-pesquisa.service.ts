@@ -8,7 +8,7 @@ export class PedidosPesquisaService {
 
   private timeout: any;
 
-  resetFormInTimeout(time = 5000): void {
+  resetFormInTimeout(time = 900000): void {
     this.timeout = setTimeout(() => {
       this.pedidosPesquisaStore.update({ form: null });
     }, time);
