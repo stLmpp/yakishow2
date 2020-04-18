@@ -31,6 +31,7 @@ import { FilterPipe } from './filter/filter.pipe';
 import { GetDeepPipe } from './get-deep/get-deep.pipe';
 import { SumByPipe } from './sum-by/sum-by.pipe';
 import { SnackBarComponent } from './snack-bar/snack-bar.component';
+import { DefaultPipe } from './default/default.pipe';
 
 const DECLARATIONS = [
   environment.production ? [] : HammerjsDirective,
@@ -46,7 +47,14 @@ const DECLARATIONS = [
   SnackBarComponent,
 ];
 
-const PIPES = [SearchPipe, OrderByPipe, GetDeepPipe, SumByPipe, FilterPipe];
+const PIPES = [
+  SearchPipe,
+  OrderByPipe,
+  GetDeepPipe,
+  SumByPipe,
+  FilterPipe,
+  DefaultPipe,
+];
 
 const MODULES = [
   MatToolbarModule,

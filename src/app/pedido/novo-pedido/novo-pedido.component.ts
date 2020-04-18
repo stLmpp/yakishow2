@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  HostListener,
   Inject,
   OnDestroy,
   OnInit,
@@ -260,6 +261,7 @@ export class NovoPedidoComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.maskApplierService.applyMask(celular, MaskEnum.celular);
   }
 
+  @HostListener('swiperight')
   navigateBack(): void {
     const backUrl = this.routerQuery.getQueryParams<string>(
       RouteParamsEnum.backUrl

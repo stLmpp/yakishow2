@@ -8,6 +8,7 @@ import { ProdutoItemComponent } from './produto-item/produto-item.component';
 import { NgxCurrencyModule } from 'ngx-currency';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ValidatorsModule } from '../validators/validators.module';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [ProdutoComponent, ProdutoItemComponent],
@@ -18,6 +19,7 @@ import { ValidatorsModule } from '../validators/validators.module';
     NgxCurrencyModule,
     MatCheckboxModule,
     ValidatorsModule,
+    MatCardModule,
   ],
 })
 export class ProdutoModule {}

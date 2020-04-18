@@ -76,6 +76,9 @@
     </mat-list-item>
   </virtual-scroller>
 </mat-nav-list>
+<button mat-mini-fab ykFabFloating left (click)="navigateBack()">
+  <mat-icon>keyboard_arrow_left</mat-icon>
+</button>
 <button mat-mini-fab ykFabFloating center [routerLink]="['./', 'novo']">
   <mat-icon>add</mat-icon>
 </button>

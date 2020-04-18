@@ -16,6 +16,7 @@ export class PedidoService {
   constructor(private pedidoStore: PedidoStore, private http: HttpClient) {}
 
   private target = 'pedido';
+  private targetItem = 'pedido-item';
 
   getByDay(day: Date): Observable<Pedido[]> {
     const params = new HttpParams({ day });
@@ -73,5 +74,12 @@ export class PedidoService {
           this.pedidoStore.upsertMany(pedidos);
         })
       );
+  }
+
+  getExistsProduto(idProduto: number): Observable<boolean> {
+    const params = new HttpParams({ idProduto });
+    return this.http.get<boolean>(`${this.targetItem}/exists/produto`, {
+      params,
+    });
   }
 }

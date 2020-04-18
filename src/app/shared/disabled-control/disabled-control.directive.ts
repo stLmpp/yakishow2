@@ -1,6 +1,16 @@
-import { AfterViewInit, Directive, Host, Input, Optional } from '@angular/core';
-import { ControlContainer, NgControl } from '@angular/forms';
+import {
+  AfterViewInit,
+  ContentChildren,
+  Directive,
+  Host,
+  Input,
+  Optional,
+  QueryList,
+} from '@angular/core';
+import { AbstractControl, ControlContainer, NgControl } from '@angular/forms';
 import { isUndefined } from 'is-what';
+
+type DisabledControlAction = keyof Pick<AbstractControl, 'disable' | 'enable'>;
 
 @Directive({
   selector:
@@ -14,22 +24,34 @@ export class DisabledControlDirective implements AfterViewInit {
     this.ngControl = ngControl ?? controlContainer;
   }
 
+  @ContentChildren(DisabledControlDirective, { descendants: true })
+  disabledControlChildren: QueryList<DisabledControlDirective>;
+
   private _markForLater: boolean;
-  private ngControl: NgControl | ControlContainer;
+  private readonly ngControl: NgControl | ControlContainer;
 
   @Input() emitEvent = false;
   @Input() onlySelf = false;
 
   @Input()
   set ykDisabledControl(disabled: boolean) {
-    const action = disabled ? 'disable' : 'enable';
-    if (!this.ngControl?.control?.[action]) {
+    const action: DisabledControlAction = disabled ? 'disable' : 'enable';
+    if (!this.ngControl?.control?.[action] || !this.disabledControlChildren) {
       this._markForLater = disabled;
+    } else {
+      this.ngControl?.control?.[action]?.({
+        emitEvent: this.emitEvent,
+        onlySelf: this.onlySelf,
+      });
+      if (this.disabledControlChildren?.length) {
+        this.disabledControlChildren.forEach(child => {
+          child?.ngControl?.control?.[action]?.({
+            emitEvent: this.emitEvent,
+            onlySelf: this.onlySelf,
+          });
+        });
+      }
     }
-    this.ngControl?.control?.[action]?.({
-      emitEvent: this.emitEvent,
-      onlySelf: this.onlySelf,
-    });
   }
 
   ngAfterViewInit(): void {

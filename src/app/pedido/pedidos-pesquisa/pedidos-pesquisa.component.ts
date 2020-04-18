@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  HostListener,
   OnDestroy,
   OnInit,
   QueryList,
@@ -137,6 +138,7 @@ export class PedidosPesquisaComponent implements OnInit, OnDestroy {
     );
   }
 
+  @HostListener('swiperight')
   navigateBack(): void {
     const backUrl = this.routerQuery.getQueryParams<string>(
       RouteParamsEnum.backUrl
@@ -235,7 +237,17 @@ export class PedidosPesquisaComponent implements OnInit, OnDestroy {
         this.form.get('cliente').disable();
       });
     }
-    if (idPessoa || !isAllNull(this.form.getRawValue())) {
+    const idProduto = +this.routerQuery.getQueryParams<string>(
+      RouteParamsEnum.idProduto
+    );
+    if (idProduto) {
+      this.form.get('produtoId').setValue(idProduto);
+      this.produtoService.getById(idProduto).subscribe(({ descricao }) => {
+        this.form.get('produto').setValue(descricao);
+        this.form.get('produto').disable();
+      });
+    }
+    if (!isAllNull(this.form.getRawValue())) {
       this.pesquisar();
       this.pedidos$.pipe(
         take(1),

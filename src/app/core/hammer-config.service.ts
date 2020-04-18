@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class HammerConfig extends HammerGestureConfig {
-  buildHammer(element: HTMLElement): any {
-    return new Hammer(element, {
-      touchAction: 'pan-y',
-    });
-  }
+  overrides = {
+    swipe: { direction: Hammer.DIRECTION_HORIZONTAL },
+    pinch: { enable: false },
+    rotate: { enable: false },
+  };
 }

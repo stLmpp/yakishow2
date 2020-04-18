@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { ProdutoStore } from './produto.store';
 import { Produto } from '../../model/produto';
 import { tap } from 'rxjs/operators';
@@ -7,15 +7,21 @@ import { Observable } from 'rxjs';
 import { UpdateResult } from '../../model/update-result';
 import { cacheableCustom } from '../../util/akita';
 import { setLoading } from '@datorama/akita';
+import { HttpParams } from '../../util/http-params';
+import { PedidoService } from '../../pedido/state/pedido.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProdutoService {
-  constructor(private produtoStore: ProdutoStore, private http: HttpClient) {}
+  constructor(
+    private produtoStore: ProdutoStore,
+    private http: HttpClient,
+    private pedidoService: PedidoService
+  ) {}
 
   private target = 'produto';
 
   getBySimilarityCodigo(codigo: string): Observable<Produto[]> {
-    const params = new HttpParams({ fromObject: { codigo } });
+    const params = new HttpParams({ codigo });
     return this.http.get<Produto[]>(`${this.target}/similarity/codigo`, {
       params,
     });
@@ -63,8 +69,24 @@ export class ProdutoService {
     withPedido: boolean
   ): Observable<Produto[]> {
     const params = new HttpParams({
-      fromObject: { term, withPedido: '' + withPedido, limit: '8' },
+      term,
+      withPedido,
+      limit: '8',
     });
     return this.http.get<Produto[]>(`${this.target}/search`, { params });
+  }
+
+  getExistsPedido(idProduto: number): Observable<boolean> {
+    return this.pedidoService.getExistsProduto(idProduto).pipe(
+      tap(hasPedido => {
+        this.produtoStore.update(idProduto, { hasPedido });
+      })
+    );
+  }
+
+  getById(idProduto: number): Observable<Produto> {
+    return this.http
+      .get<Produto>(`${this.target}/id/${idProduto}`)
+      .pipe(tap(produto => this.produtoStore.upsert(idProduto, produto)));
   }
 }

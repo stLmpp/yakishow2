@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  HostListener,
   Inject,
   OnDestroy,
   OnInit,
@@ -19,6 +20,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { RouteParamsEnum } from '../model/route-params.enum';
 import { Subject } from 'rxjs';
 import { PessoaService } from './state/pessoa.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-pessoa',
@@ -31,7 +33,8 @@ export class PessoaComponent implements OnInit, AfterViewInit, OnDestroy {
     public pessoaQuery: PessoaQuery,
     @Inject(WINDOW) public window: Window,
     private routerQuery: RouterQuery,
-    private pessoaService: PessoaService
+    private pessoaService: PessoaService,
+    private router: Router
   ) {}
 
   private _destroy$ = new Subject();
@@ -50,6 +53,11 @@ export class PessoaComponent implements OnInit, AfterViewInit, OnDestroy {
 
   comparePessoa = compareByFactory<Pessoa>('id');
   trackByPessoa = trackByFactory<Pessoa>('id');
+
+  @HostListener('swiperight')
+  navigateBack(): void {
+    this.router.navigate(['/home']);
+  }
 
   ngOnInit(): void {
     this.idPessoaParam = +this.routerQuery.getQueryParams(

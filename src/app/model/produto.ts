@@ -11,6 +11,8 @@ export class Produto extends CommonHistory {
   valor: number;
   ativo: boolean;
 
+  hasPedido?: boolean;
+
   setValues(values: Partial<Produto> = {}): void {
     Object.assign(this, values);
     if (values?.valor) this.valor = parseFloat('' + values.valor);

@@ -15,6 +15,8 @@ import { catchError, finalize, tap } from 'rxjs/operators';
 import { UpdateResult } from '../../model/update-result';
 import { SnackBarService } from '../../shared/snack-bar/snack-bar.service';
 import { ValidatorsService } from '../../validators/validators.service';
+import { ProdutoQuery } from '../state/produto.query';
+import { isUndefined } from 'is-what';
 
 @Component({
   selector: 'app-produto-item',
@@ -24,12 +26,13 @@ import { ValidatorsService } from '../../validators/validators.service';
 })
 export class ProdutoItemComponent implements OnInit {
   constructor(
-    private matDialogRef: MatDialogRef<ProdutoItemComponent>,
+    public matDialogRef: MatDialogRef<ProdutoItemComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public produto: Produto,
     private produtoService: ProdutoService,
     private snackBarService: SnackBarService,
     private validatorsService: ValidatorsService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private produtoQuery: ProdutoQuery
   ) {
     this.edit = !!produto;
     this.produto = new Produto(this.produto);
@@ -39,9 +42,12 @@ export class ProdutoItemComponent implements OnInit {
   }
 
   loading = false;
+  loadingExistsPedido = false;
   edit: boolean;
 
   form: FormGroup;
+
+  hasPedido$: Observable<boolean>;
 
   onSubmit(): void {
     this.loading = true;
@@ -57,7 +63,7 @@ export class ProdutoItemComponent implements OnInit {
       .pipe(
         tap(() => {
           this.matDialogRef.close();
-          this.snackBarService.success('Produto salvo com sucesso!', 'Fechar');
+          this.snackBarService.success('Produto salvo com sucesso!');
         }),
         finalize(() => {
           this.loading = false;
@@ -75,6 +81,19 @@ export class ProdutoItemComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.hasPedido$ = this.produtoQuery.hasPedido(this.produto?.id);
+    if (this.produto?.id && isUndefined(this.produto?.hasPedido)) {
+      this.loadingExistsPedido = true;
+      this.produtoService
+        .getExistsPedido(this.produto?.id)
+        .pipe(
+          finalize(() => {
+            this.loadingExistsPedido = false;
+            this.changeDetectorRef.markForCheck();
+          })
+        )
+        .subscribe();
+    }
     this.form = new FormGroup({
       codigo: new FormControl(this.produto.codigo, {
         validators: [Validators.required],

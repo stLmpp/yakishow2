@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  HostListener,
   OnDestroy,
   OnInit,
 } from '@angular/core';
@@ -85,6 +86,7 @@ export class PessoaItemComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  @HostListener('swiperight')
   navigateBack(): void {
     let commands = '../';
     const queryParams: Params = {};

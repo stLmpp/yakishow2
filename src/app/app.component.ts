@@ -24,7 +24,7 @@ import { AuthQuery } from './auth/state/auth.query';
       LTR('NovoPedido', 'PedidoItem'),
       ...SLIDE_X('PedidosPesquisa', 'PedidoItem'),
       ...SLIDE_X('Pedidos', 'PedidosPesquisa'),
-      LTR('Home', '*'),
+      ...SLIDE_X('Home', '*'),
       ...SLIDE_X('PedidoItem', 'PessoaItem'),
       ...SLIDE_X('PedidosDia', 'PessoaItem'),
       ...SLIDE_X('PedidosDia', 'NovoPedido'),

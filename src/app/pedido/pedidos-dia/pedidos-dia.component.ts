@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  HostListener,
   OnInit,
   TemplateRef,
   ViewChild,
@@ -19,6 +20,7 @@ import {
 } from '../../model/pedido-status.enum';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-pedidos-dia',
@@ -31,7 +33,9 @@ export class PedidosDiaComponent implements OnInit {
     public pedidoQuery: PedidoQuery,
     private routerQuery: RouterQuery,
     private matDialog: MatDialog,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   @ViewChild('filterStatusSettingsRef', { read: TemplateRef })
@@ -51,6 +55,11 @@ export class PedidosDiaComponent implements OnInit {
 
   trackByPedidoStatus = trackByFactory<LabelValue>('value');
   trackByPedido = trackByFactory<Pedido>('id');
+
+  @HostListener('swiperight')
+  navigateBack(): void {
+    this.router.navigate(['../'], { relativeTo: this.activatedRoute });
+  }
 
   openFilterModal(): void {
     this.filterStatusSettingsDialogRef = this.matDialog.open(

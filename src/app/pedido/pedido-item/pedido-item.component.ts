@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  HostListener,
   Inject,
   Input,
   LOCALE_ID,
@@ -145,6 +146,7 @@ export class PedidoItemComponent implements OnInit, OnDestroy {
       });
   }
 
+  @HostListener('swiperight')
   navigateBack(): void {
     const backUrl = this.routerQuery.getQueryParams<string>(
       RouteParamsEnum.backUrl
