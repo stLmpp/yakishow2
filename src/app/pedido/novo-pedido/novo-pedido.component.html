@@ -17,9 +17,7 @@
   <mat-autocomplete #clienteAutocomplete [autoActiveFirstOption]="true">
     <mat-option
       *ngFor="let cliente of clientes; trackBy: trackByCliente"
-      value="{{ cliente.celular | mask: maskEnum.celular }} - {{
-        cliente.nome
-      }}"
+      [value]="cliente.celular | mask: maskEnum.celular"
       (click)="selectCliente(cliente)"
     >
       {{ cliente.celular | mask: maskEnum.celular }} - {{ cliente.nome }}
@@ -82,6 +80,7 @@
       (swipeAction)="deleteProduto($index)"
       [class.mat-error]="form.dirty && form.get('codigo').hasError('required')"
       #matExpansionPanel
+      #swipeActions="ykSwipeActions"
       @items
     >
       <mat-expansion-panel-header>

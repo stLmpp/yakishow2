@@ -5,7 +5,7 @@
 </div>
 <form [formGroup]="form" (ngSubmit)="save()">
   <mat-form-field *ykLet="form.get('nome') as nomeControl" class="nome">
-    <input matInput formControlName="nome" placeholder="Nome" required />
+    <input matInput formControlName="nome" placeholder="Nome" />
     <mat-error *ngIf="nomeControl.hasError('required')">
       Nome é obrigatório
     </mat-error>
@@ -15,10 +15,8 @@
       matInput
       formControlName="celular"
       placeholder="Celular"
-      required
       inputmode="tel"
       [mask]="masksEnum.celular"
-      [ykUniqueCelular]="idPessoa"
     />
     <mat-error *ngIf="celularControl.hasError('uniqueCelular')">
       Celular já cadastrado
@@ -26,6 +24,11 @@
     <mat-error *ngIf="celularControl.hasError('required')">
       Celular é obrigatório
     </mat-error>
+    <mat-spinner
+      matSuffix
+      diameter="18"
+      *ngIf="celularControl.pending"
+    ></mat-spinner>
   </mat-form-field>
   <mat-form-field>
     <input
@@ -38,12 +41,7 @@
     <mat-spinner matSuffix diameter="18" *ngIf="loadingCep"></mat-spinner>
   </mat-form-field>
   <mat-form-field *ykLet="form.get('endereco') as enderecoControl">
-    <input
-      matInput
-      formControlName="endereco"
-      placeholder="Endereço"
-      required
-    />
+    <input matInput formControlName="endereco" placeholder="Endereço" />
     <mat-error *ngIf="enderecoControl.hasError('required')">
       Endereço é obrigatório
     </mat-error>
@@ -56,10 +54,8 @@
       matInput
       formControlName="email"
       placeholder="E-mail"
-      email
       type="email"
       inputmode="email"
-      [ykUniqueEmail]="idPessoa"
     />
     <mat-error *ngIf="emailControl.hasError('email')">
       E-mail inválido
@@ -67,6 +63,11 @@
     <mat-error *ngIf="emailControl.hasError('uniqueEmail')">
       E-mail já cadastrado
     </mat-error>
+    <mat-spinner
+      matSuffix
+      diameter="18"
+      *ngIf="emailControl.pending"
+    ></mat-spinner>
   </mat-form-field>
   <button
     mat-mini-fab

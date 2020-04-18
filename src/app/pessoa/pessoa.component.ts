@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   Inject,
   OnDestroy,
@@ -23,6 +24,7 @@ import { PessoaService } from './state/pessoa.service';
   selector: 'app-pessoa',
   templateUrl: './pessoa.component.html',
   styleUrls: ['./pessoa.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PessoaComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(

@@ -13,9 +13,7 @@
         type="text"
         formControlName="codigo"
         placeholder="Código"
-        required
         maxlength="30"
-        [ykUniqueCodigo]="produto.id"
         autocomplete="off"
         [ykDisabledControl]="!isAtivo || loading"
         #codigo
@@ -33,7 +31,7 @@
         *ngIf="codigoControl.pending"
       ></mat-spinner>
     </mat-form-field>
-    <mat-form-field>
+    <mat-form-field *ykLet="form.get('descricao') as descricaoControl">
       <textarea
         matInput
         [matTextareaAutosize]="true"
@@ -41,13 +39,15 @@
         formControlName="descricao"
         placeholder="Descrição"
         maxlength="255"
-        required
         [ykDisabledControl]="!isAtivo || loading"
         #descricao
       ></textarea>
       <mat-hint align="end">{{ descricao.value?.length || 0 }}/255</mat-hint>
-      <mat-error *ngIf="form.get('descricao').hasError('required')">
+      <mat-error *ngIf="descricaoControl.hasError('required')">
         Descrição é obrigatória!
+      </mat-error>
+      <mat-error *ngIf="descricaoControl.hasError('maxlength')">
+        Descrição muito grande!
       </mat-error>
     </mat-form-field>
     <mat-form-field>
@@ -58,7 +58,7 @@
         [options]="{ allowNegative: false }"
         formControlName="valor"
         placeholder="Valor"
-        required
+        autocomplete="off"
         [ykDisabledControl]="!isAtivo || loading"
       />
       <span matPrefix>R$&nbsp;</span>

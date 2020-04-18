@@ -15,8 +15,6 @@ export class PedidoQuery extends QueryEntity<PedidoState> {
     super(store);
   }
 
-  all$ = this.selectAll();
-
   selectDayList(day: Date = new Date()): Observable<Pedido[]> {
     return this.selectAll().pipe(
       map(pedidos => pedidos.filter(filterByDate(day)))

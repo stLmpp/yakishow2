@@ -4,7 +4,18 @@
   $is-dark-theme: map-get($theme, is-dark);
   .mat-snack-bar-container {
     &.error {
-      color: mat-color(mat-palette($mat-red, if($is-dark-theme, 500, 100)));
+      color: yk-color($mat-red, if($is-dark-theme, 500, 100));
+    }
+  }
+  .yk-snackbar {
+    &.error {
+      color: yk-color($mat-red, if($is-dark-theme, 500, 100));
+    }
+    &.success {
+      color: yk-color($mat-green, if($is-dark-theme, 400, 100));
+    }
+    &.warning {
+      color: yk-color($mat-yellow, if($is-dark-theme, 800, 100));
     }
   }
 }

@@ -1,4 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { LTR, RTL, SLIDE_X, TTB } from './route-animations';
 import { trigger } from '@angular/animations';
 import { Subject } from 'rxjs';
@@ -26,6 +31,7 @@ import { AuthQuery } from './auth/state/auth.query';
       ...SLIDE_X('PedidosPesquisa', 'Pessoas'),
     ]),
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit, OnDestroy {
   constructor(public authQuery: AuthQuery) {}

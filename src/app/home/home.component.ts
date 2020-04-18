@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { SidenavService } from '../sidenav/sidenav.service';
 import { AuthQuery } from '../auth/state/auth.query';
 import { trackByFactory } from '../util/util';
@@ -8,6 +8,7 @@ import { Sidenav } from '../sidenav/sidenav.component';
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent implements OnInit {
   constructor(

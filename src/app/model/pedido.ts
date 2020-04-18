@@ -4,6 +4,10 @@ import { PedidoItem } from './pedido-item';
 import { PedidoStatusEnum } from './pedido-status.enum';
 
 export class Pedido extends CommonHistory {
+  constructor(partial: Partial<Pedido>) {
+    super();
+    Object.assign(this, partial);
+  }
   id: number;
   status: PedidoStatusEnum;
   clienteId: number;

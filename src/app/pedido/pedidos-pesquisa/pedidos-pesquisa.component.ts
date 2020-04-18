@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   OnDestroy,
@@ -47,6 +48,7 @@ import { PedidoQuery } from '../state/pedido.query';
   selector: 'app-pedidos-pesquisar',
   templateUrl: './pedidos-pesquisa.component.html',
   styleUrls: ['./pedidos-pesquisa.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PedidosPesquisaComponent implements OnInit, OnDestroy {
   constructor(
@@ -121,10 +123,8 @@ export class PedidosPesquisaComponent implements OnInit, OnDestroy {
       );
     }
     if (isEmpty(payload)) {
-      this.snackBarService.open(
-        'Precisa de pelo menos um parâmetro de pesquisa',
-        'Fechar',
-        { panelClass: 'error' }
+      this.snackBarService.warning(
+        'Precisa de pelo menos um parâmetro de pesquisa'
       );
       return;
     }

@@ -1,12 +1,20 @@
-<h2 mat-dialog-title *ngIf="data.title">{{ data.title }}</h2>
-<mat-dialog-content>
-  {{ data.content }}
-</mat-dialog-content>
+<h2 mat-dialog-title *ngIf="data?.title">{{ data.title }}</h2>
+<mat-dialog-content [innerHTML]="data?.content"> </mat-dialog-content>
 <mat-dialog-actions class="align-end">
-  <button mat-button (click)="matDialogRef.close(false)" color="primary">
+  <button
+    mat-button
+    [mat-dialog-close]="false"
+    color="primary"
+    *ngIf="data?.buttonCancelar"
+  >
     {{ data.buttonCancelar }}
   </button>
-  <button mat-button color="primary" (click)="matDialogRef.close(true)">
+  <button
+    mat-button
+    [mat-dialog-close]="true"
+    color="primary"
+    *ngIf="data?.buttonConfirmar"
+  >
     {{ data.buttonConfirmar }}
   </button>
 </mat-dialog-actions>

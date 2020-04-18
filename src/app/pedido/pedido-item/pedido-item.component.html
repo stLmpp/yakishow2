@@ -12,7 +12,8 @@
     </mat-card-header>
     <mat-card-content
       *ykLet="
-        pedido.dataFinalizado && pedido.dataFinalizado < nowDate as isBlocked
+        pedido.dataFinalizado &&
+        pedido.dataFinalizado < (nowDate$ | async) as isBlocked
       "
     >
       <div

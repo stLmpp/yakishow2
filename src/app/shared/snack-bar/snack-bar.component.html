@@ -1,0 +1,11 @@
+<div class="yk-snackbar" [ngClass]="data.status">
+  <mat-icon *ngIf="data?.icon">{{ data.icon }}</mat-icon>
+  <span class="title" [innerHTML]="data?.title"></span>
+  <button
+    mat-button
+    *ngIf="data?.action"
+    (click)="matSnackBarRef.dismissWithAction()"
+  >
+    {{ data?.action }}
+  </button>
+</div>

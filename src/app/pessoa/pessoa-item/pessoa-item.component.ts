@@ -1,11 +1,17 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { PessoaQuery } from '../state/pessoa.query';
 import { Observable, Subject, throwError } from 'rxjs';
 import { Pessoa } from '../../model/pessoa';
 import { RouteParamsEnum } from '../../model/route-params.enum';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MaskEnum } from '../../model/mask.enum';
 import {
   catchError,
@@ -19,13 +25,14 @@ import {
 } from 'rxjs/operators';
 import { ViaCepService } from '../../shared/via-cep/via-cep.service';
 import { PessoaService } from '../state/pessoa.service';
-import { isArray } from 'is-what';
 import { SnackBarService } from '../../shared/snack-bar/snack-bar.service';
+import { ValidatorsService } from '../../validators/validators.service';
 
 @Component({
   selector: 'app-pessoa-item',
   templateUrl: './pessoa-item.component.html',
   styleUrls: ['./pessoa-item.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PessoaItemComponent implements OnInit, OnDestroy {
   constructor(
@@ -35,7 +42,9 @@ export class PessoaItemComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private viaCepService: ViaCepService,
     private pessoaService: PessoaService,
-    private snackBarService: SnackBarService
+    private snackBarService: SnackBarService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private validatorsService: ValidatorsService
   ) {}
 
   private _destroy$ = new Subject();
@@ -60,21 +69,16 @@ export class PessoaItemComponent implements OnInit, OnDestroy {
       .pipe(
         tap(() => {
           this.navigateBack();
-          this.snackBarService.open('Pessoa salva com sucesso!', 'Fechar');
+          this.snackBarService.success('Pessoa salva com sucesso!');
         }),
         finalize(() => {
           this.loadingPessoa = false;
+          this.changeDetectorRef.markForCheck();
         }),
         catchError(err => {
-          if (
-            isArray(err.message) &&
-            err.message.some(o => o.property === 'email')
-          ) {
-            this.snackBarService.open('E-mail inválido!');
-          } else {
-            this.snackBarService.open(err.message);
-          }
-
+          this.snackBarService.error(
+            err?.message ?? 'Erro ao tentar salvar a pessoa!'
+          );
           return throwError(err);
         })
       )
@@ -136,13 +140,19 @@ export class PessoaItemComponent implements OnInit, OnDestroy {
     const pessoa = this.pessoaQuery.getEntity(this.idPessoa) ?? new Pessoa();
     const { celular, tipos, complemento, cep, nome, email, endereco } = pessoa;
     this.form = new FormGroup({
-      nome: new FormControl(nome),
-      celular: new FormControl(celular),
+      nome: new FormControl(nome, [Validators.required]),
+      celular: new FormControl(celular, {
+        validators: [Validators.required],
+        asyncValidators: [this.validatorsService.uniqueCelular(this.idPessoa)],
+      }),
       complemento: new FormControl(complemento),
       tipos: new FormControl(tipos),
       cep: new FormControl(cep),
-      email: new FormControl(email),
-      endereco: new FormControl(endereco),
+      email: new FormControl(email, {
+        validators: [Validators.email],
+        asyncValidators: [this.validatorsService.uniqueEmail(this.idPessoa)],
+      }),
+      endereco: new FormControl(endereco, [Validators.required]),
     });
     // TODO fazer tipos de pessoas
     if (!this.idPessoa) {

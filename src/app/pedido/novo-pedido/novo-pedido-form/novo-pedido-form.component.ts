@@ -1,4 +1,6 @@
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   Input,
@@ -8,7 +10,7 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ProdutoService } from '../../../produto/state/produto.service';
-import { combineLatest, Subject } from 'rxjs';
+import { combineLatest, Observable, of, Subject } from 'rxjs';
 import {
   debounceTime,
   delay,
@@ -27,11 +29,13 @@ import { MatExpansionPanel } from '@angular/material/expansion';
   selector: 'app-novo-pedido-form',
   templateUrl: './novo-pedido-form.component.html',
   styleUrls: ['./novo-pedido-form.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NovoPedidoFormComponent implements OnInit, OnDestroy {
   constructor(
     private produtoService: ProdutoService,
-    private matExpansionPanel: MatExpansionPanel
+    private matExpansionPanel: MatExpansionPanel,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   private _destroy$ = new Subject();
@@ -41,7 +45,8 @@ export class NovoPedidoFormComponent implements OnInit, OnDestroy {
   @ViewChild('codigoRef')
   codigoRef: ElementRef<HTMLInputElement>;
 
-  similarCodigos: Produto[] = [];
+  similarCodigos$: Observable<Produto[]> = of([]);
+
   trackByProduto = trackByFactory<Produto>('id');
 
   loadingCodigo = false;
@@ -58,33 +63,29 @@ export class NovoPedidoFormComponent implements OnInit, OnDestroy {
   }
 
   startSub(): void {
-    this.form
-      .get('codigo')
-      .valueChanges.pipe(
-        takeUntil(this._destroy$),
-        filter(() => this.codigoFocused),
-        distinctUntilChanged(),
-        filter(value => !!value),
-        debounceTime(300),
-        tap(() => {
-          this.form.patchValue({
-            descricao: null,
-            valorUnitario: null,
-            produtoId: null,
-          });
-        }),
-        switchMap(value => {
-          this.loadingCodigo = true;
-          return this.produtoService.getBySimilarityCodigo(value).pipe(
-            finalize(() => {
-              this.loadingCodigo = false;
-            })
-          );
-        })
-      )
-      .subscribe(produtos => {
-        this.similarCodigos = produtos;
-      });
+    this.similarCodigos$ = this.form.get('codigo').valueChanges.pipe(
+      takeUntil(this._destroy$),
+      filter(() => this.codigoFocused),
+      distinctUntilChanged(),
+      filter(value => !!value),
+      debounceTime(300),
+      tap(() => {
+        this.form.patchValue({
+          descricao: null,
+          valorUnitario: null,
+          produtoId: null,
+        });
+      }),
+      switchMap(value => {
+        this.loadingCodigo = true;
+        return this.produtoService.getBySimilarityCodigo(value).pipe(
+          finalize(() => {
+            this.loadingCodigo = false;
+            this.changeDetectorRef.markForCheck();
+          })
+        );
+      })
+    );
     this.matExpansionPanel.afterExpand
       .pipe(
         takeUntil(this._destroy$),
@@ -108,6 +109,7 @@ export class NovoPedidoFormComponent implements OnInit, OnDestroy {
         this.form
           .get('valorTotal')
           .setValue(+(quantidade ?? 0) * +(valor ?? 0), { emitEvent: false });
+        this.changeDetectorRef.markForCheck();
       });
   }
 

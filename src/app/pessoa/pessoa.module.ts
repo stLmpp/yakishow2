@@ -7,16 +7,13 @@ import { PessoaComponent } from './pessoa.component';
 import { VirtualScrollerModule } from 'ngx-virtual-scroller';
 import { NgxMaskModule } from 'ngx-mask';
 import { PessoaItemComponent } from './pessoa-item/pessoa-item.component';
-import { YkUniqueCelularDirective } from './yk-unique-celular.directive';
-import { YkUniqueEmailDirective } from './yk-unique-email.directive';
 import { PessoaNovoQuickComponent } from './pessoa-novo-quick/pessoa-novo-quick.component';
+import { ValidatorsModule } from '../validators/validators.module';
 
 @NgModule({
   declarations: [
     PessoaComponent,
     PessoaItemComponent,
-    YkUniqueCelularDirective,
-    YkUniqueEmailDirective,
     PessoaNovoQuickComponent,
   ],
   imports: [
@@ -25,6 +22,7 @@ import { PessoaNovoQuickComponent } from './pessoa-novo-quick/pessoa-novo-quick.
     SharedModule,
     VirtualScrollerModule,
     NgxMaskModule.forChild(),
+    ValidatorsModule,
   ],
 })
 export class PessoaModule {}

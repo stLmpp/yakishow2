@@ -43,7 +43,7 @@ export class SwipeActionsDirective
   private _destroy$ = new Subject();
   private componentRef: ComponentRef<SwipeActionComponent>;
   private _rippleActive = false;
-  private isOpened = false;
+  isOpened = false;
 
   @Input()
   set swipeDisabled(disabled: boolean) {
@@ -64,10 +64,13 @@ export class SwipeActionsDirective
   @Output() swiped = new EventEmitter<TouchInput>();
   @Output() swipeClick = new EventEmitter<MouseEvent>();
   @Output() swipeAction = new EventEmitter();
+  @Output() swipeStart = new EventEmitter<TouchInput>();
+  @Output() swipeEnd = new EventEmitter<TouchInput>();
 
-  @HostListener('panstart')
-  panStart(): void {
+  @HostListener('panstart', ['$event'])
+  panStart($event: TouchInput): void {
     this.updatePosition();
+    this.swipeStart.emit($event);
   }
 
   @HostListener('panmove', ['$event'])
@@ -93,6 +96,7 @@ export class SwipeActionsDirective
 
   @HostListener('panend', ['$event'])
   panEnd($event: TouchInput): void {
+    this.swipeEnd.emit($event);
     if (this._disabled) return;
     this.swipeActionsService.doCheckDisabled = false;
     if (this._rippleActive) {

@@ -1,4 +1,11 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { PedidoQuery } from '../state/pedido.query';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable } from 'rxjs';
@@ -17,12 +24,14 @@ import { FormControl, FormGroup } from '@angular/forms';
   selector: 'app-pedidos-dia',
   templateUrl: './pedidos-dia.component.html',
   styleUrls: ['./pedidos-dia.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PedidosDiaComponent implements OnInit {
   constructor(
     public pedidoQuery: PedidoQuery,
     private routerQuery: RouterQuery,
-    private matDialog: MatDialog
+    private matDialog: MatDialog,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   @ViewChild('filterStatusSettingsRef', { read: TemplateRef })
@@ -52,6 +61,7 @@ export class PedidosDiaComponent implements OnInit {
   applyFiltersAndOrder(): void {
     this.filterStatus = this.formSettings.get('status').value;
     this.filterStatusSettingsDialogRef.close();
+    this.changeDetectorRef.markForCheck();
   }
 
   ngOnInit(): void {

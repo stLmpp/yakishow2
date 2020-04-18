@@ -8,6 +8,8 @@ import {
 import { ComponentType } from '@angular/cdk/overlay';
 import { BehaviorSubject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
+import { isArray } from 'is-what';
+import { SnackBarComponent, SnackBarData } from './snack-bar.component';
 
 @Injectable({ providedIn: 'root' })
 export class SnackBarService {
@@ -17,7 +19,7 @@ export class SnackBarService {
   snackbar$ = this._snackbar$.asObservable();
   snackbarHeight$ = this.snackbar$.pipe(map(l => (l ? l + 'px' : 0)));
 
-  addSnackbar(snackBar: MatSnackBarRef<any>): void {
+  private addSnackbar(snackBar: MatSnackBarRef<any>): void {
     setTimeout(
       () => {
         this._snackbar$.next(
@@ -49,6 +51,63 @@ export class SnackBarService {
     config?: MatSnackBarConfig
   ): MatSnackBarRef<SimpleSnackBar> {
     const snackBar = this.matSnackBar.open(message, action, config);
+    this.processSnackbar(snackBar);
+    return snackBar;
+  }
+
+  error(
+    title: string | string[],
+    action = 'Fechar',
+    config?: MatSnackBarConfig
+  ): MatSnackBarRef<SnackBarComponent> {
+    if (isArray(title)) {
+      title = title.filter((_, index) => index < 3).join('<br>');
+    }
+    const snackBar = this.openFromComponent(SnackBarComponent, {
+      data: {
+        status: 'error',
+        title,
+        icon: 'highlight_off',
+        action,
+      } as SnackBarData,
+      ...config,
+    });
+    this.processSnackbar(snackBar);
+    return snackBar;
+  }
+
+  success(
+    title: string,
+    action = 'Fechar',
+    config?: MatSnackBarConfig
+  ): MatSnackBarRef<SnackBarComponent> {
+    const snackBar = this.openFromComponent(SnackBarComponent, {
+      data: {
+        title,
+        action,
+        icon: 'check_circle_outline',
+        status: 'success',
+      } as SnackBarData,
+      ...config,
+    });
+    this.processSnackbar(snackBar);
+    return snackBar;
+  }
+
+  warning(
+    title: string,
+    action = 'Fechar',
+    config?: MatSnackBarConfig
+  ): MatSnackBarRef<SnackBarComponent> {
+    const snackBar = this.openFromComponent(SnackBarComponent, {
+      data: {
+        title,
+        action,
+        icon: 'error_outline',
+        status: 'warning',
+      } as SnackBarData,
+      ...config,
+    });
     this.processSnackbar(snackBar);
     return snackBar;
   }

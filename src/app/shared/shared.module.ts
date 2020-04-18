@@ -29,9 +29,8 @@ import { MatRippleModule } from '@angular/material/core';
 import { FabFloatingDirective } from './fab-floating/fab-floating.directive';
 import { FilterPipe } from './filter/filter.pipe';
 import { GetDeepPipe } from './get-deep/get-deep.pipe';
-import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { SumByPipe } from './sum-by/sum-by.pipe';
-import { ReactiveComponentModule } from '@ngrx/component';
+import { SnackBarComponent } from './snack-bar/snack-bar.component';
 
 const DECLARATIONS = [
   environment.production ? [] : HammerjsDirective,
@@ -44,7 +43,7 @@ const DECLARATIONS = [
   CardComponent,
   CardsComponent,
   FabFloatingDirective,
-  ConfirmDialogComponent,
+  SnackBarComponent,
 ];
 
 const PIPES = [SearchPipe, OrderByPipe, GetDeepPipe, SumByPipe, FilterPipe];
@@ -66,7 +65,6 @@ const MODULES = [
   MatSnackBarModule,
   OverlayModule,
   MatRippleModule,
-  ReactiveComponentModule,
 ];
 
 @NgModule({

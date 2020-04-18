@@ -1,6 +1,7 @@
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
-  DoCheck,
   Inject,
   Input,
   LOCALE_ID,
@@ -9,36 +10,42 @@ import {
 } from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Pedido } from '../../model/pedido';
-import { Observable, Subject } from 'rxjs';
+import { interval, Observable, Subject } from 'rxjs';
 import { PedidoQuery } from '../state/pedido.query';
 import { RouteParamsEnum } from '../../model/route-params.enum';
 import { MaskEnum } from '../../model/mask.enum';
 import { PedidoItem } from '../../model/pedido-item';
 import { Sort } from '@angular/material/sort';
 import { trackByFactory } from '../../util/util';
-import { debounceTime, finalize, take } from 'rxjs/operators';
+import {
+  debounceTime,
+  finalize,
+  map,
+  startWith,
+  take,
+  takeUntil,
+} from 'rxjs/operators';
 import {
   pedidoStatusArray,
   PedidoStatusEnum,
 } from '../../model/pedido-status.enum';
 import { PedidoService } from '../state/pedido.service';
 import { MatDialog } from '@angular/material/dialog';
-import {
-  ConfirmDialogComponent,
-  ConfirmDialogOptions,
-} from '../../shared/confirm-dialog/confirm-dialog.component';
 import { transformPedidoStatus } from '../pedido-status.pipe';
 import { addDays } from 'date-fns';
 import { formatDate } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PedidosPesquisaService } from '../pedidos-pesquisa/state/pedidos-pesquisa.service';
+import { DialogService } from '../../shared/dialog/dialog.service';
+import { DialogData } from '../../shared/dialog/dialog.component';
 
 @Component({
   selector: 'app-pedido-item',
   templateUrl: './pedido-item.component.html',
   styleUrls: ['./pedido-item.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PedidoItemComponent implements OnInit, DoCheck, OnDestroy {
+export class PedidoItemComponent implements OnInit, OnDestroy {
   constructor(
     private routerQuery: RouterQuery,
     private pedidoQuery: PedidoQuery,
@@ -47,10 +54,18 @@ export class PedidoItemComponent implements OnInit, DoCheck, OnDestroy {
     @Inject(LOCALE_ID) private locale: string,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private pedidosPesquisaService: PedidosPesquisaService
+    private pedidosPesquisaService: PedidosPesquisaService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private dialogService: DialogService
   ) {}
 
-  nowDate = addDays(new Date(), -5);
+  private _destroy$ = new Subject();
+
+  nowDate$ = interval(1000).pipe(
+    takeUntil(this._destroy$),
+    startWith(addDays(new Date(), -5)),
+    map(() => addDays(new Date(), -5))
+  );
 
   @Input('pedido')
   set _pedido(pedido: Pedido) {
@@ -88,9 +103,9 @@ export class PedidoItemComponent implements OnInit, DoCheck, OnDestroy {
   confirmEditStatus = false;
 
   clickOverlayChangeStatus(status: PedidoStatusEnum, isBlocked: boolean): void {
-    const data: ConfirmDialogOptions = {
+    const data: DialogData = {
       content: isBlocked
-        ? `Não é possível mais alterar o status do pedido, pois já se passaram 5 dias (${formatDate(
+        ? `Não é possível alterar o status do pedido, pois já se passaram 5 dias (${formatDate(
             this.pedido.dataFinalizado,
             'dd/MM/yyyy HH:mm',
             this.locale
@@ -98,28 +113,34 @@ export class PedidoItemComponent implements OnInit, DoCheck, OnDestroy {
         : `Tem certeza que deseja mudar o status desse pedido?<br> Ele já está com o status de "${transformPedidoStatus(
             status
           )}".`,
-      yesBtn: isBlocked ? null : 'Sim',
-      noBtn: isBlocked ? 'Ok' : 'Não',
+      buttonConfirmar: isBlocked ? null : 'Sim',
+      buttonCancelar: isBlocked ? 'Ok' : 'Não',
     };
-    this.matDialog
-      .open(ConfirmDialogComponent, {
-        data,
-      })
+    this.dialogService
+      .confirm(data)
       .afterClosed()
       .pipe(take(1))
       .subscribe(confirmed => {
         this.confirmEditStatus = confirmed;
+        this.changeDetectorRef.markForCheck();
       });
   }
 
   changeStatusPedido(status: PedidoStatusEnum): void {
     this._changingStatus$.next(true);
+    this.changeDetectorRef.markForCheck();
     this.pedidoService
       .updateStatus(this.idPedido, status)
-      .pipe(finalize(() => this._changingStatus$.next(false)))
+      .pipe(
+        finalize(() => {
+          this._changingStatus$.next(false);
+          this.changeDetectorRef.markForCheck();
+        })
+      )
       .subscribe(pedido => {
         if (pedido.dataFinalizado) {
           this.confirmEditStatus = false;
+          this.changeDetectorRef.markForCheck();
         }
       });
   }
@@ -147,11 +168,9 @@ export class PedidoItemComponent implements OnInit, DoCheck, OnDestroy {
     this.backUrl = this.backUrl ?? '/pedidos/' + this.idPedido;
   }
 
-  ngDoCheck(): void {
-    this.nowDate = addDays(new Date(), -5);
-  }
-
   ngOnDestroy(): void {
     this.pedidosPesquisaService.resetFormInTimeout();
+    this._destroy$.next();
+    this._destroy$.complete();
   }
 }

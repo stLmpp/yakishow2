@@ -1,4 +1,9 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
 import { SidenavService } from './sidenav.service';
 import { slideX } from '../shared/animations';
 import { Observable } from 'rxjs';
@@ -17,6 +22,7 @@ export interface Sidenav {
   styleUrls: ['./sidenav.component.scss'],
   animations: [slideX('RTL')],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidenavComponent implements OnInit {
   constructor(public sidenavService: SidenavService) {}

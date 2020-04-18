@@ -7,14 +7,27 @@
         matInput
         formControlName="celular"
         placeholder="Celular"
-        required
+        autocomplete="tel"
       />
       <mat-error *ngIf="celularControl.hasError('required')">
         Celular é obrigatório
       </mat-error>
+      <mat-error *ngIf="celularControl.hasError('uniqueCelular')">
+        Celular já cadastrado
+      </mat-error>
+      <mat-spinner
+        matSuffix
+        diameter="18"
+        *ngIf="celularControl.pending"
+      ></mat-spinner>
     </mat-form-field>
     <mat-form-field *ykLet="form.get('nome') as nomeControl" class="nome">
-      <input matInput formControlName="nome" placeholder="Nome" required />
+      <input
+        matInput
+        formControlName="nome"
+        placeholder="Nome"
+        autocomplete="name"
+      />
       <mat-error *ngIf="nomeControl.hasError('required')">
         Nome é obrigatório
       </mat-error>
@@ -24,7 +37,7 @@
         matInput
         formControlName="endereco"
         placeholder="Endereço"
-        required
+        autocomplete="street-address"
       />
       <mat-error *ngIf="enderecoControl.hasError('required')">
         Endereço é obrigatório
@@ -36,7 +49,7 @@
       mat-button
       type="submit"
       color="accent"
-      [disabled]="loading || form.invalid || form.pristine"
+      [disabled]="loading || form.invalid || form.pending || form.pristine"
     >
       <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
       Salvar
