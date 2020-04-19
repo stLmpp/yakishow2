@@ -102,29 +102,33 @@
 </mat-expansion-panel>
 <ng-container *ykLet="pedidos$ | async as pedidos">
   <mat-nav-list *ngIf="pedidos?.length">
-    <mat-list-item
-      *ngFor="let pedido of pedidos"
-      [routerLink]="['..', pedido.id]"
-      [queryParams]="{ backUrl: '/pedidos/pesquisa?idPedido=' + pedido.id }"
-      [ngClass]="pedido.status | pedidoStatus | lowercase"
-      [id]="pedido.id"
-      [class.active]="pedido.id === activeId"
-      #pedidos
+    <ng-container
+      *ngFor="let pedido of pedidos; trackBy: trackByPedido; let $last = last"
     >
-      <mat-icon mat-list-icon>menu_book</mat-icon>
-      <span matLine>{{ pedido.cliente.nome }}</span>
-      <span matLine>
-        Criado: {{ pedido.creationDate | date: 'dd/MM/yyyy HH:mm' }}
-      </span>
-      <span matLine>
-        {{ pedido.status | pedidoStatus
-        }}<ng-container *ngIf="pedido.dataFinalizado"
-          >:
-          {{ pedido.dataFinalizado | date: 'dd/MM/yyyy HH:mm' }}</ng-container
-        >
-      </span>
-      <span matSuffix>{{ pedido.id }}</span>
-    </mat-list-item>
+      <mat-list-item
+        [routerLink]="['..', pedido.id]"
+        [queryParams]="{ backUrl: '/pedidos/pesquisa?idPedido=' + pedido.id }"
+        [ngClass]="pedido.status | pedidoStatus | lowercase"
+        [id]="pedido.id"
+        [class.active]="pedido.id === activeId"
+        #pedidos
+      >
+        <mat-icon mat-list-icon>menu_book</mat-icon>
+        <span matLine>{{ pedido.cliente.nome }}</span>
+        <span matLine>
+          Criado: {{ pedido.creationDate | date: 'dd/MM/yyyy HH:mm' }}
+        </span>
+        <span matLine>
+          {{ pedido.status | pedidoStatus
+          }}<ng-container *ngIf="pedido.dataFinalizado"
+            >:
+            {{ pedido.dataFinalizado | date: 'dd/MM/yyyy HH:mm' }}</ng-container
+          >
+        </span>
+        <span matSuffix>{{ pedido.id }}</span>
+      </mat-list-item>
+      <mat-divider *ngIf="!$last"></mat-divider>
+    </ng-container>
   </mat-nav-list>
   <div *ngIf="!pedidos?.length && !pedidosLoading" class="main-padding">
     Nenhum pedido encontrado

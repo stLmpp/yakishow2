@@ -14,25 +14,29 @@
 </mat-form-field>
 
 <mat-nav-list *ykLet="search$ | async as search">
-  <a
-    [class.inativo]="!produto.ativo"
-    [class.active]="idProduto === produto.id"
-    mat-list-item
+  <ng-container
     *ngFor="
       let produto of produtoQuery.all$
         | async
         | search: ['codigo', 'descricao']:search
         | orderBy: 'descricao';
-      trackBy: trackByProduto
+      trackBy: trackByProduto;
+      let $last = last
     "
-    (click)="openModalProduto(produto)"
-    [id]="produto.id"
-    #produtosRef
   >
-    <div matLine>{{ produto.descricao }}</div>
-    <div matLine class="mat-line-secondary">{{ produto.codigo }}</div>
-    <div matSuffix>{{ produto.valor | currency }}</div>
-  </a>
+    <mat-list-item
+      [class.inativo]="!produto.ativo"
+      [class.active]="idProduto === produto.id"
+      (click)="openModalProduto(produto)"
+      [id]="produto.id"
+      #produtosRef
+    >
+      <div matLine>{{ produto.descricao }}</div>
+      <div matLine class="mat-line-secondary">{{ produto.codigo }}</div>
+      <div matSuffix>{{ produto.valor | currency }}</div>
+    </mat-list-item>
+    <mat-divider *ngIf="!$last"></mat-divider>
+  </ng-container>
 </mat-nav-list>
 <button mat-mini-fab ykFabFloating left (click)="navigateBack()">
   <mat-icon>keyboard_arrow_left</mat-icon>

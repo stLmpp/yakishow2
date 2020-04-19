@@ -12,10 +12,14 @@
 @import './styles/snackbar';
 @import './styles/swipe-actions';
 @import './styles/card';
+@import './styles/radio';
+@import './styles/menu';
+@import './styles/overlay';
 
 @include angular-material-theme($light-theme);
 @include mat-list-theme-custom($light-theme);
 @include mat-snack-bar-custom($light-theme);
+@include mat-menu-theme-custom($light-theme);
 
 html,
 body {
@@ -28,6 +32,7 @@ body {
     @include angular-material-theme($dark-theme);
     @include mat-list-theme-custom($dark-theme);
     @include mat-snack-bar-custom($dark-theme);
+    @include mat-menu-theme-custom($dark-theme);
     color: white;
     background-color: map-get($mat-dark-theme-background, background);
   }

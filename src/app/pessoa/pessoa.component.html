@@ -20,7 +20,7 @@
       pessoaQuery.all$
         | async
         | search: ['nome', 'celular']:search
-        | orderBy: ['nome', 'celular']
+        | orderBy: settingsForm.get('orderBy').value
     "
     [parentScroll]="window"
     (vsUpdate)="viewPortItems = $event"
@@ -28,57 +28,79 @@
     [bufferAmount]="4"
     #virtualScroller
   >
-    <mat-list-item
-      *ngFor="let pessoa of viewPortItems; trackBy: trackByPessoa"
-      [routerLink]="['./', 'edit', pessoa.id]"
-      (click)="idPessoaParam = pessoa.id"
-      [class.active]="pessoa.id === idPessoaParam"
+    <ng-container
+      *ngFor="
+        let pessoa of viewPortItems;
+        trackBy: trackByPessoa;
+        let $last = last
+      "
     >
-      <mat-icon matListIcon>person</mat-icon>
-      <button
-        mat-icon-button
-        matSuffix
-        [matMenuTriggerFor]="menu"
-        (click)="$event.stopPropagation()"
+      <mat-list-item
+        [routerLink]="['./', 'edit', pessoa.id]"
+        (click)="idPessoaParam = pessoa.id"
+        [class.active]="pessoa.id === idPessoaParam"
       >
-        <mat-icon>more_vert</mat-icon>
-      </button>
-      <mat-menu #menu="matMenu">
+        <mat-icon matListIcon>person</mat-icon>
         <button
-          mat-menu-item
-          [routerLink]="['/', 'pedidos', 'novo']"
-          [queryParams]="{ idPessoa: pessoa.id }"
+          mat-icon-button
+          matSuffix
+          [matMenuTriggerFor]="menu"
+          (click)="$event.stopPropagation()"
         >
-          Fazer pedido
+          <mat-icon>more_vert</mat-icon>
         </button>
-        <button
-          mat-menu-item
-          (click)="idPessoaParam = pessoa.id"
-          [routerLink]="['./', 'edit', pessoa.id]"
-        >
-          Editar
-        </button>
-        <button
-          mat-menu-item
-          [routerLink]="['/', 'pedidos', 'pesquisa']"
-          [queryParams]="{
-            idPessoa: pessoa.id,
-            backUrl: 'pessoas?idPessoa=' + pessoa.id
-          }"
-        >
-          Ver últimos pedidos
-        </button>
-      </mat-menu>
-      <span matLine>{{ pessoa.nome }}</span>
-      <span matLine class="mat-line-secondary">
-        {{ pessoa.celular | mask: masksEnum.celular }}
-      </span>
-    </mat-list-item>
+        <mat-menu #menu="matMenu">
+          <button
+            mat-menu-item
+            [routerLink]="['/', 'pedidos', 'novo']"
+            [queryParams]="{ idPessoa: pessoa.id }"
+          >
+            Fazer pedido
+          </button>
+          <button
+            mat-menu-item
+            (click)="idPessoaParam = pessoa.id"
+            [routerLink]="['./', 'edit', pessoa.id]"
+          >
+            Editar
+          </button>
+          <button
+            mat-menu-item
+            [routerLink]="['/', 'pedidos', 'pesquisa']"
+            [queryParams]="{
+              idPessoa: pessoa.id,
+              backUrl: 'pessoas?idPessoa=' + pessoa.id
+            }"
+          >
+            Ver últimos pedidos
+          </button>
+        </mat-menu>
+        <span matLine>{{ pessoa.nome }}</span>
+        <span matLine class="mat-line-secondary">
+          {{ pessoa.celular | mask: masksEnum.celular }}
+        </span>
+      </mat-list-item>
+      <mat-divider *ngIf="!$last"></mat-divider>
+    </ng-container>
   </virtual-scroller>
 </mat-nav-list>
+<button mat-mini-fab ykFabFloating right top [matMenuTriggerFor]="orderByRef">
+  <mat-icon>sort</mat-icon>
+</button>
 <button mat-mini-fab ykFabFloating left (click)="navigateBack()">
   <mat-icon>keyboard_arrow_left</mat-icon>
 </button>
 <button mat-mini-fab ykFabFloating center [routerLink]="['./', 'novo']">
   <mat-icon>add</mat-icon>
 </button>
+
+<mat-menu #orderByRef="matMenu">
+  <button
+    mat-menu-item
+    [class.active]="settingsForm.get('orderBy').value === item.value"
+    *ngFor="let item of pessoaKeys; trackBy: trackByKeyValue"
+    (click)="settingsForm.get('orderBy').setValue(item.value)"
+  >
+    {{ item.label }}
+  </button>
+</mat-menu>

@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   HostListener,
@@ -11,7 +12,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -19,9 +20,7 @@ import {
   finalize,
   pluck,
   switchMap,
-  take,
   takeUntil,
-  tap,
 } from 'rxjs/operators';
 import { PessoaService } from '../../pessoa/state/pessoa.service';
 import { Pessoa } from '../../model/pessoa';
@@ -44,6 +43,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PedidosPesquisaService } from './state/pedidos-pesquisa.service';
 import { PedidosPesquisaQuery } from './state/pedidos-pesquisa.query';
 import { PedidoQuery } from '../state/pedido.query';
+import { ScrollService } from '../../shared/scroll/scroll.service';
 
 @Component({
   selector: 'app-pedidos-pesquisar',
@@ -63,7 +63,9 @@ export class PedidosPesquisaComponent implements OnInit, OnDestroy {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private pedidosPesquisaService: PedidosPesquisaService,
-    private pedidosPesquisaQuery: PedidosPesquisaQuery
+    private pedidosPesquisaQuery: PedidosPesquisaQuery,
+    private changeDetectorRef: ChangeDetectorRef,
+    private scrollService: ScrollService
   ) {}
 
   private _destroy$ = new Subject();
@@ -92,7 +94,8 @@ export class PedidosPesquisaComponent implements OnInit, OnDestroy {
   produtos$: Observable<Produto[]>;
   produtosLoading = false;
 
-  pedidos$: Observable<Pedido[]>;
+  private _pedidos$ = new BehaviorSubject<Pedido[]>([]);
+  pedidos$ = this._pedidos$.asObservable();
   pedidosLoading = false;
 
   maskEnum = MaskEnum;
@@ -101,6 +104,7 @@ export class PedidosPesquisaComponent implements OnInit, OnDestroy {
 
   trackByCliente = trackByFactory<Pessoa>('id');
   trackByProduto = trackByFactory<Produto>('id');
+  trackByPedido = trackByFactory<Pedido>('id');
 
   selectCliente(clienteId: number): void {
     this.form.get('clienteId').setValue(clienteId);
@@ -110,7 +114,7 @@ export class PedidosPesquisaComponent implements OnInit, OnDestroy {
     this.form.get('produtoId').setValue(produtoId);
   }
 
-  pesquisar(): void {
+  pesquisar(doScroll?: boolean): void {
     const payload = removeNullObject(
       {
         ...this.form.getRawValue(),
@@ -130,12 +134,21 @@ export class PedidosPesquisaComponent implements OnInit, OnDestroy {
       return;
     }
     this.pedidosLoading = true;
-    this.pedidos$ = this.pedidoService.getByParams(payload).pipe(
-      finalize(() => {
-        this.searchPanelRef.close();
-        this.pedidosLoading = false;
-      })
-    );
+    this.pedidoService
+      .getByParams(payload)
+      .pipe(
+        finalize(() => {
+          this.searchPanelRef.close();
+          this.pedidosLoading = false;
+          if (doScroll) {
+            this.doScrollAndMarkPedido();
+          }
+          this.changeDetectorRef.markForCheck();
+        })
+      )
+      .subscribe(pedidos => {
+        this._pedidos$.next(pedidos);
+      });
   }
 
   @HostListener('swiperight')
@@ -223,6 +236,25 @@ export class PedidosPesquisaComponent implements OnInit, OnDestroy {
       });
   }
 
+  doScrollAndMarkPedido(): void {
+    const idPedido = +this.routerQuery.getQueryParams<string>(
+      RouteParamsEnum.idPedido
+    );
+    if (idPedido) {
+      this.activeId = idPedido;
+      setTimeout(() => {
+        this.scrollService.scrollIntoViewOffset(
+          this.pedidosRef.find(o => +o.nativeElement.id === idPedido),
+          -100
+        );
+        setTimeout(() => {
+          this.activeId = null;
+          this.changeDetectorRef.markForCheck();
+        }, 1500);
+      }, 250);
+    }
+  }
+
   ngOnInit(): void {
     this.pedidosPesquisaService.stopTimeoutResetForm();
     this.initSub();
@@ -248,30 +280,7 @@ export class PedidosPesquisaComponent implements OnInit, OnDestroy {
       });
     }
     if (!isAllNull(this.form.getRawValue())) {
-      this.pesquisar();
-      this.pedidos$.pipe(
-        take(1),
-        tap(() => {
-          const idPedido = +this.routerQuery.getQueryParams<string>(
-            RouteParamsEnum.idPedido
-          );
-          if (idPedido) {
-            setTimeout(() => {
-              this.activeId = idPedido;
-            });
-            setTimeout(() => {
-              this.pedidosRef
-                .find(o => +o.nativeElement.id === idPedido)
-                ?.nativeElement.scrollIntoView({
-                  block: 'center',
-                });
-              setTimeout(() => {
-                this.activeId = null;
-              }, 1500);
-            }, 250);
-          }
-        })
-      );
+      this.pesquisar(true);
     }
   }
 

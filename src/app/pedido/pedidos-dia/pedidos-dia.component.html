@@ -9,7 +9,7 @@
       <app-pedido-item
         [editPedido]="true"
         [pedido]="pedido"
-        backUrl="/pedidos/dia"
+        backUrl="/pedidos/dia{{ dia ? '?dia=' + dia : '' }}"
       ></app-pedido-item>
     </div>
     <div class="main-margin" *ngIf="!pedidos?.length">
@@ -17,9 +17,9 @@
     </div>
   </div>
   <ng-template #filterStatusSettingsRef>
-    <h2 mat-dialog-title>Status</h2>
     <mat-dialog-content [formGroup]="formSettings">
       <mat-selection-list formControlName="status">
+        <h2 matSubheader>Status</h2>
         <mat-list-option
           *ngFor="let status of pedidoStatusList; trackBy: trackByPedidoStatus"
           [value]="status.value"

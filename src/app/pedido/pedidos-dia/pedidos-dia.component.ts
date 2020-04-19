@@ -14,13 +14,13 @@ import { Pedido } from '../../model/pedido';
 import { parse } from 'date-fns';
 import { trackByFactory } from '../../util/util';
 import {
-  LabelValue,
   pedidoStatusArray,
   PedidoStatusEnum,
 } from '../../model/pedido-status.enum';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LabelValue } from '../../model/label-value';
 
 @Component({
   selector: 'app-pedidos-dia',
@@ -53,6 +53,8 @@ export class PedidosDiaComponent implements OnInit {
     sortDirection: new FormControl('asc'),
   });
 
+  dia: string;
+
   trackByPedidoStatus = trackByFactory<LabelValue>('value');
   trackByPedido = trackByFactory<Pedido>('id');
 
@@ -74,9 +76,9 @@ export class PedidosDiaComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const dia = this.routerQuery.getQueryParams<string>('dia');
+    this.dia = this.routerQuery.getQueryParams<string>('dia');
     this.list$ = this.pedidoQuery.selectDayList(
-      dia ? parse(dia, 'dd-MM-yyyy', new Date()) : new Date()
+      this.dia ? parse(this.dia, 'dd-MM-yyyy', new Date()) : new Date()
     );
   }
 }

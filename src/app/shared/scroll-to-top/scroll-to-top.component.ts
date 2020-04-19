@@ -11,7 +11,7 @@ import {
 import { WINDOW } from '../../core/window.service';
 import { DOCUMENT } from '@angular/common';
 import { fromEvent, Subject } from 'rxjs';
-import { filter, sampleTime, takeUntil } from 'rxjs/operators';
+import { sampleTime, takeUntil } from 'rxjs/operators';
 import { fadeInOut } from '../animations';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 
@@ -63,11 +63,7 @@ export class ScrollToTopComponent implements OnInit, OnDestroy {
 
     this.ngZone.runOutsideAngular(() => {
       fromEvent(this.window, 'scroll', { passive: true })
-        .pipe(
-          takeUntil(this._destroy$),
-          sampleTime(50),
-          filter(() => isScrolling() || isOnTop())
-        )
+        .pipe(takeUntil(this._destroy$), sampleTime(50))
         .subscribe(() => {
           if (isScrolling()) {
             this.windowScrolled = true;

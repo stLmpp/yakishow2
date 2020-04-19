@@ -1,3 +1,5 @@
+@import 'variables';
+
 .mat-button-base {
   > .mat-button-wrapper {
     > mat-progress-bar {
@@ -7,13 +9,14 @@
       right: 0;
     }
   }
-  &.mat-fab, &.mat-mini-fab {
+  &.mat-fab,
+  &.mat-mini-fab {
     &.mat-button-floating {
       position: fixed;
       z-index: 500;
       transition: margin-bottom 200ms ease, margin-top 200ms ease;
       &.top {
-        top: 1rem;
+        top: calc(64px + 1rem);
       }
       &.bottom {
         bottom: 1rem;

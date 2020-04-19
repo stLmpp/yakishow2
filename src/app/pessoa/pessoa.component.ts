@@ -10,9 +10,9 @@ import {
 } from '@angular/core';
 import { PessoaQuery } from './state/pessoa.query';
 import { WINDOW } from '../core/window.service';
-import { Pessoa } from '../model/pessoa';
+import { getPessoaKeys, Pessoa } from '../model/pessoa';
 import { compareByFactory, trackByFactory } from '../util/util';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 import { MaskEnum } from '../model/mask.enum';
 import { VirtualScrollerComponent } from 'ngx-virtual-scroller';
@@ -21,6 +21,7 @@ import { RouteParamsEnum } from '../model/route-params.enum';
 import { Subject } from 'rxjs';
 import { PessoaService } from './state/pessoa.service';
 import { Router } from '@angular/router';
+import { LabelValue } from '../model/label-value';
 
 @Component({
   selector: 'app-pessoa',
@@ -51,8 +52,16 @@ export class PessoaComponent implements OnInit, AfterViewInit, OnDestroy {
 
   idPessoaParam: number;
 
+  pessoaKeys = getPessoaKeys();
+
   comparePessoa = compareByFactory<Pessoa>('id');
+  trackByKeyValue = trackByFactory<LabelValue<keyof Pessoa>>('value');
   trackByPessoa = trackByFactory<Pessoa>('id');
+
+  settingsForm = new FormGroup({
+    orderBy: new FormControl('nome'),
+    sortDirection: new FormControl('asc'),
+  });
 
   @HostListener('swiperight')
   navigateBack(): void {

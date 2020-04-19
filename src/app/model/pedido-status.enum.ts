@@ -1,14 +1,11 @@
+import { LabelValue } from './label-value';
+
 export enum PedidoStatusEnum {
   pendente,
   preparando,
   despachado,
   finalizado,
   cancelado,
-}
-
-export interface LabelValue<T = any> {
-  label: string;
-  value: T;
 }
 
 export const pedidoStatusArray = (): LabelValue<number>[] => [
