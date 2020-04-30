@@ -10,7 +10,7 @@ import {
 import { PedidoQuery } from '../state/pedido.query';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable } from 'rxjs';
-import { Pedido } from '../../model/pedido';
+import { getPedidoKeys, Pedido } from '../../model/pedido';
 import { parse } from 'date-fns';
 import { trackByFactory } from '../../util/util';
 import {
@@ -47,10 +47,12 @@ export class PedidosDiaComponent implements OnInit {
   filterStatus: PedidoStatusEnum[] = [];
   pedidoStatusList = pedidoStatusArray();
 
+  pedidoKeys = getPedidoKeys();
+
   formSettings = new FormGroup({
     status: new FormControl(this.pedidoStatusList.map(o => o.value)),
-    orderBy: new FormControl(),
-    sortDirection: new FormControl('asc'),
+    orderBy: new FormControl('creationDate'),
+    sortDirection: new FormControl(false),
   });
 
   dia: string;

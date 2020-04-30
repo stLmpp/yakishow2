@@ -6,6 +6,9 @@
   $accent: map-get($theme, accent);
   .mat-menu-panel {
     .mat-menu-content {
+      .mat-slide-toggle {
+        margin: 10px 16px;
+      }
       .mat-menu-item {
         &.active {
           font-weight: bold;

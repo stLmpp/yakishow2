@@ -2,6 +2,7 @@ import { CommonHistory } from './common-history';
 import { Pessoa } from './pessoa';
 import { PedidoItem } from './pedido-item';
 import { PedidoStatusEnum } from './pedido-status.enum';
+import { LabelValue } from './label-value';
 
 export class Pedido extends CommonHistory {
   constructor(partial: Partial<Pedido>) {
@@ -10,9 +11,9 @@ export class Pedido extends CommonHistory {
   }
   id: number;
   status: PedidoStatusEnum;
-  clienteId: number;
+  idCliente: number;
   cliente?: Pessoa;
-  entregadorId: number;
+  idEntregador: number;
   entregador?: Pessoa;
   pedidoItems: PedidoItem[];
   dataFinalizado?: Date;
@@ -21,12 +22,35 @@ export class Pedido extends CommonHistory {
 export interface PedidoGetByParamsPayload {
   dataCriacao?: Date;
   dataFinalizado?: Date;
-  clienteId?: number;
+  idCliente?: number;
   status?: PedidoStatusEnum;
   produto?: string;
-  produtoId?: number;
+  idProduto?: number;
 }
 
 export type UpdatePedidoDto = Partial<
-  Pick<Pedido, 'status' | 'entregadorId' | 'clienteId'>
+  Pick<Pedido, 'status' | 'idEntregador' | 'idCliente'>
 >;
+
+export const getPedidoKeys = (): LabelValue<keyof Pedido | string>[] => [
+  {
+    label: 'Id',
+    value: 'id',
+  },
+  {
+    label: 'Data de crição',
+    value: 'creationDate',
+  },
+  {
+    label: 'Cliente',
+    value: 'cliente.nome',
+  },
+  {
+    label: 'Status',
+    value: 'status',
+  },
+  {
+    label: 'Produto',
+    value: 'produto.descricao',
+  },
+];

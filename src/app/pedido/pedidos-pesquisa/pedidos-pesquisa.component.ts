@@ -76,8 +76,8 @@ export class PedidosPesquisaComponent implements OnInit, OnDestroy {
     dataCriacao: new FormControl({ value: null, disabled: true }),
     dataFinalizado: new FormControl({ value: null, disabled: true }),
     cliente: new FormControl(),
-    clienteId: new FormControl(),
-    produtoId: new FormControl(),
+    idCliente: new FormControl(),
+    idProduto: new FormControl(),
     produto: new FormControl(),
     status: new FormControl(),
   });
@@ -106,12 +106,12 @@ export class PedidosPesquisaComponent implements OnInit, OnDestroy {
   trackByProduto = trackByFactory<Produto>('id');
   trackByPedido = trackByFactory<Pedido>('id');
 
-  selectCliente(clienteId: number): void {
-    this.form.get('clienteId').setValue(clienteId);
+  selectCliente(idCliente: number): void {
+    this.form.get('idCliente').setValue(idCliente);
   }
 
-  selectProduto(produtoId: number): void {
-    this.form.get('produtoId').setValue(produtoId);
+  selectProduto(idProduto: number): void {
+    this.form.get('idProduto').setValue(idProduto);
   }
 
   pesquisar(doScroll?: boolean): void {
@@ -194,7 +194,7 @@ export class PedidosPesquisaComponent implements OnInit, OnDestroy {
     );
     const clienteControl = this.form.get('cliente');
     this.form
-      .get('clienteId')
+      .get('idCliente')
       .valueChanges.pipe(takeUntil(this._destroy$), distinctUntilChanged())
       .subscribe(id => {
         if (id) {
@@ -206,7 +206,7 @@ export class PedidosPesquisaComponent implements OnInit, OnDestroy {
       });
     const produtoControl = this.form.get('produto');
     this.form
-      .get('produtoId')
+      .get('idProduto')
       .valueChanges.pipe(takeUntil(this._destroy$), distinctUntilChanged())
       .subscribe(id => {
         if (id) {
@@ -263,7 +263,7 @@ export class PedidosPesquisaComponent implements OnInit, OnDestroy {
       RouteParamsEnum.idPessoa
     );
     if (idPessoa) {
-      this.form.get('clienteId').setValue(idPessoa);
+      this.form.get('idCliente').setValue(idPessoa);
       this.pessoaService.getById(idPessoa).subscribe(({ nome }) => {
         this.form.get('cliente').setValue(nome);
         this.form.get('cliente').disable();

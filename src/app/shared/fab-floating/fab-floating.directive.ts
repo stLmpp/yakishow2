@@ -46,7 +46,7 @@ export class FabFloatingDirective implements OnInit, OnDestroy {
     return this._right;
   }
 
-  private _bottom = true;
+  private _bottom: boolean;
   @Input()
   set bottom(bottom: '' | boolean) {
     this._bottom = convertToBoolProperty(bottom);
@@ -76,15 +76,50 @@ export class FabFloatingDirective implements OnInit, OnDestroy {
     return this._center;
   }
 
+  offsetXClass: string;
+  offsetYClass: string;
+
+  @Input()
+  set offsetX(offset: number | string) {
+    this._offsetX = offset;
+    if (this.offsetXClass) {
+      this.renderer2.removeClass(
+        this.elementRef.nativeElement,
+        this.offsetXClass
+      );
+    }
+    if (offset) {
+      this.offsetXClass = `x${offset}`;
+      this.renderer2.addClass(this.elementRef.nativeElement, this.offsetXClass);
+    }
+  }
+  private _offsetX: number | string;
+
+  @Input()
+  set offsetY(offset: number | string) {
+    this._offsetY = offset;
+    if (this.offsetYClass) {
+      this.renderer2.removeClass(
+        this.elementRef.nativeElement,
+        this.offsetYClass
+      );
+    }
+    if (offset) {
+      this.offsetYClass = `y${offset}`;
+      this.renderer2.addClass(this.elementRef.nativeElement, this.offsetYClass);
+    }
+  }
+  private _offsetY: number | string;
+
   ngOnInit(): void {
     this.snackBarService.snackbarHeight$
       .pipe(takeUntil(this._destroy$))
-      .subscribe(h => {
+      .subscribe(height => {
         const marginProperty = this._bottom ? 'bottom' : 'top';
         this.renderer2.setStyle(
           this.elementRef.nativeElement,
           `margin-${marginProperty}`,
-          h
+          height
         );
       });
   }

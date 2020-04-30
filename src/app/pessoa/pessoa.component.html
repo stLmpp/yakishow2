@@ -87,20 +87,14 @@
 <button mat-mini-fab ykFabFloating right top [matMenuTriggerFor]="orderByRef">
   <mat-icon>sort</mat-icon>
 </button>
-<button mat-mini-fab ykFabFloating left (click)="navigateBack()">
+<button mat-mini-fab ykFabFloating left bottom (click)="navigateBack()">
   <mat-icon>keyboard_arrow_left</mat-icon>
 </button>
-<button mat-mini-fab ykFabFloating center [routerLink]="['./', 'novo']">
+<button mat-mini-fab ykFabFloating center bottom [routerLink]="['./', 'novo']">
   <mat-icon>add</mat-icon>
 </button>
 
-<mat-menu #orderByRef="matMenu">
-  <button
-    mat-menu-item
-    [class.active]="settingsForm.get('orderBy').value === item.value"
-    *ngFor="let item of pessoaKeys; trackBy: trackByKeyValue"
-    (click)="settingsForm.get('orderBy').setValue(item.value)"
-  >
-    {{ item.label }}
-  </button>
+<mat-menu #orderByRef="matMenu" [formGroup]="settingsForm">
+  <app-menu-order-by [items]="pessoaKeys" formControlName="orderBy">
+  </app-menu-order-by>
 </mat-menu>

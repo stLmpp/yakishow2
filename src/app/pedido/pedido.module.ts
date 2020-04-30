@@ -23,6 +23,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PedidoStatusPipe } from './pedido-status.pipe';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { PedidoStatusPipe } from './pedido-status.pipe';
     MatTableModule,
     MatSortModule,
     MatTooltipModule,
+    MatSlideToggleModule,
   ],
 })
 export class PedidoModule {}

@@ -58,23 +58,23 @@ import { RouteParamsEnum } from '../../model/route-params.enum';
 import { MaskApplierService } from 'ngx-mask';
 import { SwipeActionsDirective } from '../../shared/swipe-actions/swipe-actions.directive';
 
-const produtoIdExists: ValidatorFn = control => {
-  const produtoIdControl = control?.parent?.get?.('produtoId');
-  if (produtoIdControl) {
-    return produtoIdControl.value ? null : { produtoIdNotExists: true };
+const idProdutoExists: ValidatorFn = control => {
+  const idProdutoControl = control?.parent?.get?.('idProduto');
+  if (idProdutoControl) {
+    return idProdutoControl.value ? null : { idProdutoNotExists: true };
   }
   return null;
 };
 
 const formGroupModel = () =>
   new FormGroup({
-    codigo: new FormControl(null, [Validators.required, produtoIdExists]),
+    codigo: new FormControl(null, [Validators.required, idProdutoExists]),
     descricao: new FormControl({ value: null, disabled: true }),
     observacao: new FormControl(),
     valorUnitario: new FormControl({ value: null, disabled: true }),
     quantidade: new FormControl(null, [Validators.required, Validators.min(0)]),
     valorTotal: new FormControl({ value: null, disabled: true }),
-    produtoId: new FormControl(),
+    idProduto: new FormControl(),
   });
 
 @Component({
@@ -204,17 +204,17 @@ export class NovoPedidoComponent implements OnInit, OnDestroy, AfterViewInit {
     this.pedidoService
       .postPedido(
         new Pedido({
-          clienteId: this.pessoa.id,
+          idCliente: this.pessoa.id,
           status: PedidoStatusEnum.pendente,
           pedidoItems: this.formProdutos.controls.map((group: FormGroup) => {
             const {
-              produtoId,
+              idProduto,
               quantidade,
               observacao,
               valorTotal: total,
             } = group.getRawValue();
             return new PedidoItem({
-              produtoId,
+              idProduto,
               quantidade,
               observacao: observacao ?? '',
               total,

@@ -8,8 +8,8 @@ export interface PedidosPesquisaForm {
   dataCriacao: Date;
   dataFinalizado: Date;
   cliente: string;
-  clienteId: number;
-  produtoId: number;
+  idCliente: number;
+  idProduto: number;
   produto: string;
   status: PedidoStatusEnum;
 }

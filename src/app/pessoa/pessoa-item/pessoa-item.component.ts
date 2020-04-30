@@ -158,7 +158,7 @@ export class PessoaItemComponent implements OnInit, OnDestroy {
     });
     // TODO fazer tipos de pessoas
     if (!this.idPessoa) {
-      this.form.get('tipos').setValue([{ tipoPessoaId: 1 }]);
+      this.form.get('tipos').setValue([{ idTipoPessoa: 1 }]);
     }
     this.initSub();
   }

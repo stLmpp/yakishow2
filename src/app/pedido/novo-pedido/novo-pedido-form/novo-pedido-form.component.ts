@@ -58,7 +58,7 @@ export class NovoPedidoFormComponent implements OnInit, OnDestroy {
     this.form.patchValue({
       descricao: produto.descricao,
       valorUnitario: produto.valor,
-      produtoId: produto.id,
+      idProduto: produto.id,
     });
   }
 
@@ -73,7 +73,7 @@ export class NovoPedidoFormComponent implements OnInit, OnDestroy {
         this.form.patchValue({
           descricao: null,
           valorUnitario: null,
-          produtoId: null,
+          idProduto: null,
         });
       }),
       switchMap(value => {

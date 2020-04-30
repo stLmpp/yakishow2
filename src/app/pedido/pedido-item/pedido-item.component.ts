@@ -62,7 +62,7 @@ export class PedidoItemComponent implements OnInit, OnDestroy {
 
   private _destroy$ = new Subject();
 
-  nowDate$ = interval(1000).pipe(
+  nowDate$ = interval(30000).pipe(
     takeUntil(this._destroy$),
     startWith(addDays(new Date(), -5)),
     map(() => addDays(new Date(), -5))

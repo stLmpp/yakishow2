@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { isArray, isFunction, isNumber } from 'is-what';
+import { isArray, isDate, isFunction, isNumber } from 'is-what';
 import { getDeep, isNil } from '../../util/util';
 import { SortDirection } from '@angular/material/sort';
 
@@ -43,8 +43,12 @@ export function orderBy<T, K = keyof T>(
 export function compareValues<T>(valueA: T, valueB: T): number {
   if (isNil(valueA)) return 1;
   if (isNil(valueB)) return -1;
-  if (isNumber(valueA) && isNumber(valueB)) {
-    return +valueA - +valueB;
+  if (
+    (isNumber(valueA) && isNumber(valueB)) ||
+    (isDate(valueA) && isDate(valueB))
+  ) {
+    // @ts-ignore
+    return valueA - valueB;
   } else {
     return valueA.toString().localeCompare(valueB.toString());
   }

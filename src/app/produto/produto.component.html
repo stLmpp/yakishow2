@@ -13,13 +13,13 @@
   <mat-hint>Pesquise pela descrição ou código do produto</mat-hint>
 </mat-form-field>
 
-<mat-nav-list *ykLet="search$ | async as search">
+<mat-nav-list>
   <ng-container
     *ngFor="
       let produto of produtoQuery.all$
         | async
-        | search: ['codigo', 'descricao']:search
-        | orderBy: 'descricao';
+        | search: ['codigo', 'descricao']:(search$ | async)
+        | orderBy: settingsForm.get('orderBy').value;
       trackBy: trackByProduto;
       let $last = last
     "
@@ -38,9 +38,19 @@
     <mat-divider *ngIf="!$last"></mat-divider>
   </ng-container>
 </mat-nav-list>
-<button mat-mini-fab ykFabFloating left (click)="navigateBack()">
+<button mat-mini-fab ykFabFloating right top [matMenuTriggerFor]="orderRef">
+  <mat-icon>sort</mat-icon>
+</button>
+<button mat-mini-fab ykFabFloating bottom left (click)="navigateBack()">
   <mat-icon>keyboard_arrow_left</mat-icon>
 </button>
-<button mat-mini-fab ykFabFloating center (click)="openModalProduto()">
+<button mat-mini-fab ykFabFloating bottom center (click)="openModalProduto()">
   <mat-icon>add</mat-icon>
 </button>
+
+<mat-menu #orderRef="matMenu" [formGroup]="settingsForm" [hasBackdrop]="true">
+  <app-menu-order-by
+    [items]="produtoKeys"
+    formControlName="orderBy"
+  ></app-menu-order-by>
+</mat-menu>

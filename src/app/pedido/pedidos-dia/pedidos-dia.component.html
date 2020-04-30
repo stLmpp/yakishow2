@@ -2,7 +2,10 @@
   <div class="list">
     <div
       *ngFor="
-        let pedido of pedidos | orderBy: 'creationDate':'desc';
+        let pedido of pedidos
+          | orderBy
+            : formSettings.get('orderBy').value
+            : (formSettings.get('sortDirection').value ? 'asc' : 'desc');
         trackBy: trackByPedido
       "
     >
@@ -35,20 +38,34 @@
       </button>
     </mat-dialog-actions>
   </ng-template>
-
-  <button mat-mini-fab ykFabFloating left (click)="navigateBack()">
+  <button mat-mini-fab ykFabFloating right top [matMenuTriggerFor]="orderByRef">
+    <mat-icon>sort</mat-icon>
+  </button>
+  <button mat-mini-fab ykFabFloating left bottom (click)="navigateBack()">
     <mat-icon>keyboard_arrow_left</mat-icon>
   </button>
   <button
     mat-mini-fab
     ykFabFloating
     center
+    bottom
     [routerLink]="['../', 'novo']"
     [queryParams]="{ backUrl: '/pedidos/dia' }"
   >
     <mat-icon>add</mat-icon>
   </button>
-  <button mat-mini-fab ykFabFloating right (click)="openFilterModal()">
+  <button mat-mini-fab ykFabFloating right bottom (click)="openFilterModal()">
     <mat-icon>filter_list</mat-icon>
   </button>
 </ng-container>
+
+<mat-menu #orderByRef [formGroup]="formSettings">
+  <mat-slide-toggle formControlName="sortDirection">
+    {{ formSettings.get('sortDirection').value ? 'Crescente' : 'Decrescente' }}
+  </mat-slide-toggle>
+  <mat-divider></mat-divider>
+  <app-menu-order-by
+    [items]="pedidoKeys"
+    formControlName="orderBy"
+  ></app-menu-order-by>
+</mat-menu>

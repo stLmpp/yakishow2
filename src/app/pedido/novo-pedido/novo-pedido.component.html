@@ -102,6 +102,7 @@
     mat-mini-fab
     ykFabFloating
     center
+    bottom
     (click)="addForm()"
     [disabled]="pedidoSaving"
   >
@@ -110,6 +111,7 @@
   <button
     mat-mini-fab
     ykFabFloating
+    bottom
     right
     [disabled]="(saveDisabled$ | async) || !formProdutos.length || pedidoSaving"
     (click)="salvar()"
@@ -123,6 +125,7 @@
   mat-mini-fab
   ykFabFloating
   left
+  bottom
   (click)="navigateBack()"
   [disabled]="pedidoSaving"
 >

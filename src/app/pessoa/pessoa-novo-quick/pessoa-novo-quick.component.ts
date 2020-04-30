@@ -76,7 +76,7 @@ export class PessoaNovoQuickComponent implements OnInit {
       }),
       endereco: new FormControl(null, [Validators.required]),
       // TODO add tipos
-      tipos: new FormControl([{ tipoPessoaId: 1 }]),
+      tipos: new FormControl([{ idTipoPessoa: 1 }]),
     });
   }
 }

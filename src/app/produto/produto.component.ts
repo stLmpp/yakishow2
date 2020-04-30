@@ -10,14 +10,14 @@ import {
   ViewChildren,
   ViewEncapsulation,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { ProdutoService } from './state/produto.service';
 import { ProdutoQuery } from './state/produto.query';
 import { MatDialog } from '@angular/material/dialog';
 import { ProdutoItemComponent } from './produto-item/produto-item.component';
-import { Produto } from '../model/produto';
+import { getProdutoKeys, Produto } from '../model/produto';
 import { trackByFactory } from '../util/util';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { RouteParamsEnum } from '../model/route-params.enum';
@@ -49,6 +49,12 @@ export class ProdutoComponent implements OnInit, OnDestroy, AfterViewInit {
 
   idProduto: number;
   searchControl = new FormControl();
+
+  produtoKeys = getProdutoKeys();
+
+  settingsForm = new FormGroup({
+    orderBy: new FormControl('descricao'),
+  });
 
   search$: Observable<string> = this.searchControl.valueChanges.pipe(
     debounceTime(400)

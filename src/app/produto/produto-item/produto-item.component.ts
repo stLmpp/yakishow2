@@ -1,8 +1,10 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Inject,
+  OnDestroy,
   OnInit,
   Optional,
 } from '@angular/core';
@@ -10,8 +12,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Produto } from '../../model/produto';
 import { ProdutoService } from '../state/produto.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Observable, throwError } from 'rxjs';
-import { catchError, finalize, tap } from 'rxjs/operators';
+import { Observable, Subject, throwError } from 'rxjs';
+import { catchError, delay, finalize, tap } from 'rxjs/operators';
 import { UpdateResult } from '../../model/update-result';
 import { SnackBarService } from '../../shared/snack-bar/snack-bar.service';
 import { ValidatorsService } from '../../validators/validators.service';
@@ -24,7 +26,7 @@ import { isUndefined } from 'is-what';
   styleUrls: ['./produto-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProdutoItemComponent implements OnInit {
+export class ProdutoItemComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     public matDialogRef: MatDialogRef<ProdutoItemComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public produto: Produto,
@@ -40,6 +42,8 @@ export class ProdutoItemComponent implements OnInit {
       this.produto.ativo = true;
     }
   }
+
+  private _destroy$ = new Subject();
 
   loading = false;
   loadingExistsPedido = false;
@@ -81,19 +85,7 @@ export class ProdutoItemComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.hasPedido$ = this.produtoQuery.hasPedido(this.produto?.id);
-    if (this.produto?.id && isUndefined(this.produto?.hasPedido)) {
-      this.loadingExistsPedido = true;
-      this.produtoService
-        .getExistsPedido(this.produto?.id)
-        .pipe(
-          finalize(() => {
-            this.loadingExistsPedido = false;
-            this.changeDetectorRef.markForCheck();
-          })
-        )
-        .subscribe();
-    }
+    this.hasPedido$ = this.produtoQuery.selectHasPedido(this.produto?.id);
     this.form = new FormGroup({
       codigo: new FormControl(this.produto.codigo, {
         validators: [Validators.required],
@@ -106,5 +98,26 @@ export class ProdutoItemComponent implements OnInit {
       valor: new FormControl(this.produto.valor, [Validators.required]),
       ativo: new FormControl(this.produto.ativo),
     });
+  }
+
+  ngAfterViewInit(): void {
+    if (this.produto?.id && isUndefined(this.produto?.hasPedido)) {
+      this.loadingExistsPedido = true;
+      this.produtoService
+        .getExistsPedido(this.produto?.id)
+        .pipe(
+          delay(0),
+          finalize(() => {
+            this.loadingExistsPedido = false;
+            this.changeDetectorRef.markForCheck();
+          })
+        )
+        .subscribe();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this._destroy$.next();
+    this._destroy$.complete();
   }
 }

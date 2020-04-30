@@ -32,6 +32,7 @@ import { GetDeepPipe } from './get-deep/get-deep.pipe';
 import { SumByPipe } from './sum-by/sum-by.pipe';
 import { SnackBarComponent } from './snack-bar/snack-bar.component';
 import { DefaultPipe } from './default/default.pipe';
+import { MenuOrderByComponent } from './order-by/menu-order-by/menu-order-by.component';
 
 const DECLARATIONS = [
   environment.production ? [] : HammerjsDirective,
@@ -45,6 +46,7 @@ const DECLARATIONS = [
   CardsComponent,
   FabFloatingDirective,
   SnackBarComponent,
+  MenuOrderByComponent,
 ];
 
 const PIPES = [
