@@ -157,7 +157,7 @@
       [matTooltip]="row.observacao"
       matTooltipPosition="above"
       matTooltipTouchGestures="off"
-      (click)="toolTip._isTooltipVisible() ? toolTip.hide() : toolTip.show()"
+      (click)="toolTip.toggle()"
       #toolTip="matTooltip"
     ></mat-row>
     <mat-footer-row *matFooterRowDef="columns"></mat-footer-row>
