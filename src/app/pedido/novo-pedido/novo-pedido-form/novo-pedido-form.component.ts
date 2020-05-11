@@ -108,7 +108,7 @@ export class NovoPedidoFormComponent implements OnInit, OnDestroy {
       .subscribe(([quantidade, valor]) => {
         this.form
           .get('valorTotal')
-          .setValue(+(quantidade ?? 0) * +(valor ?? 0), { emitEvent: false });
+          .setValue(+(quantidade ?? 0) * +(valor ?? 0));
         this.changeDetectorRef.markForCheck();
       });
   }

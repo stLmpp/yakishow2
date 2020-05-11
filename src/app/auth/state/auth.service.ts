@@ -27,6 +27,10 @@ export class AuthService {
       setLoading(this.authStore),
       tap(user => {
         this.authStore.update({ user });
+      }),
+      catchError(err => {
+        this.authStore.update({ user: null, token: null });
+        return throwError(err);
       })
     );
   }

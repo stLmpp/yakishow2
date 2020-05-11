@@ -84,7 +84,14 @@
       >
         {{ element.produto.codigo }}
       </mat-cell>
-      <mat-footer-cell *matFooterCellDef>Total</mat-footer-cell>
+      <mat-footer-cell *matFooterCellDef> Total </mat-footer-cell
+      ><!--
+      <mat-footer-cell *matFooterCellDef>
+        Valor a receber
+      </mat-footer-cell>
+      <mat-footer-cell *matFooterCellDef>
+        Troco
+      </mat-footer-cell>-->
     </ng-container>
     <ng-container matColumnDef="quantidade">
       <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -102,7 +109,7 @@
       <mat-cell *matCellDef="let element">
         {{ element.produto.valor | currency }}
       </mat-cell>
-      <mat-footer-cell *matFooterCellDef> </mat-footer-cell>
+      <mat-footer-cell *matFooterCellDef></mat-footer-cell>
     </ng-container>
     <ng-container matColumnDef="total">
       <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -115,6 +122,35 @@
         {{ pedido.pedidoItems | sumBy: 'total' | currency }}
       </mat-footer-cell>
     </ng-container>
+    <ng-container
+      *ngFor="let cell of ['dummy1', 'dummy11', 'dummy21', 'dummy2']"
+    >
+      <ng-container [matColumnDef]="cell">
+        <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+      </ng-container>
+    </ng-container>
+    <ng-container matColumnDef="label1">
+      <mat-footer-cell *matFooterCellDef>
+        Receber
+      </mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="total1">
+      <mat-footer-cell *matFooterCellDef>
+        {{ pedido.valorReceber | currency }}
+      </mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="label2">
+      <mat-footer-cell *matFooterCellDef>
+        Troco
+      </mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="total2">
+      <mat-footer-cell *matFooterCellDef>
+        {{
+          pedido.valorReceber - (pedido.pedidoItems | sumBy: 'total') | currency
+        }}
+      </mat-footer-cell>
+    </ng-container>
     <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
     <mat-row
       *matRowDef="let row; columns: columns"
@@ -125,6 +161,10 @@
       #toolTip="matTooltip"
     ></mat-row>
     <mat-footer-row *matFooterRowDef="columns"></mat-footer-row>
+    <ng-container *ngIf="pedido.valorReceber">
+      <mat-footer-row *matFooterRowDef="columns1"></mat-footer-row>
+      <mat-footer-row *matFooterRowDef="columns2"></mat-footer-row>
+    </ng-container>
   </mat-table>
 </ng-container>
 <button

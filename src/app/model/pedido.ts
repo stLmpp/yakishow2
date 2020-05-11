@@ -17,6 +17,7 @@ export class Pedido extends CommonHistory {
   entregador?: Pessoa;
   pedidoItems: PedidoItem[];
   dataFinalizado?: Date;
+  valorReceber: number;
 }
 
 export interface PedidoGetByParamsPayload {

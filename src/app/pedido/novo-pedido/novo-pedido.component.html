@@ -51,6 +51,7 @@
     </mat-list-item>
   </mat-list>
 </div>
+
 <div
   class="produtos"
   *ngIf="
@@ -120,6 +121,32 @@
       save
     </mat-icon>
   </button>
+</div>
+<div class="valor-receber main-margin-x">
+  <mat-form-field>
+    <input
+      matInput
+      placeholder="Total"
+      disabled
+      [value]="total$ | async | number: '1.2-2'"
+    />
+  </mat-form-field>
+  <mat-form-field>
+    <input
+      matInput
+      placeholder="Valor a receber"
+      currencyMask
+      [formControl]="valorReceberControl"
+    />
+  </mat-form-field>
+  <mat-form-field>
+    <input
+      matInput
+      placeholder="Troco"
+      disabled
+      [value]="troco$ | async | number: '1.2-2'"
+    />
+  </mat-form-field>
 </div>
 <button
   mat-mini-fab

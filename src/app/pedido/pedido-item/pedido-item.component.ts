@@ -91,6 +91,8 @@ export class PedidoItemComponent implements OnInit, OnDestroy {
     'quantidade',
     'total',
   ];
+  columns1: string[] = ['label1', 'dummy1', 'dummy11', 'total1'];
+  columns2: string[] = ['label2', 'dummy2', 'dummy21', 'total2'];
   maskEnum = MaskEnum;
   sort: Sort;
 

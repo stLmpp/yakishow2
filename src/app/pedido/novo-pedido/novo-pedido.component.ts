@@ -38,7 +38,7 @@ import {
   takeUntil,
   tap,
 } from 'rxjs/operators';
-import { Observable, of, Subject, throwError } from 'rxjs';
+import { combineLatest, Observable, of, Subject, throwError } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { PessoaNovoQuickComponent } from '../../pessoa/pessoa-novo-quick/pessoa-novo-quick.component';
 import { DOCUMENT, ViewportScroller } from '@angular/common';
@@ -57,6 +57,7 @@ import { SnackBarService } from '../../shared/snack-bar/snack-bar.service';
 import { RouteParamsEnum } from '../../model/route-params.enum';
 import { MaskApplierService } from 'ngx-mask';
 import { SwipeActionsDirective } from '../../shared/swipe-actions/swipe-actions.directive';
+import { sumBy } from '../../util/sum/sum';
 
 const idProdutoExists: ValidatorFn = control => {
   const idProdutoControl = control?.parent?.get?.('idProduto');
@@ -123,6 +124,9 @@ export class NovoPedidoComponent implements OnInit, OnDestroy, AfterViewInit {
   maskEnum = MaskEnum;
 
   clienteControl = new FormControl(null, [Validators.required]);
+  valorReceberControl = new FormControl(0);
+  troco$: Observable<number>;
+  total$: Observable<number>;
   loadingPessoa = false;
   formProdutos: FormArray;
   saveDisabled$: Observable<boolean>;
@@ -206,6 +210,7 @@ export class NovoPedidoComponent implements OnInit, OnDestroy, AfterViewInit {
         new Pedido({
           idCliente: this.pessoa.id,
           status: PedidoStatusEnum.pendente,
+          valorReceber: this.valorReceberControl.value,
           pedidoItems: this.formProdutos.controls.map((group: FormGroup) => {
             const {
               idProduto,
@@ -288,6 +293,23 @@ export class NovoPedidoComponent implements OnInit, OnDestroy, AfterViewInit {
             .getByTermAutocomplete(cliente)
             .pipe(finalize(() => (this.loadingPessoa = false)));
         }
+      })
+    );
+    this.total$ = this.formProdutos.valueChanges.pipe(
+      debounceTime(200),
+      startWith([]),
+      map(() => sumBy(this.formProdutos.getRawValue(), 'valorTotal'))
+    );
+    this.troco$ = combineLatest([
+      this.valorReceberControl.valueChanges.pipe(
+        debounceTime(200),
+        startWith(0)
+      ),
+      this.total$,
+    ]).pipe(
+      map(([valorReceber, total]) => {
+        const troco = valorReceber - total;
+        return troco < 0 ? 0 : troco;
       })
     );
   }
