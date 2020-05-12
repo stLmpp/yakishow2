@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PessoaComponent } from './pessoa.component';
 import { PessoaResolver } from './pessoa.resolver';
-import { RouterParamsEnum } from '../model/router-params.enum';
+import { RouteParamsEnum } from '../model/route-params.enum';
 import { PessoaItemComponent } from './pessoa-item/pessoa-item.component';
 import { PessoaItemResolver } from './pessoa-item/pessoa-item.resolver';
 
@@ -14,7 +14,7 @@ const routes: Routes = [
     data: { animation: 'Pessoas' },
   },
   {
-    path: `edit/:${RouterParamsEnum.idPessoa}`,
+    path: `edit/:${RouteParamsEnum.idPessoa}`,
     component: PessoaItemComponent,
     resolve: [PessoaItemResolver],
     data: { animation: 'PessoaItem' },

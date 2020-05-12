@@ -3,7 +3,6 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 import { enableAkitaProdMode, persistState } from '@datorama/akita';
-import { debounceTime } from 'rxjs/operators';
 
 import 'hammerjs';
 
@@ -14,9 +13,9 @@ if (environment.production) {
 
 persistState({
   include: ['auth.token'],
-  preStorageUpdateOperator: () => debounceTime(2000),
 });
 
 platformBrowserDynamic()
   .bootstrapModule(AppModule)
+  // tslint:disable-next-line:no-console
   .catch(err => console.error(err));

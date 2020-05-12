@@ -1,0 +1,71 @@
+<ng-container *ykLet="list$ | async | filter: 'status':filterStatus as pedidos">
+  <div class="list">
+    <div
+      *ngFor="
+        let pedido of pedidos
+          | orderBy
+            : formSettings.get('orderBy').value
+            : (formSettings.get('sortDirection').value ? 'asc' : 'desc');
+        trackBy: trackByPedido
+      "
+    >
+      <app-pedido-item
+        [editPedido]="true"
+        [pedido]="pedido"
+        backUrl="/pedidos/dia{{ dia ? '?dia=' + dia : '' }}"
+      ></app-pedido-item>
+    </div>
+    <div class="main-margin" *ngIf="!pedidos?.length">
+      Nenhum pedido encontrado.
+    </div>
+  </div>
+  <ng-template #filterStatusSettingsRef>
+    <mat-dialog-content [formGroup]="formSettings">
+      <mat-selection-list formControlName="status">
+        <h2 matSubheader>Status</h2>
+        <mat-list-option
+          *ngFor="let status of pedidoStatusList; trackBy: trackByPedidoStatus"
+          [value]="status.value"
+        >
+          {{ status.label }}
+        </mat-list-option>
+      </mat-selection-list>
+    </mat-dialog-content>
+    <mat-dialog-actions class="align-end">
+      <button mat-button color="primary" mat-dialog-close>Cancelar</button>
+      <button mat-button color="primary" (click)="applyFiltersAndOrder()">
+        Aplicar
+      </button>
+    </mat-dialog-actions>
+  </ng-template>
+  <button mat-mini-fab ykFabFloating right top [matMenuTriggerFor]="orderByRef">
+    <mat-icon>sort</mat-icon>
+  </button>
+  <button mat-mini-fab ykFabFloating left bottom (click)="navigateBack()">
+    <mat-icon>keyboard_arrow_left</mat-icon>
+  </button>
+  <button
+    mat-mini-fab
+    ykFabFloating
+    center
+    bottom
+    [routerLink]="['../', 'novo']"
+    [queryParams]="{ backUrl: '/pedidos/dia' }"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+  <button mat-mini-fab ykFabFloating right bottom (click)="openFilterModal()">
+    <mat-icon>filter_list</mat-icon>
+  </button>
+</ng-container>
+
+<mat-menu #orderByRef [formGroup]="formSettings">
+  <mat-slide-toggle formControlName="sortDirection">
+    {{ formSettings.get('sortDirection').value ? 'Crescente' : 'Decrescente' }}
+  </mat-slide-toggle>
+  <mat-divider></mat-divider>
+  <app-menu-order-by
+    [items]="pedidoKeys"
+    formControlName="orderBy"
+  ></app-menu-order-by>
+</mat-menu>

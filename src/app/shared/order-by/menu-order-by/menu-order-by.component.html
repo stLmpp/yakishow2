@@ -1,0 +1,8 @@
+<button
+  mat-menu-item
+  *ngFor="let item of items; trackBy: trackByValue"
+  (click)="emitOnChange(item.value)"
+  [class.active]="selected === item.value"
+>
+  {{ item.label }}
+</button>

@@ -1,0 +1,21 @@
+@import 'variables';
+
+@mixin mat-menu-theme-custom($theme) {
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+  $accent: map-get($theme, accent);
+  .mat-menu-panel {
+    .mat-menu-content {
+      .mat-slide-toggle {
+        margin: 10px 16px;
+      }
+      .mat-menu-item {
+        &.active {
+          font-weight: bold;
+          color: mat-color($accent, darker) !important;
+          background: $background-list-active;
+        }
+      }
+    }
+  }
+}

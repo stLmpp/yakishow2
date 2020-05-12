@@ -1,12 +1,19 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  HostListener,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { PessoaQuery } from '../state/pessoa.query';
 import { Observable, Subject, throwError } from 'rxjs';
 import { Pessoa } from '../../model/pessoa';
-import { RouterParamsEnum } from '../../model/router-params.enum';
+import { RouteParamsEnum } from '../../model/route-params.enum';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { FormControl, FormGroup } from '@angular/forms';
-import { MasksEnum } from '../../model/masks.enum';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MaskEnum } from '../../model/mask.enum';
 import {
   catchError,
   debounceTime,
@@ -19,13 +26,14 @@ import {
 } from 'rxjs/operators';
 import { ViaCepService } from '../../shared/via-cep/via-cep.service';
 import { PessoaService } from '../state/pessoa.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { isArray } from 'is-what';
+import { SnackBarService } from '../../shared/snack-bar/snack-bar.service';
+import { ValidatorsService } from '../../validators/validators.service';
 
 @Component({
   selector: 'app-pessoa-item',
   templateUrl: './pessoa-item.component.html',
   styleUrls: ['./pessoa-item.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PessoaItemComponent implements OnInit, OnDestroy {
   constructor(
@@ -35,22 +43,19 @@ export class PessoaItemComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private viaCepService: ViaCepService,
     private pessoaService: PessoaService,
-    private matSnackBar: MatSnackBar
+    private snackBarService: SnackBarService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private validatorsService: ValidatorsService
   ) {}
 
   private _destroy$ = new Subject();
 
   form: FormGroup;
   idPessoa: number;
-  masksEnum = MasksEnum;
+  masksEnum = MaskEnum;
   loadingCep = false;
 
   loadingPessoa = false;
-
-  @HostListener('swiperight')
-  onSwipeLeft(): void {
-    this.navigateBack();
-  }
 
   save(): void {
     if (this.form.invalid) return;
@@ -65,33 +70,36 @@ export class PessoaItemComponent implements OnInit, OnDestroy {
       .pipe(
         tap(() => {
           this.navigateBack();
-          this.matSnackBar.open('Pessoa salva com sucesso!', 'Fechar');
+          this.snackBarService.success('Pessoa salva com sucesso!');
         }),
         finalize(() => {
           this.loadingPessoa = false;
+          this.changeDetectorRef.markForCheck();
         }),
         catchError(err => {
-          if (
-            isArray(err.message) &&
-            err.message.some(o => o.property === 'email')
-          ) {
-            this.matSnackBar.open('E-mail inválido!');
-          } else {
-            this.matSnackBar.open(err.message);
-          }
-
+          this.snackBarService.error(
+            err?.message ?? 'Erro ao tentar salvar a pessoa!'
+          );
           return throwError(err);
         })
       )
       .subscribe();
   }
 
+  @HostListener('swiperight')
   navigateBack(): void {
     let commands = '../';
     const queryParams: Params = {};
     if (this.idPessoa) {
       commands = '/pessoas';
-      queryParams[RouterParamsEnum.idPessoa] = this.idPessoa;
+      queryParams[RouteParamsEnum.idPessoa] = this.idPessoa;
+    }
+    const backUrl = this.routerQuery.getQueryParams<string>(
+      RouteParamsEnum.backUrl
+    );
+    if (backUrl) {
+      this.router.navigateByUrl(backUrl);
+      return;
     }
     this.router.navigate([commands], {
       relativeTo: this.activatedRoute,
@@ -130,21 +138,27 @@ export class PessoaItemComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.idPessoa = this.routerQuery.getParams(RouterParamsEnum.idPessoa);
+    this.idPessoa = this.routerQuery.getParams(RouteParamsEnum.idPessoa);
     const pessoa = this.pessoaQuery.getEntity(this.idPessoa) ?? new Pessoa();
     const { celular, tipos, complemento, cep, nome, email, endereco } = pessoa;
     this.form = new FormGroup({
-      nome: new FormControl(nome),
-      celular: new FormControl(celular),
+      nome: new FormControl(nome, [Validators.required]),
+      celular: new FormControl(celular, {
+        validators: [Validators.required],
+        asyncValidators: [this.validatorsService.uniqueCelular(this.idPessoa)],
+      }),
       complemento: new FormControl(complemento),
       tipos: new FormControl(tipos),
       cep: new FormControl(cep),
-      email: new FormControl(email),
-      endereco: new FormControl(endereco),
+      email: new FormControl(email, {
+        validators: [Validators.email],
+        asyncValidators: [this.validatorsService.uniqueEmail(this.idPessoa)],
+      }),
+      endereco: new FormControl(endereco, [Validators.required]),
     });
     // TODO fazer tipos de pessoas
     if (!this.idPessoa) {
-      this.form.get('tipos').setValue([{ tipoPessoaId: 1 }]);
+      this.form.get('tipos').setValue([{ idTipoPessoa: 1 }]);
     }
     this.initSub();
   }

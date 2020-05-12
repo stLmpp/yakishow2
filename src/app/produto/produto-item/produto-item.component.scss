@@ -1,3 +1,18 @@
+@import 'variables';
+
 .mat-dialog-actions {
   justify-content: space-between;
+}
+
+.mat-card {
+  &.error {
+    margin-bottom: 1rem;
+    &.outline {
+      border-color: yk-color($mat-red, 600);
+    }
+  }
+  &.outline {
+    border-style: solid;
+    border-width: 1px;
+  }
 }

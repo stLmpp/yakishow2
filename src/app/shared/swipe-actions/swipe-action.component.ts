@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   HostBinding,
@@ -14,6 +15,7 @@ import { MatButton } from '@angular/material/button';
   selector: 'app-swipe-action',
   templateUrl: './swipe-action.component.html',
   styleUrls: ['./swipe-action.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SwipeActionComponent implements OnInit {
   constructor() {}

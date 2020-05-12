@@ -3,6 +3,7 @@ import {
   ComponentFactoryResolver,
   ComponentRef,
   Directive,
+  DoCheck,
   ElementRef,
   EventEmitter,
   HostBinding,
@@ -18,14 +19,15 @@ import {
 import { SwipeActionComponent } from './swipe-action.component';
 import { Subject } from 'rxjs';
 import { ThemePalette } from '@angular/material/core';
-import { delay, filter, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { WINDOW } from '../../core/window.service';
 import { SwipeActionsService } from './swipe-actions.service';
 import { NAVIGATOR } from '../../core/navigator.token';
-import { Debounce } from '../../util/debounce.decorator';
+import { TouchInput } from 'hammerjs';
 
-@Directive({ selector: '[swipeActions]', exportAs: 'swipeActions' })
-export class SwipeActionsDirective implements OnInit, AfterViewInit, OnDestroy {
+@Directive({ selector: '[ykSwipeActions]', exportAs: 'ykSwipeActions' })
+export class SwipeActionsDirective
+  implements OnInit, AfterViewInit, OnDestroy, DoCheck {
   constructor(
     private elementRef: ElementRef,
     private renderer2: Renderer2,
@@ -41,7 +43,7 @@ export class SwipeActionsDirective implements OnInit, AfterViewInit, OnDestroy {
   private _destroy$ = new Subject();
   private componentRef: ComponentRef<SwipeActionComponent>;
   private _rippleActive = false;
-  private isOpened = false;
+  isOpened = false;
 
   @Input()
   set swipeDisabled(disabled: boolean) {
@@ -53,19 +55,28 @@ export class SwipeActionsDirective implements OnInit, AfterViewInit, OnDestroy {
 
   private _disabled: boolean;
 
-  @Input() swipeId: string;
   @Input() swipeIcon: string;
   @Input() swipeIconColor: ThemePalette;
   @Input() swipeIconRipple: boolean;
+  @Input() updatePositionOnAnyChange: boolean;
 
   @HostBinding('style.z-index') @Input() zIndex = 1;
   @Output() swiped = new EventEmitter<TouchInput>();
   @Output() swipeClick = new EventEmitter<MouseEvent>();
   @Output() swipeAction = new EventEmitter();
+  @Output() swipeStart = new EventEmitter<TouchInput>();
+  @Output() swipeEnd = new EventEmitter<TouchInput>();
+
+  @HostListener('panstart', ['$event'])
+  panStart($event: TouchInput): void {
+    this.updatePosition();
+    this.swipeStart.emit($event);
+  }
 
   @HostListener('panmove', ['$event'])
   pan($event: TouchInput): void {
     if (this._disabled) return;
+    this.swipeActionsService.doCheckDisabled = true;
     const x = $event.deltaX - (this.isOpened ? 80 : 0);
     this.hideActions(false);
     if (x >= 1) {
@@ -85,7 +96,9 @@ export class SwipeActionsDirective implements OnInit, AfterViewInit, OnDestroy {
 
   @HostListener('panend', ['$event'])
   panEnd($event: TouchInput): void {
+    this.swipeEnd.emit($event);
     if (this._disabled) return;
+    this.swipeActionsService.doCheckDisabled = false;
     if (this._rippleActive) {
       this.swipeAction.emit();
       this.swiped.emit($event);
@@ -118,7 +131,6 @@ export class SwipeActionsDirective implements OnInit, AfterViewInit, OnDestroy {
     this.hideActions(true);
   }
 
-  @Debounce(10)
   updatePosition(): void {
     if (this.componentRef) {
       const position = this.elementRef.nativeElement.getBoundingClientRect();
@@ -165,22 +177,19 @@ export class SwipeActionsDirective implements OnInit, AfterViewInit, OnDestroy {
       'transition',
       `${transition}, transform 25ms linear`
     );
-    this.swipeActionsService.swipeUpdate
-      .pipe(
-        takeUntil(this._destroy$),
-        filter(id => id === this.swipeId),
-        delay(300)
-      )
-      .subscribe(() => {
-        this.updatePosition();
-      });
   }
 
   ngOnDestroy(): void {
     this._destroy$.next();
     this._destroy$.complete();
-    if (this.swipeId) {
-      this.swipeActionsService.updateSwipe(this.swipeId);
+  }
+
+  ngDoCheck(): void {
+    if (
+      this.updatePositionOnAnyChange &&
+      !this.swipeActionsService.doCheckDisabled
+    ) {
+      this.updatePosition();
     }
   }
 }

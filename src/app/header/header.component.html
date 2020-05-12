@@ -14,8 +14,8 @@
   <mat-menu #userMenu="matMenu" xPosition="before">
     <button
       mat-menu-item
+      *ykLet="authQuery.theme$ | async as theme"
       (click)="changeTheme(theme)"
-      *ngLet="authQuery.theme$ | async as theme"
     >
       Tema
       {{ theme === themesEnum.light ? 'escuro' : 'claro' }}

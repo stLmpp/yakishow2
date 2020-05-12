@@ -20,6 +20,10 @@ import {
   MAT_SNACK_BAR_DEFAULT_OPTIONS,
   MatSnackBarConfig,
 } from '@angular/material/snack-bar';
+import {
+  DEFAULT_PIPE_TYPE,
+  DefaultPipeType,
+} from '../shared/default/default.pipe';
 
 const withInterceptors = (...interceptors: any[]): Provider[] =>
   interceptors.map(useClass => ({
@@ -69,6 +73,10 @@ export class CoreModule {
           useValue: {
             duration: 5000,
           } as MatSnackBarConfig,
+        },
+        {
+          provide: DEFAULT_PIPE_TYPE,
+          useValue: 'strict' as DefaultPipeType,
         },
       ],
     };

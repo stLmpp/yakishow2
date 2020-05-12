@@ -1,0 +1,13 @@
+.yk-snackbar {
+  display: flex;
+  align-items: center;
+  > button {
+    margin-left: auto;
+  }
+  > .title {
+    line-height: normal;
+  }
+  > mat-icon {
+    margin-right: 1rem;
+  }
+}

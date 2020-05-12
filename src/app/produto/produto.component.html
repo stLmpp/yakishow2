@@ -1,10 +1,5 @@
 <div class="page-title">
   <h2>Produtos</h2>
-  <div>
-    <button mat-raised-button color="accent" (click)="openModalProduto()">
-      Novo
-    </button>
-  </div>
 </div>
 
 <mat-form-field class="search">
@@ -18,21 +13,44 @@
   <mat-hint>Pesquise pela descrição ou código do produto</mat-hint>
 </mat-form-field>
 
-<mat-nav-list *ngLet="search$ | async as search">
-  <a
-    [class.inativo]="!produto.ativo"
-    mat-list-item
+<mat-nav-list>
+  <ng-container
     *ngFor="
       let produto of produtoQuery.all$
         | async
-        | filter: ['codigo', 'descricao']:search
-        | orderBy: 'descricao';
-      trackBy: trackByProduto
+        | search: ['codigo', 'descricao']:(search$ | async)
+        | orderBy: settingsForm.get('orderBy').value;
+      trackBy: trackByProduto;
+      let $last = last
     "
-    (click)="openModalProduto(produto)"
   >
-    <div matLine>{{ produto.descricao }}</div>
-    <div matLine class="mat-line-secondary">{{ produto.codigo }}</div>
-    <div matSuffix>{{ produto.valor | currency }}</div>
-  </a>
+    <mat-list-item
+      [class.inativo]="!produto.ativo"
+      [class.active]="idProduto === produto.id"
+      (click)="openModalProduto(produto)"
+      [id]="produto.id"
+      #produtosRef
+    >
+      <div matLine>{{ produto.descricao }}</div>
+      <div matLine class="mat-line-secondary">{{ produto.codigo }}</div>
+      <div matSuffix>{{ produto.valor | currency }}</div>
+    </mat-list-item>
+    <mat-divider *ngIf="!$last"></mat-divider>
+  </ng-container>
 </mat-nav-list>
+<button mat-mini-fab ykFabFloating right top [matMenuTriggerFor]="orderRef">
+  <mat-icon>sort</mat-icon>
+</button>
+<button mat-mini-fab ykFabFloating bottom left (click)="navigateBack()">
+  <mat-icon>keyboard_arrow_left</mat-icon>
+</button>
+<button mat-mini-fab ykFabFloating bottom center (click)="openModalProduto()">
+  <mat-icon>add</mat-icon>
+</button>
+
+<mat-menu #orderRef="matMenu" [formGroup]="settingsForm" [hasBackdrop]="true">
+  <app-menu-order-by
+    [items]="produtoKeys"
+    formControlName="orderBy"
+  ></app-menu-order-by>
+</mat-menu>

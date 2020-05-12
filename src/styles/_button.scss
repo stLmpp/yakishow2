@@ -1,3 +1,18 @@
+@import 'variables';
+
+$default: 16px;
+$top: $header-height + $default;
+$mini-fab: 40px;
+$fab: 56px;
+
+@mixin createDistances($property, $xOrY, $increment, $offset: 0px, $num: 10) {
+  @for $i from 1 through $num {
+    &.#{$xOrY}#{$i} {
+      #{$property}: $offset + ($default * ($i + 1)) + ($increment * $i);
+    }
+  }
+}
+
 .mat-button-base {
   > .mat-button-wrapper {
     > mat-progress-bar {
@@ -7,12 +22,17 @@
       right: 0;
     }
   }
-  &.mat-fab, &.mat-mini-fab {
+  &.mat-fab,
+  &.mat-mini-fab {
     &.mat-button-floating {
       position: fixed;
       z-index: 500;
+      transition: margin-bottom 200ms ease, margin-top 200ms ease;
+      &.top {
+        top: $top;
+      }
       &.bottom {
-        bottom: 1rem;
+        bottom: $default;
       }
       &.center {
         left: 50%;
@@ -20,10 +40,42 @@
         transform: translate(-50%);
       }
       &.left {
-        left: 1rem;
+        left: $default;
       }
       &.right {
-        right: 1rem;
+        right: $default;
+      }
+    }
+  }
+  &.mat-fab {
+    &.mat-button-floating {
+      &.top {
+        @include createDistances('top', 'y', $fab, $header-height);
+      }
+      &.bottom {
+        @include createDistances('bottom', 'y', $fab);
+      }
+      &.left {
+        @include createDistances('left', 'x', $fab);
+      }
+      &.right {
+        @include createDistances('right', 'x', $fab);
+      }
+    }
+  }
+  &.mat-mini-fab {
+    &.mat-button-floating {
+      &.top {
+        @include createDistances('top', 'y', $mini-fab, $header-height);
+      }
+      &.bottom {
+        @include createDistances('bottom', 'y', $mini-fab);
+      }
+      &.left {
+        @include createDistances('left', 'x', $mini-fab);
+      }
+      &.right {
+        @include createDistances('right', 'x', $mini-fab);
       }
     }
   }

@@ -72,4 +72,20 @@ export class PessoaService {
         })
       );
   }
+
+  getByTermAutocomplete(
+    term: string,
+    withPedido = false
+  ): Observable<Pessoa[]> {
+    const params = new HttpParams({
+      fromObject: { term, withPedido: '' + withPedido },
+    });
+    return this.http.get<Pessoa[]>(`${this.target}/search/autocomplete`, {
+      params,
+    });
+  }
+
+  updateSearch(term: string): void {
+    this.pessoaStore.update({ search: term });
+  }
 }

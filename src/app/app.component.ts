@@ -1,4 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { LTR, RTL, SLIDE_X, TTB } from './route-animations';
 import { trigger } from '@angular/animations';
 import { Subject } from 'rxjs';
@@ -15,9 +20,18 @@ import { AuthQuery } from './auth/state/auth.query';
       RTL('AuthLogin', '*'),
       RTL('*', 'Produtos'),
       ...SLIDE_X('Pedidos', 'NovoPedido'),
-      LTR('Home', '*'),
+      ...SLIDE_X('Pedidos', 'PedidosDia'),
+      LTR('NovoPedido', 'PedidoItem'),
+      ...SLIDE_X('PedidosPesquisa', 'PedidoItem'),
+      ...SLIDE_X('Pedidos', 'PedidosPesquisa'),
+      ...SLIDE_X('Home', '*'),
+      ...SLIDE_X('PedidoItem', 'PessoaItem'),
+      ...SLIDE_X('PedidosDia', 'PessoaItem'),
+      ...SLIDE_X('PedidosDia', 'NovoPedido'),
+      ...SLIDE_X('PedidosPesquisa', 'Pessoas'),
     ]),
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit, OnDestroy {
   constructor(public authQuery: AuthQuery) {}

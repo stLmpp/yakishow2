@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { ProdutoStore } from './produto.store';
 import { Produto } from '../../model/produto';
 import { tap } from 'rxjs/operators';
@@ -7,32 +7,21 @@ import { Observable } from 'rxjs';
 import { UpdateResult } from '../../model/update-result';
 import { cacheableCustom } from '../../util/akita';
 import { setLoading } from '@datorama/akita';
+import { HttpParams } from '../../util/http-params';
+import { PedidoService } from '../../pedido/state/pedido.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProdutoService {
-  constructor(private produtoStore: ProdutoStore, private http: HttpClient) {}
+  constructor(
+    private produtoStore: ProdutoStore,
+    private http: HttpClient,
+    private pedidoService: PedidoService
+  ) {}
 
   private target = 'produto';
 
-  getByParams(descricao: string, codigo: string): Observable<Produto[]> {
-    const params = new HttpParams({ fromObject: { descricao, codigo } });
-    return this.http
-      .get<Produto[]>(`${this.target}/params`, { params })
-      .pipe(
-        setLoading(this.produtoStore),
-        tap(produtos => {
-          this.produtoStore.upsertMany(produtos);
-        })
-      );
-  }
-
-  getByCodigo(codigo: string): Observable<Produto> {
-    const params = new HttpParams({ fromObject: { codigo } });
-    return this.http.get<Produto>(`${this.target}/codigo`, { params });
-  }
-
   getBySimilarityCodigo(codigo: string): Observable<Produto[]> {
-    const params = new HttpParams({ fromObject: { codigo } });
+    const params = new HttpParams({ codigo });
     return this.http.get<Produto[]>(`${this.target}/similarity/codigo`, {
       params,
     });
@@ -73,5 +62,31 @@ export class ProdutoService {
         this.produtoStore.update(id, partial);
       })
     );
+  }
+
+  getBySearchAutocomplete(
+    term: string,
+    withPedido: boolean
+  ): Observable<Produto[]> {
+    const params = new HttpParams({
+      term,
+      withPedido,
+      limit: '8',
+    });
+    return this.http.get<Produto[]>(`${this.target}/search`, { params });
+  }
+
+  getExistsPedido(idProduto: number): Observable<boolean> {
+    return this.pedidoService.getExistsProduto(idProduto).pipe(
+      tap(hasPedido => {
+        this.produtoStore.update(idProduto, { hasPedido });
+      })
+    );
+  }
+
+  getById(idProduto: number): Observable<Produto> {
+    return this.http
+      .get<Produto>(`${this.target}/id/${idProduto}`)
+      .pipe(tap(produto => this.produtoStore.upsert(idProduto, produto)));
   }
 }

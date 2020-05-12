@@ -1,4 +1,11 @@
-import { Component, Inject, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  OnDestroy,
+  OnInit,
+  Renderer2,
+} from '@angular/core';
 import { LoadingService } from '../core/loading/loading.service';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { SidenavService } from '../sidenav/sidenav.service';
@@ -28,6 +35,7 @@ import { filter, take, takeUntil } from 'rxjs/operators';
       ]),
     ]),
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   constructor(

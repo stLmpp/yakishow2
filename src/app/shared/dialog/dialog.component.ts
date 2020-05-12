@@ -1,5 +1,11 @@
-import { Component, Inject, OnInit, Optional } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  OnInit,
+  Optional,
+} from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export interface DialogData {
   title?: string;
@@ -12,12 +18,10 @@ export interface DialogData {
   selector: 'app-dialog',
   templateUrl: './dialog.component.html',
   styleUrls: ['./dialog.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogComponent implements OnInit {
-  constructor(
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    public matDialogRef: MatDialogRef<DialogComponent>
-  ) {
+  constructor(@Optional() @Inject(MAT_DIALOG_DATA) public data: DialogData) {
     this.data = {
       buttonCancelar: 'Cancelar',
       buttonConfirmar: 'Confirmar',

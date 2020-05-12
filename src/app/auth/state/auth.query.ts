@@ -18,7 +18,10 @@ export class AuthQuery extends Query<Auth> {
   });
 
   user$ = this.select('user');
-  theme$ = this.select('user').pipe(filter(Boolean), pluck('theme'));
+  theme$ = this.select('user').pipe(
+    filter(o => !!o),
+    pluck('theme')
+  );
 
   themeChanged$ = this.theme$.pipe(distinctUntilChanged());
 

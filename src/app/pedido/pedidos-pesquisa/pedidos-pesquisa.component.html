@@ -1,0 +1,146 @@
+<div class="page-title">
+  <h2>Pesquisar pedidos</h2>
+</div>
+<mat-expansion-panel class="pesquisa" [expanded]="true" #searchPanel>
+  <mat-expansion-panel-header>
+    Parâmetros de pesquisa
+  </mat-expansion-panel-header>
+  <div [formGroup]="form" class="form">
+    <mat-form-field>
+      <input
+        matInput
+        [matDatepicker]="dataCriacao"
+        placeholder="Criação"
+        formControlName="dataCriacao"
+      />
+      <mat-datepicker-toggle
+        [for]="dataCriacao"
+        matSuffix
+      ></mat-datepicker-toggle>
+      <mat-datepicker
+        [touchUi]="touchUi$ | async"
+        #dataCriacao
+        disabled="false"
+      ></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        matInput
+        placeholder="Hora finalizado"
+        formControlName="dataFinalizado"
+        inputmode="numeric"
+        [mask]="maskEnum.horaMinuto"
+        [dropSpecialCharacters]="false"
+      />
+    </mat-form-field>
+    <mat-form-field
+      class="full-row"
+      *ykLet="form.get('cliente') as clienteControl"
+    >
+      <input
+        matInput
+        formControlName="cliente"
+        placeholder="Cliente"
+        [matAutocomplete]="clienteAutocomplete"
+      />
+      <mat-spinner
+        diameter="18"
+        matSuffix
+        *ngIf="clientesLoading"
+      ></mat-spinner>
+      <mat-icon
+        matSuffix
+        (click)="selectCliente(null)"
+        *ngIf="clienteControl.disabled"
+      >
+        clear
+      </mat-icon>
+      <mat-autocomplete #clienteAutocomplete [autoActiveFirstOption]="true">
+        <mat-option
+          *ngFor="let cliente of clientes$ | async; trackBy: trackByCliente"
+          [value]="cliente.nome"
+          (click)="selectCliente(cliente.id)"
+        >
+          {{ cliente.celular | mask: maskEnum.celular }} - {{ cliente.nome }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field
+      class="full-row"
+      *ykLet="form.get('produto') as produtoControl"
+    >
+      <input
+        matInput
+        placeholder="Produto"
+        formControlName="produto"
+        [matAutocomplete]="produtoAutocomplete"
+      />
+      <mat-spinner
+        diameter="18"
+        matSuffix
+        *ngIf="produtosLoading"
+      ></mat-spinner>
+      <mat-autocomplete #produtoAutocomplete [autoActiveFirstOption]="true">
+        <mat-option
+          *ngFor="let produto of produtos$ | async; trackBy: trackByProduto"
+          [value]="produto.descricao"
+          (click)="selectProduto(produto.id)"
+          [title]="produto.descricao"
+        >
+          {{ produto.codigo }} - {{ produto.descricao }}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-icon
+        matSuffix
+        (click)="selectProduto(null)"
+        *ngIf="produtoControl.disabled"
+      >
+        clear
+      </mat-icon>
+    </mat-form-field>
+  </div>
+</mat-expansion-panel>
+<ng-container *ykLet="pedidos$ | async as pedidos">
+  <mat-nav-list *ngIf="pedidos?.length">
+    <ng-container
+      *ngFor="let pedido of pedidos; trackBy: trackByPedido; let $last = last"
+    >
+      <mat-list-item
+        [routerLink]="['..', pedido.id]"
+        [queryParams]="{ backUrl: '/pedidos/pesquisa?idPedido=' + pedido.id }"
+        [ngClass]="pedido.status | pedidoStatus | lowercase"
+        [id]="pedido.id"
+        [class.active]="pedido.id === activeId"
+        #pedidos
+      >
+        <mat-icon mat-list-icon>menu_book</mat-icon>
+        <span matLine>{{ pedido.cliente.nome }}</span>
+        <span matLine>
+          Criado: {{ pedido.creationDate | date: 'dd/MM/yyyy HH:mm' }}
+        </span>
+        <span matLine>
+          {{ pedido.status | pedidoStatus
+          }}<ng-container *ngIf="pedido.dataFinalizado"
+            >:
+            {{ pedido.dataFinalizado | date: 'dd/MM/yyyy HH:mm' }}</ng-container
+          >
+        </span>
+        <span matSuffix>{{ pedido.id }}</span>
+      </mat-list-item>
+      <mat-divider *ngIf="!$last"></mat-divider>
+    </ng-container>
+  </mat-nav-list>
+  <div *ngIf="!pedidos?.length && !pedidosLoading" class="main-padding">
+    Nenhum pedido encontrado
+  </div>
+  <div *ngIf="pedidosLoading" class="main-padding">
+    Pesquisando...
+  </div>
+</ng-container>
+
+<button mat-mini-fab ykFabFloating left bottom (click)="navigateBack()">
+  <mat-icon>keyboard_arrow_left</mat-icon>
+</button>
+<button mat-mini-fab ykFabFloating right bottom (click)="pesquisar()">
+  <mat-icon>search</mat-icon>
+</button>

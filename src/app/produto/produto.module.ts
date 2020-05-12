@@ -5,18 +5,21 @@ import { ProdutoRoutingModule } from './produto-routing.module';
 import { SharedModule } from '../shared/shared.module';
 import { ProdutoComponent } from './produto.component';
 import { ProdutoItemComponent } from './produto-item/produto-item.component';
-import { UniqueCodigoDirective } from './produto-item/unique-codigo.directive';
 import { NgxCurrencyModule } from 'ngx-currency';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { ValidatorsModule } from '../validators/validators.module';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
-  declarations: [ProdutoComponent, ProdutoItemComponent, UniqueCodigoDirective],
+  declarations: [ProdutoComponent, ProdutoItemComponent],
   imports: [
     CommonModule,
     ProdutoRoutingModule,
     SharedModule,
     NgxCurrencyModule,
     MatCheckboxModule,
+    ValidatorsModule,
+    MatCardModule,
   ],
 })
 export class ProdutoModule {}

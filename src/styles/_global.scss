@@ -3,7 +3,7 @@
 .page-title {
   display: flex;
   justify-content: space-between;
-  @extend .main-padding
+  @extend .main-padding;
 }
 
 .d-flex-align-center-justify-end {
@@ -42,8 +42,38 @@
 }
 
 .main-padding-y {
-  padding-top: $main-padding;
-  padding-bottom: $main-padding;
+  margin-top: $main-padding;
+  margin-bottom: $main-padding;
+}
+
+.main-margin {
+  margin: $main-padding;
+}
+
+.main-margin-t {
+  margin-top: $main-padding;
+}
+
+.main-margin-b {
+  margin-bottom: $main-padding;
+}
+
+.main-margin-l {
+  margin-left: $main-padding;
+}
+
+.main-margin-r {
+  margin-right: $main-padding;
+}
+
+.main-margin-x {
+  margin-left: $main-padding;
+  margin-right: $main-padding;
+}
+
+.main-margin-y {
+  margin-top: $main-padding;
+  margin-bottom: $main-padding;
 }
 
 .pointer-events-none {

@@ -8,6 +8,6 @@ export interface PessoaState extends EntityState<Pessoa> {}
 @StoreConfig({ name: 'pessoa', cache: { ttl: 600000 } })
 export class PessoaStore extends EntityStore<PessoaState> {
   constructor() {
-    super({ loading: false });
+    super({ loading: false, search: null });
   }
 }
